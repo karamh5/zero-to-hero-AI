@@ -16,16 +16,6 @@ Hands-on labs from my journey learning modern AI engineering — every lab is ru
 | 08 | [`ml-foundations`](labs/08-ml-foundations) | Regression + regularization + Gaussian anomaly detection in NumPy, PyTorch NNs, attention from scratch, OpenCV |
 | 09 | [`cloud`](labs/09-cloud) | AWS Lambda ingestion, Snowflake warehousing, Vertex AI + Ollama local inference, Databricks/K8s notes |
 
-## Run any lab
-
-```bash
-cd labs/<lab>
-python -m venv venv && source venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env   # add API keys
-python src/<entry>.py  # each lab's README names the entry file
-```
-
 **Stack:** Python · LangChain/LangGraph · MCP · ChromaDB/pgvector · Hugging Face · Ollama · FastAPI · Docker · React/TS · AWS · Snowflake
 
 ---
