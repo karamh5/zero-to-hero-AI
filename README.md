@@ -70,7 +70,7 @@ python wildsense/agent/run_node.py --node 1  # start an agent node (simulated se
 
 ### Status / Roadmap
 
-- [x] Single-node agent loop + RAG grounding + dashboard
+- [ ] Single-node agent loop + RAG grounding + dashboard
 - [ ] Hybrid search + reranking with RAGAS before/after scores
 - [ ] Multi-node corroboration experiment (single vs consensus: false-alarm & miss rates)
 - [ ] On-Pi SLM deployment (quantized, via Ollama)
