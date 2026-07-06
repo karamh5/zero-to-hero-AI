@@ -53,10 +53,6 @@ python src/<entry>.py  # each lab's README names the entry file
 [UI]       React dashboard (live WebSocket feed) · voice alerts (streaming TTS)
 ```
 
-### Why agents instead of federated learning
-
-Edge nodes coordinate through structured agent-to-agent messages (corroborated risk assessment) rather than gradient sharing — richer semantics per exchange, auditable decision trails, and alignment with current agentic-AI practice. FL remains future work for model improvement across nodes.
-
 ### Repo layout
 
 `wildsense/backend/` FastAPI + DB · `wildsense/agent/` LangGraph agent + MCP server · `wildsense/rag/` retrieval pipeline + evals · `wildsense/voice/` TTS alerts · `wildsense/frontend/` dashboard · `wildsense/hardware/` Pi + sensor setup · `wildsense/docs/` architecture + experiment results
