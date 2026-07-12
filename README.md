@@ -22,22 +22,3 @@
         ▼
 [UI]       React dashboard (live WebSocket feed) · voice alerts (streaming TTS)
 ```
-
-### Repo layout
-
-`wildsense/backend/` FastAPI + DB · `wildsense/agent/` LangGraph agent + MCP server · `wildsense/rag/` retrieval pipeline + evals · `wildsense/voice/` TTS alerts · `wildsense/frontend/` dashboard · `wildsense/hardware/` Pi + sensor setup · `wildsense/docs/` architecture + experiment results
-
-### Run
-
-```bash
-docker compose up --build          # backend + db + dashboard
-python wildsense/agent/run_node.py --node 1  # start an agent node (simulated sensors if no Pi)
-```
-
-### Status / Roadmap
-
-- [ ] Single-node agent loop + RAG grounding + dashboard
-- [ ] Hybrid search + reranking with RAGAS before/after scores
-- [ ] Multi-node corroboration experiment (single vs consensus: false-alarm & miss rates)
-- [ ] On-Pi SLM deployment (quantized, via Ollama)
-- [ ] Voice alert channel
