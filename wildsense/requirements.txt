@@ -1,0 +1,39 @@
+# ---------------------------------------------------------------------------
+# WildSense runtime dependencies.
+#
+# Everything listed here installs cleanly on Windows, macOS, Linux AND on a
+# Raspberry Pi (64-bit Raspberry Pi OS). Hardware-only packages are commented
+# out at the bottom -- install those on the Pi only.
+# ---------------------------------------------------------------------------
+
+# Config + numerics
+PyYAML>=6.0.1
+numpy>=1.26
+
+# Model training and inference. The default PyPI wheel is CPU-only, which is
+# exactly what we want on a Pi. The event classifier is deliberately tiny
+# (~6.5K parameters) so CPU inference costs well under a millisecond.
+torch>=2.2
+
+# Dashboard (FastAPI app served by uvicorn; the page polls a JSON endpoint,
+# so no websocket or frontend build step is required).
+fastapi>=0.110
+uvicorn>=0.29
+
+# Cloud event snapshot sync. Import is lazy and failure is non-fatal: if boto3
+# is missing or no credentials are configured, WildSense logs one clear line
+# and continues running with S3 sync disabled.
+boto3>=1.34
+
+# Tests
+pytest>=8.0
+
+# ---------------------------------------------------------------------------
+# Raspberry Pi hardware only -- do NOT install these on a dev machine, they
+# require real GPIO and will not build on Windows/macOS:
+#
+#   pip install adafruit-circuitpython-dht adafruit-blinka
+#
+# adafruit-circuitpython-dht>=4.0.0
+# adafruit-blinka>=8.20.0
+# ---------------------------------------------------------------------------

@@ -1,0 +1,170 @@
+# ===========================================================================
+# WildSense node configuration.
+#
+# This file decides which modules run. Adding a future sensor pack (thermal
+# camera, air quality, ...) is a change HERE, not a change to the pipeline:
+#   1. write sensors/<pack>.py with @register_sensor("<pack>")
+#   2. add its module path to `packs.discover` below
+#   3. set `sensor.active: <pack>`
+# ===========================================================================
+
+node:
+  id: wildsense-node-01
+
+# Modules imported at startup so their @register_* decorators run. An import
+# that fails (e.g. dht22 on a laptop with no GPIO) is logged and skipped, not
+# fatal -- which is why this list can safely name hardware packs everywhere.
+packs:
+  discover:
+    - sensors.synthetic
+    - sensors.dht22
+    - detectors.env_anomaly
+
+# ---------------------------------------------------------------------------
+# Sensor
+# ---------------------------------------------------------------------------
+sensor:
+  # `synthetic` for development and demos, `dht22` on the Raspberry Pi.
+  active: synthetic
+
+  packs:
+    synthetic:
+      profile: temperate          # temperate | coastal | arid | alpine | boreal
+      seed: 1337                  # reproducible stream
+      anomaly_probability: 0.02   # per-sample chance of starting an episode
+      quiet_samples: 25           # settle time between episodes
+      seconds_per_sample: 120.0   # simulated time per sample (diurnal cycle only)
+      min_interval_s: 0.0         # no wall-clock floor; the pipeline paces itself
+
+    dht22:
+      pin: D4                     # GPIO4, physical pin 7
+      retries: 5                  # transient RuntimeErrors are normal, retry them
+      retry_delay_s: 2.0          # a retry cannot succeed sooner than this
+      use_pulseio: false          # bit-bang path is the reliable one on Pi OS
+      min_interval_s: 2.0         # datasheet floor; lower values are clamped up
+
+# ---------------------------------------------------------------------------
+# Detector
+# ---------------------------------------------------------------------------
+detector:
+  active: env_anomaly
+
+  packs:
+    env_anomaly:
+      alpha: 0.05                 # fast EWMA forgetting factor (~39-sample memory)
+      z_threshold: 3.5            # deviations from the fast baseline -> spike/drop
+      warmup_samples: 40          # no detections before this many readings
+      window_size: 32             # must match the trained model
+      hidden: 64                  # must match the trained model
+      temp_min_std: 0.20          # variance floor, C  (DHT22 resolution is 0.1)
+      humidity_min_std: 0.60      # variance floor, %RH
+      sustained_samples: 6        # consecutive hits before calling it a drift
+      # Cap on how far ONE reading may move a baseline, in std devs. Without
+      # this a single 10C spike inflates the variance for 100+ samples and
+      # blinds the detector to everything after it.
+      clip_z: 4.0
+      # Slow baseline = alpha * this (~500-sample memory). A fast EWMA follows
+      # a gradual ramp and never sees it; the slow one is what makes drift
+      # detectable at all.
+      slow_alpha_ratio: 0.08
+      # Deviations from the SLOW baseline -> drift. Measured on 22.5k synthetic
+      # quiet samples: 3.5 gives 25% drift / 74% drop / 83% spike episode
+      # recall at a 0.52% false-positive rate; 4.0 trades recall (18/70/81) for
+      # a 0.30% rate. Raise it if your node is chattier than you want.
+      drift_z_threshold: 3.5
+      # After firing, stay quiet for this many readings while the SAME
+      # condition persists, then re-report. The slow baseline stays displaced
+      # for hundreds of samples after a real drift, so without this one
+      # episode emits an event (and an S3 snapshot) on every single cycle.
+      refractory_samples: 15
+      model_path: artifacts/event_classifier.pt
+      use_torchscript: false      # true = load .ts.pt (lighter, but no hot-swap)
+
+# ---------------------------------------------------------------------------
+# Contextual adaptation: risk level -> polling cadence
+# ---------------------------------------------------------------------------
+context:
+  provider: mock_external         # mock_external | static
+
+  providers:
+    mock_external:
+      cycle_seconds: 120.0        # ambient forecast period
+      event_window_s: 90.0        # detections within this window escalate risk
+      events_for_escalation: 2    # detections per extra risk band
+      base_level: low
+      seed: 7
+    static:
+      level: moderate
+
+  # Seconds between polls at each risk level. Always clamped up to the active
+  # sensor's min_interval_s -- config can never out-run the hardware.
+  intervals:
+    low: 60.0
+    moderate: 30.0
+    high: 5.0
+    extreme: 2.0
+  max_interval_s: 300.0
+
+# ---------------------------------------------------------------------------
+# Cloud event snapshots (optional)
+# ---------------------------------------------------------------------------
+# Credentials are NEVER read from this file. boto3 resolves them from the
+# environment (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY) or ~/.aws. With no
+# bucket or no credentials, WildSense logs one line and writes snapshots to
+# the local fallback directory instead.
+cloud:
+  enabled: true
+  bucket: null                    # or set $WILDSENSE_S3_BUCKET
+  prefix: events
+  region: null
+  # Where snapshots go when S3 is unavailable. The S3 key (including `prefix`)
+  # is mirrored underneath, so this directory is an exact local copy of the
+  # bucket layout and can be uploaded later with `aws s3 sync`.
+  local_fallback_dir: snapshots
+  queue_size: 200
+
+# ---------------------------------------------------------------------------
+# Federated learning across simulated peer nodes
+# ---------------------------------------------------------------------------
+federation:
+  enabled: true
+  round_interval_s: 20.0          # seconds between aggregation rounds
+  samples_per_round: 150          # readings each node collects per round
+  warmup_readings: 600            # readings buffered per node before round 1
+  local_epochs: 4                 # short local runs average better than long ones
+  learning_rate: 0.003
+  update_detector: true           # push averaged weights into the live detector
+  # A fresh fleet starts from random weights and its first rounds are worse
+  # than the trained artifact. The node refuses to adopt a global model below
+  # this validation accuracy, so federation can only ever help the detector.
+  # (When artifacts/ exists, federation is seeded from it and clears this
+  # immediately -- the floor only matters on a cold start.)
+  min_accuracy_to_adopt: 0.5
+
+  # 3-5 nodes. Each has its own climate, so the averaged model has to
+  # generalise instead of memorising one location's weather.
+  nodes:
+    - node_id: node-coastal
+      profile: coastal
+      seed: 11
+      anomaly_probability: 0.06
+    - node_id: node-arid
+      profile: arid
+      seed: 22
+      anomaly_probability: 0.06
+    - node_id: node-alpine
+      profile: alpine
+      seed: 33
+      anomaly_probability: 0.06
+
+# ---------------------------------------------------------------------------
+# Dashboard
+# ---------------------------------------------------------------------------
+dashboard:
+  enabled: true
+  host: 127.0.0.1                 # use 0.0.0.0 to reach the Pi from your laptop
+  port: 8000
+  log_level: warning
+
+logging:
+  level: INFO

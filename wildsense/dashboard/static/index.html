@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WildSense — Live Node</title>
+<style>
+/* ---------------------------------------------------------------------------
+   Palette. Light values are the default; dark values are *selected* steps for
+   the dark surface, declared under both the OS media query and the explicit
+   [data-theme] scope so the in-page toggle wins in either direction.
+   --------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+  --plane:          #f9f9f7;
+  --surface:        #fcfcfb;
+  --text-primary:   #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted:     #898781;
+  --grid:           #e1e0d9;
+  --axis:           #c3c2b7;
+  --border:         rgba(11, 11, 11, 0.10);
+
+  --series-temp:    #eb6834;  /* categorical slot 8, orange */
+  --series-humid:   #2a78d6;  /* categorical slot 1, blue   */
+
+  /* Status palette — reserved, never reused for a data series. */
+  --status-good:     #0ca30c;
+  --status-warning:  #fab219;
+  --status-serious:  #ec835a;
+  --status-critical: #d03b3b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --plane:          #0d0d0d;
+    --surface:        #1a1a19;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --grid:           #2c2c2a;
+    --axis:           #383835;
+    --border:         rgba(255, 255, 255, 0.10);
+    --series-temp:    #d95926;
+    --series-humid:   #3987e5;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --plane:          #0d0d0d;
+  --surface:        #1a1a19;
+  --text-primary:   #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted:     #898781;
+  --grid:           #2c2c2a;
+  --axis:           #383835;
+  --border:         rgba(255, 255, 255, 0.10);
+  --series-temp:    #d95926;
+  --series-humid:   #3987e5;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 24px;
+  background: var(--plane);
+  color: var(--text-primary);
+  font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* --- layout -------------------------------------------------------------- */
+.wrap { max-width: 1180px; margin: 0 auto; }
+
+header {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 12px;
+  margin-bottom: 20px;
+}
+h1 { font-size: 21px; font-weight: 650; margin: 0; letter-spacing: -0.01em; }
+.subtitle { color: var(--text-secondary); font-size: 13px; }
+header .spacer { flex: 1 1 auto; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 10px; border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 12px; color: var(--text-secondary);
+  background: var(--surface);
+}
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--status-good); }
+
+button {
+  font: inherit; font-size: 12px;
+  color: var(--text-secondary); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 5px 11px; cursor: pointer;
+}
+button:hover { color: var(--text-primary); }
+button[aria-pressed="true"] { color: var(--text-primary); border-color: var(--axis); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+.card h2 {
+  margin: 0 0 2px; font-size: 13px; font-weight: 600;
+  letter-spacing: 0.01em; color: var(--text-primary);
+}
+.card .hint { margin: 0 0 14px; font-size: 12px; color: var(--text-muted); }
+
+.grid-tiles {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px; margin-bottom: 14px;
+}
+.grid-main {
+  display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: 14px; margin-bottom: 14px;
+}
+@media (max-width: 880px) {
+  .grid-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-main  { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --- stat tiles ---------------------------------------------------------- */
+.tile .label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+/* Proportional figures on purpose: tabular-nums reads loose at display sizes. */
+.tile .value { font-size: 30px; font-weight: 600; line-height: 1.15; margin-top: 6px; }
+.tile .value .unit { font-size: 15px; font-weight: 500; color: var(--text-secondary); margin-left: 3px; }
+.tile .foot { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* --- charts -------------------------------------------------------------- */
+.chart-card { position: relative; }
+.chart-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+.chart-head .swatch { width: 9px; height: 9px; border-radius: 2px; flex: none; }
+.chart-head .now { margin-left: auto; font-size: 12px; color: var(--text-secondary); }
+/* Height includes the x-axis band, so the axis labels are never clipped. */
+.canvas-box { position: relative; height: 190px; }
+canvas { width: 100%; height: 100%; display: block; }
+
+.tooltip {
+  position: absolute; pointer-events: none; opacity: 0;
+  transform: translate(-50%, -100%);
+  background: var(--surface); color: var(--text-primary);
+  border: 1px solid var(--axis); border-radius: 8px;
+  padding: 6px 9px; font-size: 12px; white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  transition: opacity 90ms linear;
+}
+.tooltip .t-time { color: var(--text-muted); font-size: 11px; }
+
+/* --- risk gauge ---------------------------------------------------------- */
+.gauge-wrap { display: flex; flex-direction: column; align-items: center; }
+.gauge-level {
+  font-size: 24px; font-weight: 650; letter-spacing: -0.01em;
+  display: flex; align-items: center; gap: 8px; margin-top: -18px;
+}
+.gauge-level .icon { font-size: 17px; }
+.gauge-reason { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 6px; }
+.gauge-interval { font-size: 13px; color: var(--text-secondary); margin-top: 12px; text-align: center; }
+.gauge-interval strong { color: var(--text-primary); font-weight: 600; }
+
+/* --- tables (event log + chart table views) ------------------------------ */
+.table-scroll { overflow-x: auto; }
+.log-scroll { max-height: 300px; overflow-y: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+th {
+  position: sticky; top: 0; background: var(--surface);
+  text-align: left; font-weight: 600; color: var(--text-muted);
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 7px 10px 7px 0; border-bottom: 1px solid var(--grid);
+  white-space: nowrap;
+}
+td {
+  padding: 7px 10px 7px 0; border-bottom: 1px solid var(--grid);
+  color: var(--text-secondary); font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+td.detail { white-space: normal; color: var(--text-muted); font-variant-numeric: normal; }
+tr:last-child td { border-bottom: none; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-weight: 600; font-size: 11.5px; color: var(--text-primary);
+}
+.badge .mark { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+
+.empty { color: var(--text-muted); font-size: 13px; padding: 18px 0; }
+.hidden { display: none; }
+
+/* --- federation ---------------------------------------------------------- */
+.fed-row { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 12px; }
+.fed-stat .k { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+.fed-stat .v { font-size: 19px; font-weight: 600; }
+
+footer { margin-top: 18px; font-size: 12px; color: var(--text-muted); }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>WildSense</h1>
+      <div class="subtitle" id="subtitle">connecting…</div>
+    </div>
+    <div class="spacer"></div>
+    <span class="chip"><span class="dot" id="live-dot"></span><span id="live-label">live</span></span>
+    <span class="chip" id="mode-chip">—</span>
+    <button id="theme-toggle" type="button">Light / dark</button>
+  </header>
+
+  <!-- Stat tiles. The headline numbers are numbers, not charts. -->
+  <section class="grid-tiles">
+    <div class="card tile">
+      <div class="label">Temperature</div>
+      <div class="value"><span id="tile-temp">—</span><span class="unit">°C</span></div>
+      <div class="foot" id="tile-temp-foot">baseline —</div>
+    </div>
+    <div class="card tile">
+      <div class="label">Humidity</div>
+      <div class="value"><span id="tile-humid">—</span><span class="unit">%RH</span></div>
+      <div class="foot" id="tile-humid-foot">baseline —</div>
+    </div>
+    <div class="card tile">
+      <div class="label">Poll interval</div>
+      <div class="value"><span id="tile-interval">—</span><span class="unit">s</span></div>
+      <div class="foot" id="tile-interval-foot">set by risk level</div>
+    </div>
+    <div class="card tile">
+      <div class="label">Events detected</div>
+      <div class="value"><span id="tile-events">—</span></div>
+      <div class="foot" id="tile-readings-foot">— readings</div>
+    </div>
+  </section>
+
+  <section class="grid-main">
+    <!-- Risk gauge -->
+    <div class="card">
+      <h2>Current risk</h2>
+      <p class="hint">Drives the polling cadence.</p>
+      <div class="gauge-wrap">
+        <svg id="gauge" viewBox="0 0 220 128" width="100%" height="128" role="img"
+             aria-labelledby="gauge-title">
+          <title id="gauge-title">Risk gauge</title>
+        </svg>
+        <!-- Icon + label, so the risk level is never carried by color alone. -->
+        <div class="gauge-level"><span class="icon" id="gauge-icon">•</span><span id="gauge-text">—</span></div>
+        <div class="gauge-reason" id="gauge-reason"></div>
+        <div class="gauge-interval">
+          polling every <strong id="gauge-interval">—</strong>
+          <span id="gauge-floor" style="color:var(--text-muted)"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Federation -->
+    <div class="card">
+      <h2>Federated learning</h2>
+      <p class="hint">Simulated nodes train locally; only weights are averaged.</p>
+      <div class="fed-row">
+        <div class="fed-stat"><div class="k">Rounds</div><div class="v" id="fed-rounds">—</div></div>
+        <div class="fed-stat"><div class="k">Global accuracy</div><div class="v" id="fed-acc">—</div></div>
+        <div class="fed-stat"><div class="k">Global loss</div><div class="v" id="fed-loss">—</div></div>
+        <div class="fed-stat"><div class="k">Nodes</div><div class="v" id="fed-nodes">—</div></div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Node</th><th>Climate</th><th>Windows buffered</th><th>Local loss</th></tr></thead>
+          <tbody id="fed-body"><tr><td colspan="4" class="empty">Waiting for the first round…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Two single-series charts sharing an x-axis, never one dual-axis plot:
+       °C and %RH have unrelated scales, and overlaying them would invent a
+       correlation that is not in the data. -->
+  <section class="grid-tiles" style="grid-template-columns: minmax(0,1fr) minmax(0,1fr)">
+    <div class="card chart-card">
+      <div class="chart-head">
+        <span class="swatch" style="background:var(--series-temp)"></span>
+        <h2>Temperature (°C)</h2>
+        <span class="now" id="chart-temp-now"></span>
+      </div>
+      <div class="canvas-box">
+        <canvas id="chart-temp" aria-label="Temperature over time"></canvas>
+        <div class="tooltip" id="tip-temp"></div>
+      </div>
+      <button id="tbl-temp-btn" type="button" aria-pressed="false" style="margin-top:10px">Table view</button>
+      <div class="table-scroll log-scroll hidden" id="tbl-temp" style="margin-top:10px">
+        <table><thead><tr><th>Time (UTC)</th><th>°C</th></tr></thead><tbody id="tbl-temp-body"></tbody></table>
+      </div>
+    </div>
+
+    <div class="card chart-card">
+      <div class="chart-head">
+        <span class="swatch" style="background:var(--series-humid)"></span>
+        <h2>Relative humidity (%)</h2>
+        <span class="now" id="chart-humid-now"></span>
+      </div>
+      <div class="canvas-box">
+        <canvas id="chart-humid" aria-label="Relative humidity over time"></canvas>
+        <div class="tooltip" id="tip-humid"></div>
+      </div>
+      <button id="tbl-humid-btn" type="button" aria-pressed="false" style="margin-top:10px">Table view</button>
+      <div class="table-scroll log-scroll hidden" id="tbl-humid" style="margin-top:10px">
+        <table><thead><tr><th>Time (UTC)</th><th>%RH</th></tr></thead><tbody id="tbl-humid-body"></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Event log -->
+  <div class="card" style="margin-top:14px">
+    <h2>Event log</h2>
+    <p class="hint" id="detector-hint">newest first</p>
+    <div class="table-scroll log-scroll">
+      <table>
+        <thead>
+          <tr><th>Time (UTC)</th><th>Event</th><th>Conf.</th><th>°C</th><th>%RH</th><th>z(T)</th><th>z(H)</th><th>Why</th></tr>
+        </thead>
+        <tbody id="event-body">
+          <tr><td colspan="8" class="empty">No events yet — the detector is still learning its baseline.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer id="footer">WildSense · edge-AI environmental event detection</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const POLL_MS = 1000;
+  const $ = (id) => document.getElementById(id);
+  // Read palette roles off the stylesheet so canvas drawing and CSS never drift.
+  const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+  let latest = null;          // most recent /api/state payload
+  let failures = 0;
+
+  /* --- theme ------------------------------------------------------------ */
+  const themeToggle = $("theme-toggle");
+  themeToggle.addEventListener("click", () => {
+    const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    render();  // canvas colors are baked in at draw time, so redraw
+  });
+
+  /* --- helpers ---------------------------------------------------------- */
+  const fmt = (value, digits = 1) =>
+    (value === null || value === undefined || Number.isNaN(value)) ? "—" : Number(value).toFixed(digits);
+
+  const clockUTC = (epochSeconds) => {
+    const d = new Date(epochSeconds * 1000);
+    const pad = (n) => String(n).padStart(2, "0");
+    return `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`;
+  };
+
+  const RISK = {
+    low:      { color: "--status-good",     icon: "●", label: "Low" },
+    moderate: { color: "--status-warning",  icon: "◆", label: "Moderate" },
+    high:     { color: "--status-serious",  icon: "▲", label: "High" },
+    extreme:  { color: "--status-critical", icon: "■", label: "Extreme" },
+  };
+
+  // Event types are labelled in text; the mark is a redundant cue, not the message.
+  const EVENT_STYLE = {
+    spike: { color: "--status-critical", label: "Spike" },
+    drop:  { color: "--series-humid",    label: "Drop" },
+    drift: { color: "--status-warning",  label: "Drift" },
+    none:  { color: "--text-muted",      label: "None" },
+  };
+
+  /* --- canvas line chart ------------------------------------------------ */
+  /* One measure, one axis. Thin 2px stroke, hairline grid, crosshair on hover. */
+  const hover = { "chart-temp": null, "chart-humid": null };
+
+  function drawChart(canvasId, points, colorVar, unit, decimals) {
+    const canvas = $(canvasId);
+    const ratio = window.devicePixelRatio || 1;
+    const cssWidth = canvas.clientWidth || 480;
+    const cssHeight = canvas.clientHeight || 190;
+    canvas.width = Math.round(cssWidth * ratio);
+    canvas.height = Math.round(cssHeight * ratio);
+
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+    const pad = { top: 10, right: 10, bottom: 24, left: 44 };
+    const plotW = cssWidth - pad.left - pad.right;
+    const plotH = cssHeight - pad.top - pad.bottom;
+
+    const ink = { grid: cssVar("--grid"), axis: cssVar("--axis"), muted: cssVar("--text-muted") };
+    ctx.font = "11px system-ui, -apple-system, 'Segoe UI', sans-serif";
+
+    if (!points.length) {
+      ctx.fillStyle = ink.muted;
+      ctx.textAlign = "center";
+      ctx.fillText("waiting for readings…", cssWidth / 2, cssHeight / 2);
+      return;
+    }
+
+    const values = points.map((p) => p.v);
+    let lo = Math.min(...values);
+    let hi = Math.max(...values);
+    // Pad the domain so a flat line does not sit on the frame.
+    const span = Math.max(hi - lo, 0.5);
+    lo -= span * 0.15;
+    hi += span * 0.15;
+
+    const xAt = (i) => pad.left + (points.length === 1 ? plotW / 2 : (i / (points.length - 1)) * plotW);
+    const yAt = (v) => pad.top + plotH - ((v - lo) / (hi - lo)) * plotH;
+
+    // Horizontal gridlines: solid hairlines, one shade off the surface.
+    const TICKS = 4;
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = ink.grid;
+    ctx.fillStyle = ink.muted;
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    for (let i = 0; i <= TICKS; i++) {
+      const value = lo + ((hi - lo) * i) / TICKS;
+      const y = Math.round(yAt(value)) + 0.5;
+      ctx.beginPath();
+      ctx.moveTo(pad.left, y);
+      ctx.lineTo(pad.left + plotW, y);
+      ctx.stroke();
+      ctx.fillText(value.toFixed(decimals), pad.left - 8, y);
+    }
+
+    // Baseline / x-axis rule.
+    ctx.strokeStyle = ink.axis;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, Math.round(pad.top + plotH) + 0.5);
+    ctx.lineTo(pad.left + plotW, Math.round(pad.top + plotH) + 0.5);
+    ctx.stroke();
+
+    // Time labels at the ends only — a label per point would be noise.
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    ctx.fillStyle = ink.muted;
+    ctx.fillText(clockUTC(points[0].t), pad.left, pad.top + plotH + 7);
+    ctx.textAlign = "right";
+    ctx.fillText(clockUTC(points[points.length - 1].t), pad.left + plotW, pad.top + plotH + 7);
+
+    // The series itself.
+    const color = cssVar(colorVar);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    points.forEach((p, i) => (i ? ctx.lineTo(xAt(i), yAt(p.v)) : ctx.moveTo(xAt(i), yAt(p.v))));
+    ctx.stroke();
+
+    // Direct label on the endpoint only (the value that matters right now),
+    // drawn with a 2px surface ring so it reads over the line.
+    const lastX = xAt(points.length - 1);
+    const lastY = yAt(points[points.length - 1].v);
+    ctx.fillStyle = color;
+    ctx.strokeStyle = cssVar("--surface");
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(lastX, lastY, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Crosshair + marker for the hovered sample.
+    const index = hover[canvasId];
+    if (index !== null && index >= 0 && index < points.length) {
+      const hx = xAt(index);
+      ctx.strokeStyle = ink.axis;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(Math.round(hx) + 0.5, pad.top);
+      ctx.lineTo(Math.round(hx) + 0.5, pad.top + plotH);
+      ctx.stroke();
+
+      ctx.fillStyle = color;
+      ctx.strokeStyle = cssVar("--surface");
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(hx, yAt(points[index].v), 4.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    canvas._geometry = { pad, plotW, points, unit, decimals };
+  }
+
+  function wireHover(canvasId, tooltipId) {
+    const canvas = $(canvasId);
+    const tip = $(tooltipId);
+
+    canvas.addEventListener("mousemove", (event) => {
+      const geometry = canvas._geometry;
+      if (!geometry || !geometry.points.length) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const count = geometry.points.length;
+      const ratio = count === 1 ? 0 : (x - geometry.pad.left) / geometry.plotW;
+      const index = Math.max(0, Math.min(count - 1, Math.round(ratio * (count - 1))));
+
+      hover[canvasId] = index;
+      const point = geometry.points[index];
+      tip.innerHTML =
+        `<div>${point.v.toFixed(geometry.decimals)} ${geometry.unit}</div>` +
+        `<div class="t-time">${clockUTC(point.t)} UTC</div>`;
+      tip.style.left = `${geometry.pad.left + (count === 1 ? geometry.plotW / 2 : (index / (count - 1)) * geometry.plotW)}px`;
+      tip.style.top = "8px";
+      tip.style.opacity = "1";
+      render();
+    });
+
+    canvas.addEventListener("mouseleave", () => {
+      hover[canvasId] = null;
+      tip.style.opacity = "0";
+      render();
+    });
+  }
+
+  /* --- risk gauge (SVG arc) --------------------------------------------- */
+  function polar(cx, cy, r, degrees) {
+    const rad = ((degrees - 180) * Math.PI) / 180;
+    return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)];
+  }
+
+  function arcPath(cx, cy, r, from, to) {
+    const [x1, y1] = polar(cx, cy, r, from);
+    const [x2, y2] = polar(cx, cy, r, to);
+    return `M ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)}`;
+  }
+
+  function drawGauge(risk) {
+    const svg = $("gauge");
+    const cx = 110, cy = 108, r = 84;
+    const bands = ["low", "moderate", "high", "extreme"];
+    const score = Math.max(0, Math.min(1, risk && typeof risk.score === "number" ? risk.score : 0));
+    const level = (risk && risk.level) || "low";
+
+    let markup = '<title id="gauge-title">Risk gauge</title>';
+
+    // Four bands with a 2px surface gap between them (no borders around marks).
+    bands.forEach((band, i) => {
+      const from = i * 45 + 1.5;
+      const to = (i + 1) * 45 - 1.5;
+      const active = band === level;
+      markup +=
+        `<path d="${arcPath(cx, cy, r, from, to)}" fill="none" ` +
+        `stroke="${cssVar(RISK[band].color)}" stroke-width="${active ? 14 : 8}" ` +
+        `stroke-opacity="${active ? 1 : 0.28}" stroke-linecap="butt" />`;
+      const [lx, ly] = polar(cx, cy, r + 15, i * 45 + 22.5);
+      markup +=
+        `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" ` +
+        `font-size="8.5" fill="${cssVar("--text-muted")}">${RISK[band].label}</text>`;
+    });
+
+    // Needle.
+    const [nx, ny] = polar(cx, cy, r - 20, score * 180);
+    markup +=
+      `<line x1="${cx}" y1="${cy}" x2="${nx.toFixed(2)}" y2="${ny.toFixed(2)}" ` +
+      `stroke="${cssVar("--text-primary")}" stroke-width="2.5" stroke-linecap="round" />` +
+      `<circle cx="${cx}" cy="${cy}" r="4.5" fill="${cssVar("--text-primary")}" />`;
+
+    svg.innerHTML = markup;
+
+    const meta = RISK[level] || RISK.low;
+    $("gauge-icon").textContent = meta.icon;
+    $("gauge-icon").style.color = cssVar(meta.color);
+    $("gauge-text").textContent = meta.label;
+    $("gauge-reason").textContent = (risk && risk.reason) || "";
+  }
+
+  /* --- rendering -------------------------------------------------------- */
+  function render() {
+    const data = latest;
+    if (!data) return;
+
+    const runtime = data.runtime || {};
+    const risk = data.risk || {};
+    const detector = data.detector || {};
+    const federation = data.federation || {};
+    const readings = data.readings || [];
+    const events = data.events || [];
+    const last = readings.length ? readings[readings.length - 1] : null;
+
+    $("subtitle").textContent =
+      `${runtime.node_id || "node"} · sensor: ${runtime.sensor || "—"} · detector: ${runtime.detector || "—"}`;
+    $("mode-chip").textContent = runtime.mode ? `${runtime.mode} mode` : "—";
+    $("footer").textContent =
+      `WildSense · uptime ${Math.round(data.uptime_s || 0)}s · ` +
+      `${(data.counters || {}).readings || 0} readings · ` +
+      `cloud: ${(data.cloud || {}).available ? "S3 connected" : "local snapshots"}`;
+
+    // Tiles
+    $("tile-temp").textContent = last ? fmt(last.temperature_c, 1) : "—";
+    $("tile-humid").textContent = last ? fmt(last.humidity_pct, 1) : "—";
+    $("tile-interval").textContent = fmt(data.poll_interval_s, 1);
+    $("tile-events").textContent = (data.counters || {}).events ?? "—";
+    $("tile-readings-foot").textContent = `${(data.counters || {}).readings || 0} readings`;
+
+    const tempBaseline = detector.temperature_baseline || {};
+    const humidBaseline = detector.humidity_baseline || {};
+    $("tile-temp-foot").textContent =
+      tempBaseline.count ? `baseline ${fmt(tempBaseline.mean, 1)} ±${fmt(tempBaseline.std, 2)}` : "baseline warming up";
+    $("tile-humid-foot").textContent =
+      humidBaseline.count ? `baseline ${fmt(humidBaseline.mean, 1)} ±${fmt(humidBaseline.std, 2)}` : "baseline warming up";
+    $("tile-interval-foot").textContent = risk.level ? `risk: ${risk.level}` : "set by risk level";
+
+    $("detector-hint").textContent = detector.name
+      ? `${detector.name} · ${detector.warm ? "baseline ready" : `warming up (${detector.observed || 0}/${detector.warmup_samples || 0})`}` +
+        ` · z-threshold ${detector.z_threshold} · classifier ${detector.model_ready ? detector.model_kind : "not loaded (statistics only)"}`
+      : "newest first";
+
+    // Gauge
+    drawGauge(risk);
+    $("gauge-interval").textContent = `${fmt(data.poll_interval_s, 1)} s`;
+    $("gauge-floor").textContent = runtime.sensor_min_interval_s
+      ? `(sensor floor ${runtime.sensor_min_interval_s}s)` : "";
+
+    // Charts
+    const tempPoints = readings.filter((r) => r.temperature_c !== null)
+      .map((r) => ({ t: r.timestamp, v: r.temperature_c }));
+    const humidPoints = readings.filter((r) => r.humidity_pct !== null)
+      .map((r) => ({ t: r.timestamp, v: r.humidity_pct }));
+
+    drawChart("chart-temp", tempPoints, "--series-temp", "°C", 1);
+    drawChart("chart-humid", humidPoints, "--series-humid", "%RH", 1);
+    $("chart-temp-now").textContent = last ? `${fmt(last.temperature_c, 1)} °C now` : "";
+    $("chart-humid-now").textContent = last ? `${fmt(last.humidity_pct, 1)} %RH now` : "";
+
+    fillSeriesTable("tbl-temp", "tbl-temp-body", tempPoints, 1);
+    fillSeriesTable("tbl-humid", "tbl-humid-body", humidPoints, 1);
+
+    // Federation
+    const latestRound = federation.latest_round || null;
+    $("fed-rounds").textContent = federation.enabled ? (federation.rounds_completed ?? 0) : "off";
+    $("fed-acc").textContent = latestRound ? `${(latestRound.global_accuracy * 100).toFixed(1)}%` : "—";
+    $("fed-loss").textContent = latestRound ? latestRound.global_loss.toFixed(4) : "—";
+    $("fed-nodes").textContent = (federation.nodes || []).length || "—";
+
+    const fedBody = $("fed-body");
+    const nodes = federation.nodes || [];
+    if (!nodes.length) {
+      fedBody.innerHTML = `<tr><td colspan="4" class="empty">Federation is disabled.</td></tr>`;
+    } else {
+      const lossByNode = {};
+      (latestRound ? latestRound.nodes || [] : []).forEach((n) => (lossByNode[n.node_id] = n.loss));
+      fedBody.innerHTML = nodes.map((node) => `
+        <tr>
+          <td style="color:var(--text-primary)">${escapeHtml(node.node_id)}</td>
+          <td>${escapeHtml(node.climate)}</td>
+          <td>${node.buffered_windows}</td>
+          <td>${lossByNode[node.node_id] !== undefined ? lossByNode[node.node_id].toFixed(4) : "—"}</td>
+        </tr>`).join("");
+    }
+
+    // Event log
+    const body = $("event-body");
+    if (!events.length) {
+      body.innerHTML =
+        `<tr><td colspan="8" class="empty">No events yet — the detector is still learning its baseline.</td></tr>`;
+    } else {
+      body.innerHTML = events.map((event) => {
+        const style = EVENT_STYLE[event.event_type] || EVENT_STYLE.none;
+        return `<tr>
+          <td>${clockUTC(event.timestamp)}</td>
+          <td><span class="badge"><span class="mark" style="background:${cssVar(style.color)}"></span>${style.label}</span></td>
+          <td>${(event.confidence * 100).toFixed(0)}%</td>
+          <td>${fmt(event.temperature_c, 1)}</td>
+          <td>${fmt(event.humidity_pct, 1)}</td>
+          <td>${fmt(event.z_temperature, 2)}</td>
+          <td>${fmt(event.z_humidity, 2)}</td>
+          <td class="detail">${escapeHtml(event.detail || "")}</td>
+        </tr>`;
+      }).join("");
+    }
+  }
+
+  // Only rebuild the table twin while it is actually visible.
+  function fillSeriesTable(panelId, bodyId, points, decimals) {
+    if ($(panelId).classList.contains("hidden")) return;
+    $(bodyId).innerHTML = points.slice(-60).reverse()
+      .map((p) => `<tr><td>${clockUTC(p.t)}</td><td>${p.v.toFixed(decimals)}</td></tr>`).join("");
+  }
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  // Table-view toggles: every chart has a WCAG-clean table twin.
+  [["tbl-temp-btn", "tbl-temp"], ["tbl-humid-btn", "tbl-humid"]].forEach(([buttonId, panelId]) => {
+    $(buttonId).addEventListener("click", () => {
+      const panel = $(panelId);
+      const open = panel.classList.toggle("hidden") === false;
+      $(buttonId).setAttribute("aria-pressed", String(open));
+      render();
+    });
+  });
+
+  /* --- polling ---------------------------------------------------------- */
+  async function poll() {
+    try {
+      const response = await fetch("/api/state", { cache: "no-store" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      latest = await response.json();
+      failures = 0;
+      // Hold the previous render at full opacity — no skeleton flash on refetch.
+      document.body.style.opacity = "1";
+      $("live-dot").style.background = cssVar("--status-good");
+      $("live-label").textContent = "live";
+      render();
+    } catch (error) {
+      failures += 1;
+      if (failures > 2) {
+        $("live-dot").style.background = cssVar("--status-critical");
+        $("live-label").textContent = "disconnected";
+        document.body.style.opacity = "0.75";
+      }
+    } finally {
+      setTimeout(poll, POLL_MS);
+    }
+  }
+
+  wireHover("chart-temp", "tip-temp");
+  wireHover("chart-humid", "tip-humid");
+  window.addEventListener("resize", render);
+  poll();
+})();
+</script>
+</body>
+</html>
