@@ -205,6 +205,12 @@ fail on demand.
 
 ## Running with the real DHT22
 
+> **Never wired a sensor to a Pi before?** Follow
+> [HARDWARE_SETUP.md](HARDWARE_SETUP.md) instead — it covers the same ground
+> step by step, with physical pin numbers, a copy-paste test script, and
+> troubleshooting. About 15 minutes. The summary below assumes you have done
+> this sort of thing before.
+
 ### Wiring
 
 A 3-wire DHT22 module (with the pull-up resistor already on board):
