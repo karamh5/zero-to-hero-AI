@@ -15,9 +15,6 @@ the architecture, the numbers. This top-level page is just the front door.
   on a hardcoded threshold, with a simulated fleet showing how it'd federate
   across many nodes.
 
-More projects will land here over time, each in its own folder, each
-self-contained.
+More projects will land here over time!
 
 ---
-
-*Independent work, some of it supervised by UBC faculty.*
