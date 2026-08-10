@@ -1,7 +1,8 @@
 # Hardware setup: ShillehTek DHT22 on a Raspberry Pi
 
-Wiring the temperature/humidity sensor to your Pi and proving it works, from
-scratch. **About 15 minutes**, most of which is waiting for downloads.
+Wiring the temperature/humidity sensor — WildSense's wildfire-risk sensor
+node — to your Pi and proving it works, from scratch. **About 15 minutes**,
+most of which is waiting for downloads.
 
 No soldering. No breadboard. No extra components. Three wires.
 

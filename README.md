@@ -1,17 +1,26 @@
 # WildSense
 
-**A modular edge-AI platform for detecting environmental events on a Raspberry Pi.**
+**A modular edge-AI platform for detecting wildfire risk conditions on a Raspberry Pi.**
 
-WildSense reads environmental sensors on a low-power edge node, decides *on the
-device* whether what it just measured is unusual, classifies what kind of event
-it is, and learns from a fleet of peer nodes without any of them ever shipping
-raw readings anywhere.
+WildSense reads temperature and humidity on a low-power edge node, decides *on
+the device* whether what it just measured is an unusual fire-risk condition,
+classifies what kind of event it is, and learns from a fleet of peer nodes
+without any of them ever shipping raw readings anywhere.
 
-The hardware today is one Raspberry Pi with a DHT22 temperature/humidity sensor.
-The architecture assumes that is the first of several sensors, not the only one —
-adding a thermal camera or an air-quality pack is a config change, not a rewrite.
-A full synthetic mode means the entire pipeline runs, and the entire test suite
-passes, with **zero hardware attached**.
+### Hardware
+
+| | |
+|---|---|
+| Compute | Raspberry Pi 4 |
+| Sensor | DHT22 temperature/humidity, 3-wire module, GPIO4 (one-wire, no I2C) |
+
+No soldering, no breadboard — three wires. See
+[HARDWARE_SETUP.md](wildsense/HARDWARE_SETUP.md) for the full wiring guide, wired to the
+two readings that drive fire danger indices in the field. The architecture
+assumes this is the first of several sensors, not the only one — adding a
+thermal camera or an air-quality pack (for smoke) is a config change, not a
+rewrite. A full synthetic mode means the entire pipeline runs, and the entire
+test suite passes, with **zero hardware attached**.
 
 ---
 
@@ -19,22 +28,25 @@ passes, with **zero hardware attached**.
 
 **There is no hardcoded temperature anywhere in the detection path.**
 
-A fixed rule like `if temp > 35: alert` is wrong in both directions: it screams
-all summer in a desert and stays silent through a genuine 12 °C excursion in an
-alpine valley. WildSense instead keeps a rolling statistical baseline — an
-exponentially weighted mean and variance — for each channel, and flags a reading
-when it deviates significantly from *its own recent history*.
+A fixed rule like `if temp > 35: alert` is wrong for wildfire risk in both
+directions: it screams all summer in a desert and stays silent through a
+genuine 12 °C excursion — heat, humidity crash, and fast drying out — in an
+alpine valley that never sees 35 °C. WildSense instead keeps a rolling
+statistical baseline — an exponentially weighted mean and variance — for each
+channel, and flags a reading when it deviates significantly from *its own
+recent history*.
 
-So "hot" means something different depending on where the node is and what the
-last few minutes looked like. The same code, with no per-site tuning, adapts to
-its own environment. Push a node's normal operating point from 20 °C to 28 °C and
-it fires once at the transition, then goes quiet — because 28 °C is now simply
-what this place is like.
+So "elevated fire risk" means something different depending on where the node
+is and what the last few minutes looked like. The same code, with no per-site
+tuning, adapts to its own environment. Push a node's normal operating point
+from 20 °C to 28 °C and it fires once at the transition, then goes quiet —
+because 28 °C is now simply what this place is like.
 
-A small PyTorch classifier then names *what kind* of event it is. The two stages
-have deliberately different jobs, and the statistical stage always gates the
-model — so a missing or broken model file degrades the event label, never the
-detection itself.
+A small PyTorch classifier then names *what kind* of fire-risk event it is —
+a sudden heat/dryness spike, a sudden humidity drop, or a gradual drying
+drift. The two stages have deliberately different jobs, and the statistical
+stage always gates the model — so a missing or broken model file degrades the
+event label, never the detection itself.
 
 ---
 
@@ -130,7 +142,7 @@ flowchart TB
 | `federation/` | `LocalTrainer` (fits on a node's own readings) + `FederatedAverager` (sample-weighted FedAvg) + a 3-node concurrent simulation. |
 | `cloud/` | S3 event snapshots over a bounded queue. Degrades to local files with one clear log line if credentials are absent. |
 | `context/` | Risk level → polling interval, clamped to the sensor's hardware floor. |
-| `dashboard/` | FastAPI app serving one live page: temperature and humidity charts, a risk gauge, a scrolling event log. |
+| `dashboard/` | FastAPI app serving one live page: temperature and humidity charts, a fire-risk gauge, a scrolling event log. |
 
 ### Why it is genuinely modular
 
@@ -206,7 +218,7 @@ fail on demand.
 ## Running with the real DHT22
 
 > **Never wired a sensor to a Pi before?** Follow
-> [HARDWARE_SETUP.md](HARDWARE_SETUP.md) instead — it covers the same ground
+> [HARDWARE_SETUP.md](wildsense/HARDWARE_SETUP.md) instead — it covers the same ground
 > step by step, with physical pin numbers, a copy-paste test script, and
 > troubleshooting. About 15 minutes. The summary below assumes you have done
 > this sort of thing before.
@@ -386,18 +398,18 @@ federation:
 ### Screenshots
 
 > Placeholders — replace with captures from your own run. See
-> [`docs/images/README.md`](docs/images/README.md) for how to take each one.
+> [`docs/images/README.md`](wildsense/docs/images/README.md) for how to take each one.
 
-![WildSense dashboard](docs/images/dashboard.png)
+![WildSense dashboard](wildsense/docs/images/dashboard.png)
 <!-- python run.py --demo --interval 2, then screenshot once a few events have logged -->
 
-![DHT22 detection](docs/images/dht22-detection.png)
+![DHT22 detection](wildsense/docs/images/dht22-detection.png)
 <!-- On the Pi: breathe on the sensor or hold it near a warm mug -->
 
-![Federation rounds](docs/images/federation-rounds.png)
+![Federation rounds](wildsense/docs/images/federation-rounds.png)
 <!-- The federation panel after ~10 rounds -->
 
-![Node hardware](docs/images/node-hardware.png)
+![Node hardware](wildsense/docs/images/node-hardware.png)
 <!-- The Pi and DHT22 as actually wired -->
 
 ### Measured
@@ -499,4 +511,4 @@ export) and `events/` (local snapshot fallback).
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT — see [LICENSE](wildsense/LICENSE).
