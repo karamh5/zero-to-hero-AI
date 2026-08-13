@@ -1,0 +1,45 @@
+.verdict-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-machine);
+  font-size: var(--text-mono);
+  color: var(--v);
+}
+
+.verdict-glyph {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+}
+
+.verdict-glyph.decision {
+  background: var(--v);
+}
+
+.verdict-glyph.abstention {
+  border: 1.5px solid var(--v);
+  background: transparent;
+}
+
+.verdict-mark.deweighted .verdict-glyph {
+  border-style: dashed;
+}
+
+.verdict-string {
+  letter-spacing: 0.01em;
+}
+
+.verdict-kind {
+  font-size: var(--text-micro);
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+}
+
+.verdict-unreliable {
+  font-size: var(--text-micro);
+  color: var(--ink-muted);
+  border-bottom: 1px dashed var(--ink-faint);
+  cursor: help;
+}

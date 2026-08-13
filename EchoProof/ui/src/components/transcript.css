@@ -1,0 +1,26 @@
+.transcript-block {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  max-width: var(--measure);
+}
+
+.transcript-context {
+  color: var(--ink-muted);
+}
+
+.transcript-claim {
+  background: none;
+  color: var(--ink);
+  padding-bottom: 2px;
+  /* the signal rule: a underline in the verdict color, not a filled card */
+  box-shadow: inset 0 calc(-1 * var(--rule-w)) 0 0
+    color-mix(in srgb, var(--claim-color) 85%, transparent);
+  transition: box-shadow var(--dur-settle) var(--ease-settle),
+    color var(--dur-settle) var(--ease-settle);
+}
+
+/* in flight: greyed, waiting to set */
+.transcript-block.inflight .transcript-claim {
+  color: var(--ink-muted);
+  box-shadow: inset 0 calc(-1 * var(--rule-w)) 0 0 var(--line-strong);
+}

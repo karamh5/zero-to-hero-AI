@@ -1,0 +1,31 @@
+.state-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+  padding: var(--gap-3) 0;
+  max-width: var(--measure);
+}
+
+.state-message {
+  font-size: var(--text-body);
+}
+
+.state-command {
+  background: var(--ground-sunken);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.4rem 0.7rem;
+}
+
+.state-retry {
+  margin-top: 0.5rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 0.3rem 0.9rem;
+  font-size: var(--text-mono);
+}
+
+.state-retry:hover {
+  background: var(--ground-raised);
+}
