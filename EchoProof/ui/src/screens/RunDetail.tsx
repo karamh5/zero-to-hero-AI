@@ -195,7 +195,7 @@ function RunHeader({ detail }: { detail: RunDetailType }) {
   return (
     <header className="run-head">
       <nav className="mono run-crumb">
-        <Link to="/">bench</Link>
+        <Link to="/bench">bench</Link>
         <span className="faint"> / </span>
       </nav>
       <h1 className="run-title mono">{detail.run_id}</h1>

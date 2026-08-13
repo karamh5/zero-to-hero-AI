@@ -1,0 +1,14 @@
+.corpusobject {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.corpusobject-failed {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 2rem;
+  max-width: 40ch;
+}
