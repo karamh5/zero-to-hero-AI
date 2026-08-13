@@ -4,8 +4,10 @@
 
 .rig-display {
   font-size: var(--text-display);
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  line-height: var(--lh-display);
+  letter-spacing: var(--track-display);
+  font-weight: 740;
+  margin-left: -0.04em;
 }
 
 .rig-lede {

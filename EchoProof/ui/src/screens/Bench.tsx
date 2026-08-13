@@ -9,6 +9,7 @@
 
 import { Link } from "react-router-dom";
 import { api } from "../api";
+import { Reveal, RevealLines } from "../components/Reveal";
 import { Empty, ErrorState, Loading } from "../components/States";
 import { useFetch } from "../lib/useFetch";
 import type { RunSummary } from "../types";
@@ -62,12 +63,13 @@ export function Bench() {
     <div className="page">
       <BenchIntro />
       <ol className="bench-list">
-        {ordered.map((run) => (
-          <li key={run.run_id}>
+        {ordered.map((run, index) => (
+          <Reveal as="li" key={run.run_id} delay={Math.min(index, 6) * 55}>
             <Link
               to={`/runs/${run.run_id}`}
               className="bench-entry rowlink"
               aria-label={`run ${run.run_id}`}
+              data-cursor="open run"
             >
               <div className="bench-title-row">
                 <span className="bench-runid">{run.run_id}</span>
@@ -107,7 +109,7 @@ export function Bench() {
                 </dl>
               )}
             </Link>
-          </li>
+          </Reveal>
         ))}
       </ol>
       <p className="bench-footnote muted">
@@ -122,12 +124,14 @@ export function Bench() {
 function BenchIntro() {
   return (
     <header className="bench-head">
-      <h1 className="bench-display">The bench</h1>
-      <p className="bench-lede">
-        Every adjudication run on disk, each an append-only, hash-chained
-        evidence log. Open one to read its findings against the rule text they
-        rest on.
-      </p>
+      <RevealLines as="h1" className="bench-display" lines={["The", "bench"]} />
+      <Reveal delay={260}>
+        <p className="bench-lede">
+          Every adjudication run on disk, each an append-only, hash-chained
+          evidence log. Open one to read its findings against the rule text
+          they rest on.
+        </p>
+      </Reveal>
     </header>
   );
 }

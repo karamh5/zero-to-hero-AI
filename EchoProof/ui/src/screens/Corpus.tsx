@@ -9,6 +9,7 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { api } from "../api";
+import { RevealLines } from "../components/Reveal";
 import { Empty, ErrorState, Loading } from "../components/States";
 import { useFetch } from "../lib/useFetch";
 import type { PolicySection } from "../types";
@@ -73,7 +74,7 @@ export function Corpus() {
   if (!packs.data || packs.data.packs.length === 0) {
     return (
       <div className="page">
-        <h1 className="corpus-display">The corpus</h1>
+        <RevealLines as="h1" className="corpus-display" lines={["The", "corpus"]} />
         <Empty
           label="no policy pack built"
           detail="Build one from the live eCFR API with: python scripts/build_policy_pack_ecfr.py"
@@ -85,7 +86,7 @@ export function Corpus() {
   return (
     <div className="page corpus">
       <header className="corpus-head">
-        <h1 className="corpus-display">The corpus</h1>
+        <RevealLines as="h1" className="corpus-display" lines={["The", "corpus"]} />
         {corpus.data && (
           <p className="corpus-lede">
             <span className="mono">{corpus.data.manifest.citation ?? activePack}</span>

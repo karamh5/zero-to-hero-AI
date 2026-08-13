@@ -10,6 +10,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api";
+import { Reveal, RevealLines } from "../components/Reveal";
 import { Sift, type SiftRecord } from "../components/Sift";
 import { ErrorState, Loading } from "../components/States";
 import { VerdictMark } from "../components/VerdictMark";
@@ -219,14 +220,18 @@ export function Rig() {
   return (
     <div className="page rig">
       <header className="rig-head">
-        <h1 className="rig-display">The rig</h1>
-        <p className="rig-lede">
-          Submit an agent turn and watch it adjudicated against the corpus:
-          claims out, rules retrieved, one section selected, verdict written to
-          the chain. Median {latency ? seconds1(latency.median_total) : "105s"},
-          worst {latency ? seconds1(latency.worst_total) : "140s"} per turn,
-          measured. The wait is the work.
-        </p>
+        <RevealLines as="h1" className="rig-display" lines={["The", "rig"]} />
+        <Reveal delay={220}>
+          <p className="rig-lede">
+            Submit an agent turn and watch it adjudicated against the corpus:
+            claims out, rules retrieved, one section selected, verdict written
+            to the chain.{" "}
+            {latency
+              ? `Median ${seconds1(latency.median_total)}, worst ${seconds1(latency.worst_total)} per turn, measured.`
+              : "Timings load from demo/latency.json."}{" "}
+            The wait is the work.
+          </p>
+        </Reveal>
       </header>
 
       {!available && (

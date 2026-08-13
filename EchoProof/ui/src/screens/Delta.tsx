@@ -8,6 +8,7 @@
 
 import { Link } from "react-router-dom";
 import { api } from "../api";
+import { RevealLines } from "../components/Reveal";
 import { Empty, ErrorState, Loading } from "../components/States";
 import { useFetch } from "../lib/useFetch";
 import type { RerunDelta } from "../types";
@@ -24,7 +25,7 @@ export function Delta() {
   return (
     <div className="page delta">
       <header className="delta-head">
-        <h1 className="delta-display">The delta</h1>
+        <RevealLines as="h1" className="delta-display" lines={["The", "delta"]} />
         <p className="delta-lede">
           The same scenario, the same seed, run before and after a change to
           the agent. Only the agent changed: same persona, same judge, same

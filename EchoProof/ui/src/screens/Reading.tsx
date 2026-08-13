@@ -9,6 +9,7 @@
 import { Link } from "react-router-dom";
 import { api } from "../api";
 import { FloorBand, RangeBand } from "../components/Band";
+import { Reveal, RevealLines } from "../components/Reveal";
 import { ErrorState, Loading } from "../components/States";
 import { useFetch } from "../lib/useFetch";
 import { seconds1 } from "../lib/format";
@@ -37,7 +38,7 @@ export function Reading() {
   return (
     <div className="page reading">
       <header className="reading-head">
-        <h1 className="reading-display">The reading</h1>
+        <RevealLines as="h1" className="reading-display" lines={["The", "reading"]} />
       </header>
 
       <section className="reading-triage">
@@ -68,6 +69,7 @@ export function Reading() {
       )}
 
       <section className="reading-bands">
+        <Reveal>
         {detection.low !== null && detection.high !== null ? (
           <RangeBand
             name="claim detection at 2 percent false positives"
@@ -108,6 +110,7 @@ export function Reading() {
             source={data.agreement.source}
           />
         )}
+        </Reveal>
       </section>
 
       <section className="reading-panel">
