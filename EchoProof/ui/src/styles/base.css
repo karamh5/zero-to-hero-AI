@@ -1,0 +1,145 @@
+/* Element defaults on top of the token layer. Screens compose from these and
+   from component classes; there is no utility framework. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-interface);
+  font-size: var(--text-body);
+  line-height: 1.55;
+  transition: background var(--dur-move) var(--ease-settle);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-interface);
+  line-height: 1.12;
+  margin: 0;
+  font-weight: 640;
+  letter-spacing: -0.015em;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+code,
+.mono {
+  font-family: var(--font-machine);
+  font-size: var(--text-mono);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--sig-trace) 30%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--sig-trace);
+  outline-offset: 2px;
+}
+
+/* -- shared vocabulary ---------------------------------------------------- */
+
+/* system label: small caps mono, the DICH register done with real strings */
+.syslabel {
+  font-family: var(--font-machine);
+  font-size: var(--text-micro);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--ink-muted);
+}
+
+/* verbatim regulatory text. The serif is reserved for this. */
+.law {
+  font-family: var(--font-law);
+  font-size: var(--text-law);
+  line-height: 1.6;
+  max-width: var(--measure);
+}
+
+.muted {
+  color: var(--ink-muted);
+}
+
+.faint {
+  color: var(--ink-faint);
+}
+
+hr.rule {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: var(--gap-2) 0;
+}
+
+/* screen frame */
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: var(--gap-2) clamp(1rem, 4vw, 2.5rem) 6rem;
+}
+
+/* keyboard-focusable rows */
+.rowlink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.rowlink:hover {
+  background: var(--ground-raised);
+}
+
+table.plain {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table.plain th {
+  text-align: left;
+  font-family: var(--font-machine);
+  font-size: var(--text-micro);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--ink-muted);
+  font-weight: 500;
+  padding: 0.35rem 0.6rem;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+table.plain td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+table.plain td.num {
+  font-family: var(--font-machine);
+  font-size: var(--text-mono);
+  text-align: right;
+  white-space: nowrap;
+}

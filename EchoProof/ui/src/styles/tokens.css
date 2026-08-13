@@ -1,0 +1,121 @@
+/* ==========================================================================
+   EchoProof design tokens.
+
+   Three kinds of authority, three typefaces:
+     LAW        Source Serif 4   verbatim regulatory text, and nothing else
+     MACHINE    IBM Plex Mono    ids, hashes, scores, offsets, verdict strings
+     INTERFACE  Archivo          headings, navigation, editorial display
+
+   Two grounds, not a dark mode:
+     BENCH      warm paper, for evidence, findings, report, corpus
+     RIG        deep graphite, for the instrument and live runs
+
+   Signal color encodes state only. Color AREA is inversely proportional to
+   salience: a contradicted finding earns a 4px rule and a mono label, never
+   a red card.
+   ========================================================================== */
+
+:root {
+  /* -- type ---------------------------------------------------------- */
+  --font-law: "Source Serif 4 Variable", "Source Serif 4", Georgia, serif;
+  --font-machine: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
+  --font-interface: "Archivo Variable", "Archivo", "Helvetica Neue", sans-serif;
+
+  --text-micro: 0.6875rem;   /* 11px  metadata, span labels          */
+  --text-mono: 0.8125rem;    /* 13px  machine strings                */
+  --text-body: 0.9688rem;    /* 15.5px running text                  */
+  --text-law: 1.0625rem;     /* 17px  rule text reads slightly large */
+  --text-h3: 1.125rem;
+  --text-h2: 1.5rem;
+  --text-h1: clamp(1.75rem, 3.5vw, 2.625rem);
+  --text-display: clamp(2.5rem, 7vw, 5.25rem);
+
+  --track-caps: 0.08em;
+
+  /* -- bench ground (default) ---------------------------------------- */
+  --ground: #f2efe7;
+  --ground-raised: #faf8f2;
+  --ground-sunken: #eae6da;
+  --ink: #201e19;
+  --ink-muted: #6d685a;
+  /* AA on paper (4.6:1). Recession comes from size and weight, not from
+     dropping below legible contrast. */
+  --ink-faint: #716b59;
+  --line: #d8d2c2;
+  --line-strong: #b5ae99;
+
+  /* -- rig ground (set per-screen via [data-ground="rig"]) ------------ */
+  --rig-ground: #15171b;
+  --rig-raised: #1c1f24;
+  --rig-sunken: #101216;
+  --rig-ink: #e6e3da;
+  --rig-muted: #9094a0;
+  --rig-faint: #8b909c;
+  --rig-line: #2b2f37;
+  --rig-line-strong: #434956;
+
+  /* -- signal: verdict states ----------------------------------------- */
+  /* decisions */
+  --sig-supported: #2f6f5c;
+  --sig-contradicted: #a83226;
+  /* abstention family: cool grey-blue, three tints, quiet by design */
+  /* All three hold AA for 13px mono text on paper; the de-weighting of
+     conflicting_sections is carried by its dashed glyph and explicit
+     unreliability label, never by illegible text. */
+  --sig-abstain-ngr: #52657e;    /* no_governing_rule                    */
+  --sig-abstain-rbc: #5d6e82;    /* retrieval_below_confidence           */
+  --sig-abstain-cs: #5e6a79;     /* conflicting_sections, de-weighted    */
+  /* live retrieval trace, alive only while a query is in flight */
+  --sig-trace: #187582;
+  /* the only place a hard alert tone is permitted */
+  --sig-seal-broken: #c9271a;
+
+  /* deterministic short-circuit: code decided, no model involved */
+  --sig-deterministic: #7a6a35;
+
+  /* -- geometry -------------------------------------------------------- */
+  --rule-w: 4px;              /* the signal rule on a finding */
+  --radius: 2px;              /* near-square. no giant rounded cards */
+  --gap: 1rem;
+  --gap-2: 1.75rem;
+  --gap-3: 3rem;
+  --measure: 66ch;
+  --page-max: 1200px;
+
+  /* -- motion ---------------------------------------------------------- */
+  /* Two families. Instrument motion is driven by real events and has no
+     CSS duration here on purpose. Transport motion uses these. */
+  --ease-settle: cubic-bezier(0.2, 0.9, 0.25, 1);
+  --dur-settle: 420ms;
+  --dur-move: 240ms;
+  --dur-small: 130ms;
+}
+
+/* The rig ground rebinds the neutral roles; signal tokens brighten just
+   enough to hold AA contrast on graphite. */
+[data-ground="rig"] {
+  --ground: var(--rig-ground);
+  --ground-raised: var(--rig-raised);
+  --ground-sunken: var(--rig-sunken);
+  --ink: var(--rig-ink);
+  --ink-muted: var(--rig-muted);
+  --ink-faint: var(--rig-faint);
+  --line: var(--rig-line);
+  --line-strong: var(--rig-line-strong);
+
+  --sig-supported: #55a48c;
+  --sig-contradicted: #d15c4e;
+  --sig-abstain-ngr: #7f95b3;
+  --sig-abstain-rbc: #93a5ba;
+  --sig-abstain-cs: #a3aebc;
+  --sig-trace: #3fc0d2;
+  --sig-deterministic: #b9a45e;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-settle: 0ms;
+    --dur-move: 0ms;
+    --dur-small: 0ms;
+  }
+}
