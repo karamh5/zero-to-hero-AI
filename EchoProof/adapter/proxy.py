@@ -148,4 +148,15 @@ def create_app(settings: Settings, capture: CaptureQueue) -> FastAPI:
             content={"turn_id": turn.turn_id, "accepted": accepted},
         )
 
+    # The one change the UI makes to this module: mount the read-only API
+    # router and, when built, the compiled frontend. An attach failure must
+    # never break the proxy, for the same reason a capture failure never
+    # becomes a request failure.
+    try:
+        from api.router import attach_ui
+
+        attach_ui(app)
+    except Exception as exc:  # noqa: BLE001 - UI attach failure must not break capture
+        print(f"[ui] not attached: {exc}")
+
     return app
