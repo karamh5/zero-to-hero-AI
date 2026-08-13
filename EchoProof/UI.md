@@ -8,11 +8,12 @@ result to the published figures.
 
 ## What was built
 
-Eight screens on two grounds.
+Nine screens on two grounds.
 
 | Screen | Route | What it is |
 |---|---|---|
-| Bench | `/` | Every run on disk, editorially listed with chain state, seal state, corpus and counts. Violations and abstentions are separate columns everywhere. |
+| Home | `/` | The front door. The policy corpus rendered as a single living object, then a long editorial descent: how adjudication works in five moves, the five verdict states, the measurements with their uncertainty intact, and the ways in. |
+| Bench | `/bench` | Every run on disk, editorially listed with chain state, seal state, corpus and counts. Violations and abstentions are separate columns everywhere. |
 | Run | `/runs/{id}` | Gate decision (computed, never stored), verdict table, campaign flags, findings, policy gap list, integrity block. |
 | Case file | `/runs/{id}/claims/{claim_id}` | What was said (offset-sliced), the governing rule verbatim in serif, why, proof, and the expandable forensic trace with every stored candidate, the recorded thresholds, and the judge's selection against rank 1. |
 | Rig | `/rig` | Live adjudication as a job: submit a turn, follow the pipeline's own progress events over SSE, watch the sift work. Median 105 s per turn, measured; the screen is built around that number instead of hiding it. |
@@ -52,6 +53,31 @@ Live adjudication writes a new run directory through the engine's public
 pipeline, the same way `scripts/run_proxy.py` does, so a rig turn lands on the
 bench beside the recorded runs with a verifiable chain of its own.
 
+## The visual language, and where it came from
+
+Eight reference sites were studied by reading their live computed styles
+rather than by looking at screenshots, which is how the numbers below are
+specific. Nothing was copied: each row is a technique, extracted and then
+rebuilt in EchoProof's own terms.
+
+| Studied | Measured there | Expressed here |
+|---|---|---|
+| racing.porsche.com | 1001 px display type at line-height 0.91, near-black ground, one accent | Colossal display at line-height 0.86 and negative tracking; the wordmark sets at 272 px on a desktop viewport |
+| rioproperty.co.za | `clip-path` and transform reveals on `cubic-bezier(0.9, 0, 0.1, 1)` | Headings wipe in line by line from a masked block; `--ease-reveal` is that curve |
+| leoparpeix.com | A label element tracking the cursor; expo-out `cubic-bezier(0.16, 1, 0.3, 1)`; staged intro delays | The reticle cursor with its coordinate readout and contextual label; `--ease-settle` is that curve; the hero object settles once on entry |
+| dich-fashion.webflow.io | 11.6 px technical labels at 2 px tracking beside large numerals | The system ticker, built from real span names, verdict strings, run ids and chain hashes |
+| faers.tech | Negative tracking throughout, counters that animate on arrival, 0.15 s micro-hovers | `Counter` on real figures, `--dur-small` hovers, tracking tightened across the display scale |
+| zalak-patel.com, lxlcreative.co.uk | Work presented as objects with weight rather than tiled cards | Bench entries and the landing's four doors |
+
+Two rules kept the borrowing honest. The reticle **augments** the native
+cursor instead of hiding it, because hiding the system cursor trades real
+accessibility for a trick. And the landing's rotating corpus object is
+explicitly not the sift: the sift reports work in progress and may only move
+when a real pipeline event arrives, while the object reports a static fact,
+the shape and size of the corpus, so idle rotation there claims nothing.
+Every mark in it is one real provision, coloured by whether that provision
+prohibits, requires, permits or defines.
+
 ## The design system, briefly
 
 Three kinds of authority, three faces: verbatim regulatory text in Source
@@ -70,9 +96,18 @@ makes no external network request.
 Motion is two families. Instrument motion happens only when a real event
 arrives: the query ripple, candidates lifting to the ranked pool, the settling
 when a verdict lands. Between events the screen is still, and stillness is
-information. Transport motion is the settling transition on claim rows and
-transcript highlights. `prefers-reduced-motion` renders end states
-immediately.
+information. Transport motion covers reveals, route transitions and hovers.
+`prefers-reduced-motion` renders end states immediately and never arms the
+reveal system at all.
+
+**Reveals fail open.** Content is visible by default; the hidden-then-revealed
+state is armed only once a `js-motion` class is set at startup, and each
+reveal carries a 2.5 second dead man's switch that shows it regardless of
+whether the intersection observer ever reported. A failed bundle, a disabled
+script or a document that was backgrounded at load therefore yields a page
+with no animation rather than a page with no text. The same principle governs
+the hero: its settled state is the CSS default and the entrance is expressed
+as a departure from it.
 
 ## Honesty mechanics worth knowing
 
@@ -98,6 +133,13 @@ immediately.
   reproducing the published 0.348/0.261 and 0.750/0.833.
 - Proxy overhead is parsed from `demo/RUN-SHEET.md` at request time rather
   than written into code, so the figure traces to the repository or is absent.
+- The landing page has no hardcoded fallback figures. If the API cannot be
+  reached its numbers are absent and it says so, because a front page quoting
+  a number the system cannot currently produce is the exact failure this
+  product exists to catch.
+- The ticker's strings are the real vocabulary: span type names, the five
+  verdict states, run ids and chain hash prefixes read from disk. A ticker of
+  invented technical-looking strings would be set dressing.
 
 ## Running it
 
@@ -130,10 +172,18 @@ reranker weights (about 20 seconds warm), reported to the client as a
   deterministic`, while the unrelated $35 fee fell through to the judge
   rather than being manufactured into a violation.
 - The sift's worst frame (field, pool, tween, axis at rig size) measures
-  0.135 ms against the 16.7 ms 60 fps budget on this machine.
+  0.135 ms against the 16.7 ms 60 fps budget on this machine. The landing's
+  corpus object, projecting and depth-sorting all 303 provisions every frame,
+  measures 0.68 ms, which is 25 times inside the same budget.
 - No screen produces horizontal scroll at desktop width; every interactive
   element is keyboard reachable; verdicts always carry string plus glyph
   shape plus position, never color alone.
+- Every text colour token was checked arithmetically against every ground it
+  is used on. One genuine failure was found and fixed: the trace accent
+  measured 4.31:1 on the sunken ground the rig's stage log sits on, so it was
+  darkened to `#166c78`, which holds 4.88:1 there and better elsewhere.
+- Split display headings carry a spaced `aria-label`, so a heading that reads
+  as two visual lines is not announced as "Thebench".
 
 ## Deliberately not built
 
@@ -165,7 +215,14 @@ reranker weights (about 20 seconds warm), reported to the client as a
 - The rig's stage log quotes claim text from the live events, which the
   pipeline truncates at 90 characters. Full offsets and untruncated text are
   on the case file once the log is written.
-- Visual review during the build was programmatic (DOM text, computed styles,
-  contrast arithmetic, layout overflow checks, canvas frame timing). The
-  browser pane could not composite screenshots in this environment, so pixel
-  judgment relied on the token system rather than on rendered captures.
+- Visual review during the build was programmatic: DOM text, computed styles,
+  contrast arithmetic, layout overflow checks, canvas pixel sampling and frame
+  timing. The browser pane in the build environment reports
+  `document.hidden` and produces no animation frames, so transitions could
+  not be watched running. End states were verified instead by forcing every
+  animation to completion through the Web Animations API and re-measuring,
+  and the canvas by sampling its painted pixels. Timing and easing were
+  therefore chosen from the measured reference values rather than judged by
+  eye, and are the most likely thing to want adjusting on a real screen.
+- The custom cursor is disabled for coarse pointers and for reduced-motion
+  users, so on touch devices the interface is the native one throughout.
