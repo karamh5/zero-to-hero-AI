@@ -1,78 +1,150 @@
 .audio-evidence {
   margin: 0;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   border-radius: var(--radius);
   background: var(--ground-raised);
-  padding: 1rem 1.1rem;
+  padding: 1.2rem 1.3rem 1rem;
 }
 
 .audio-row {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.1rem;
 }
 
 .audio-play {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   flex: 0 0 auto;
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--ink);
   border-radius: 50%;
   display: grid;
   place-items: center;
-}
-
-.audio-play:hover {
-  background: var(--ground-sunken);
+  transition:
+    background var(--dur-small) linear,
+    transform var(--dur-small) var(--ease-swift);
 }
 
 .audio-play svg {
-  width: 16px;
-  height: 16px;
+  width: 17px;
+  height: 17px;
   fill: var(--ink);
+  transition: fill var(--dur-small) linear;
 }
 
-.audio-wave-wrap {
+.audio-play:hover {
+  background: var(--ink);
+  transform: scale(1.04);
+}
+
+.audio-play:hover svg {
+  fill: var(--ground);
+}
+
+.audio-play.playing {
+  background: var(--ink);
+}
+
+.audio-play.playing svg {
+  fill: var(--ground);
+}
+
+.audio-rail {
+  position: relative;
   flex: 1;
   min-width: 0;
+  height: 72px;
+  cursor: pointer;
+  touch-action: none;
 }
 
 .audio-wave {
   display: block;
   width: 100%;
-  height: 52px;
+  height: 72px;
 }
 
-.audio-window {
+.audio-nowave {
+  display: block;
+  padding-top: 1.6rem;
   font-size: var(--text-micro);
-  color: var(--ink-muted);
+}
+
+.audio-hovertime {
+  position: absolute;
+  top: -2px;
+  transform: translateX(-50%);
+  font-size: var(--text-micro);
+  color: var(--sig-trace);
+  pointer-events: none;
   white-space: nowrap;
 }
 
+.audio-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.audio-clocknow {
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.audio-clocktotal {
+  font-size: var(--text-micro);
+  color: var(--ink-faint);
+}
+
 .audio-captions {
-  margin-top: 0.8rem;
-  font-size: 1.05rem;
-  line-height: 1.6;
+  margin-top: 1rem;
   max-width: var(--measure);
+  line-height: 1.9;
 }
 
 .caption-word {
+  font-family: var(--font-interface);
+  font-size: 1.05rem;
   color: var(--ink-muted);
-  transition: color var(--dur-small) linear;
+  padding: 0 0.1rem;
+  border-bottom: 1.5px solid transparent;
+  transition:
+    color var(--dur-small) linear,
+    border-color var(--dur-small) linear;
+}
+
+.caption-word:hover {
+  color: var(--ink);
+  border-bottom-color: var(--line-strong);
 }
 
 .caption-word.active {
   color: var(--ink);
-  font-weight: 600;
+  border-bottom-color: var(--sig-trace);
+}
+
+/* Below the speech-to-text confidence floor. Marked because a misheard
+   number is the difference between a correct amount and a fabricated
+   allegation about one. */
+.caption-word.low {
+  border-bottom: 1.5px dotted var(--sig-abstain-rbc);
 }
 
 .audio-nocaption {
-  margin-top: 0.6rem;
+  margin-top: 0.7rem;
   font-size: var(--text-micro);
 }
 
 .audio-meta {
-  margin-top: 0.7rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--line);
   font-size: var(--text-micro);
   color: var(--ink-faint);
 }
@@ -80,7 +152,7 @@
 .audio-none {
   border: 1px dashed var(--line-strong);
   border-radius: var(--radius);
-  padding: 1rem 1.1rem;
+  padding: 1.1rem 1.2rem;
   max-width: var(--measure);
 }
 
