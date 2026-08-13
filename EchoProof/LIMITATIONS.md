@@ -8,8 +8,8 @@ disclosed limitations beat hidden ones.
 
 | Measurement | Result | Source |
 |---|---|---|
-| Claim detection at 2 percent false positives, development split | **0.348** | Phase 1 |
-| Citation precision at that operating point | 0.750 | Phase 1 |
+| Claim detection at 2 percent false positives, development split | **0.26 to 0.35** | Phase 1, two runs |
+| Citation precision at that operating point | 0.75 to 0.83 | Phase 1, two runs |
 | Scenario pass@3 across the campaign | **1/5** | Phase 4 |
 | Scenario pass^3 | 1/5 | Phase 4 |
 | Judge to human agreement | **0.480** against a 0.85 floor | Phase 5 |
@@ -52,17 +52,40 @@ did not inflate the development number.
 **Scenario coverage is narrow.** Five graded scenarios. 1/5 and 2/5 differ by
 twenty points and by one scenario.
 
+**Detection is quoted as a range because a single number would overstate the
+precision available.** The same 77 item development split was scored twice. At a
+matched ceiling of 0.548 the two runs gave 8 detections and 6, a rate of 0.348
+and 0.261, with 1 false positive and 3. Nothing changed between them that could
+account for it: the only code difference touched one claim in 162. This is the
+same run to run model variance measured elsewhere at roughly one fixture in six.
+Any single detection figure from this set carries several points of uncertainty,
+and quoting one to three decimals would imply a precision the measurement does
+not have.
+
 **`conflicting_sections` is unreliable.** In the blind labelling it agreed zero
 times out of three, and the human labeller never selected it once in 25 items.
 No weight should be placed on that verdict state.
 
 ## 3. Engineering limitations
 
-**Deterministic verification is half wired.** Numeric and date claims are
-canonicalised in code and every one emits a check span, but comparison against
-an expected value is not plumbed through, so `decided_by` is `model` for every
-claim. CLAUDE.md decision 3 requires money and dates to be verified in code;
-normalisation happens there, comparison does not yet.
+**Deterministic verification is wired. FIXED.** Previously numeric and date
+claims were canonicalised in code but never compared against anything, so
+`decided_by` was `model` for every claim and CLAUDE.md decision 3 was only half
+met. Comparison now runs in `engine/pipeline._decide_deterministically`, ahead
+of retrieval, so a value code can settle never reaches the retriever or the
+judge. Decisions are recorded with `decided_by: deterministic` and both sides of
+the comparison in the evidence span.
+
+Two constraints on it are worth stating rather than leaving implicit:
+
+- **A mismatch is only a violation when the scenario declares it.** A turn can
+  legitimately contain a second figure that is not the balance. Fixture fx-017
+  states a $940 balance and a $35 fee, and comparing the fee against the balance
+  would manufacture a violation that did not occur. An unmatched value falls
+  through to the judge unless the scenario sets `unmatched_is_violation`.
+- **It only fires where the scenario supplies a known-true value.** Most
+  fixtures do not, so most numeric claims still reach the judge. The path is
+  live and exercised, not universal.
 
 **Retrieval is not model independent.** The extractor generates the retrieval
 questions. Measured on 56 pairs, 41 percent introduced rule vocabulary absent

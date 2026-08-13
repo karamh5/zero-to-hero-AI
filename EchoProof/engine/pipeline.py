@@ -11,10 +11,11 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 from datetime import date
 from decimal import Decimal
-from typing import Any
+from typing import Any, Callable
 
-from core.contracts import Claim, ClaimType, Verdict
+from core.contracts import Adjudication, Claim, ClaimType, Verdict
 from engine.deterministic import (
+    Check,
     CheckResult,
     DateParseError,
     NumberParseError,
@@ -31,7 +32,7 @@ from engine.evidence import (
     EvidenceLog,
 )
 from engine.extract import extract_claims
-from engine.judge import Judgement, judge_claim, severity_for
+from engine.judge import Judgement, JudgementInputs, judge_claim, severity_for
 from engine.retrieval.base import RetrievalConfig, Retriever, merge
 from models.client import ModelClient
 
@@ -115,6 +116,121 @@ def build_retrieval_query(claim_text: str, criteria: dict[str, Any] | None) -> s
     return template.format(claim=claim_text)
 
 
+def _decide_deterministically(
+    claim: Claim,
+    claim_text: str,
+    expectations: dict[str, Any],
+    log: EvidenceLog | None,
+    turn_id: str,
+) -> Judgement | None:
+    """Settle a money or date claim in code, or return None to pass it on.
+
+    This is the half of CLAUDE.md decision 3 that was missing. Normalisation
+    ran, but nothing compared the parsed value against anything, so every claim
+    reached the model and `decided_by` was `model` across the board. A rule
+    saying the model never compares numbers is not satisfied by a module that
+    only parses them.
+
+    Returns None whenever code cannot settle it: no expectation supplied, the
+    value would not parse, or the value matched nothing and the scenario has not
+    declared that a non-match is a violation. Falling through to the judge is
+    always the safe direction; deciding on thin evidence is not.
+    """
+    if not claim.claim_type.is_deterministic or claim.normalized_value is None:
+        return None
+
+    key = "amounts" if claim.claim_type is ClaimType.NUMERIC else "dates"
+    expected_raw = [str(v) for v in expectations.get(key, [])]
+    if not expected_raw:
+        return None
+
+    parsed = claim.normalized_value
+    expected_norm: list[str] = []
+    matched = False
+
+    if claim.claim_type is ClaimType.NUMERIC:
+        # Compared as Decimals, never as strings. Decimal("940") equals
+        # Decimal("940.00") but their string forms do not, so a string compare
+        # calls a correct amount a mismatch purely because of trailing zeros.
+        # That is the exact class of error this module exists to prevent, and it
+        # was in the first version of this function.
+        try:
+            parsed_value = normalize_number(parsed)
+        except NumberParseError:
+            return None
+        for raw in expected_raw:
+            try:
+                value = normalize_number(raw)
+            except NumberParseError:
+                continue
+            expected_norm.append(str(value))
+            if value == parsed_value:
+                matched = True
+    else:
+        # Dates are already canonical ISO strings by the time they get here, so
+        # a string compare is an exact date compare.
+        expected_norm = expected_raw
+        matched = parsed in expected_norm
+
+    if not expected_norm:
+        return None
+    unmatched_is_violation = bool(expectations.get("unmatched_is_violation", False))
+
+    if not matched and not unmatched_is_violation:
+        # The value is not one we know about, and the scenario has not said that
+        # every value must match. Not evidence of anything; hand it to the judge.
+        return None
+
+    check = Check(
+        result=CheckResult.MATCH if matched else CheckResult.MISMATCH,
+        value_parsed=parsed,
+        expected_value=", ".join(expected_norm),
+        detail="compared in code, no model involved",
+    )
+    verdict = Verdict.SUPPORTED if matched else Verdict.CONTRADICTED
+    rationale = (
+        f"Value {parsed} matches the expected value. Verified in code."
+        if matched
+        else f"Value stated was {parsed}; the expected value is "
+             f"{', '.join(expected_norm)}. Compared in code, not by a model."
+    )
+
+    if log is not None:
+        log.append(
+            SPAN_CHECK_DETERMINISTIC,
+            {
+                "turn_id": turn_id,
+                "claim_id": claim.claim_id,
+                "claim_type": claim.claim_type.value,
+                "value_parsed": parsed,
+                "expected_value": check.expected_value,
+                "result": check.result.value,
+                "detail": check.detail,
+                "decided": verdict.value,
+            },
+        )
+
+    inputs = JudgementInputs(
+        claim_text=claim_text,
+        rule_text=None,
+        section_id=None,
+        retrieval_top_score=0.0,
+        cleared_floor=True,
+        cleared_ceiling=True,
+    )
+    return Judgement(
+        adjudication=Adjudication(
+            claim_id=claim.claim_id,
+            verdict=verdict,
+            section_id=None,
+            rationale=rationale,
+            decided_by="deterministic",
+        ),
+        inputs=inputs,
+        deterministic_check=check,
+    )
+
+
 @dataclass(frozen=True)
 class TurnResult:
     """Everything one turn produced."""
@@ -157,9 +273,34 @@ def adjudicate_turn(
     criteria: dict[str, Any] | None = None,
     section_obligations: dict[str, str] | None = None,
     audio_ref: str | None = None,
+    expectations: dict[str, Any] | None = None,
+    on_progress: Callable[[str, dict[str, Any]], None] | None = None,
 ) -> TurnResult:
-    """Run one agent turn through the full pipeline."""
+    """Run one agent turn through the full pipeline.
+
+    `expectations` carries the known-true values for this call, supplied by the
+    scenario or fixture rather than by engine code:
+
+        {"amounts": ["940.00"], "dates": ["2026-09-01"],
+         "unmatched_is_violation": false}
+
+    A numeric or date claim matching one of these is decided in code as
+    supported. A claim matching none is only called contradicted when the
+    scenario declares that every value of that type must match, because a turn
+    can legitimately contain a second figure that is not the balance. Fixture
+    fx-017 states a $940 balance and a $35 fee: comparing the fee against the
+    balance would manufacture a violation that did not occur.
+    """
     expected_values = expected_values or {}
+    expectations = expectations or {}
+
+    # Progress is emitted per stage because adjudication takes up to 140 seconds
+    # and a demo cannot sit on a blank screen for that long. This reports which
+    # stage is running, not a fake percentage: a progress bar that advances on a
+    # timer rather than on real work is a lie the audience can usually spot.
+    def progress(stage: str, **detail: Any) -> None:
+        if on_progress is not None:
+            on_progress(stage, detail)
     cost = 0.0
     tokens = 0
 
@@ -182,9 +323,15 @@ def adjudicate_turn(
             },
         )
 
+    progress("extract.start", chars=len(transcript))
     extraction = extract_claims(client, transcript, turn_id=turn_id)
     cost += extraction.call.estimated_cost_usd
     tokens += extraction.call.total_tokens
+    progress(
+        "extract.done",
+        claims=len(extraction.claims),
+        rejected=len(extraction.rejected),
+    )
 
     if log is not None:
         log.append(SPAN_EXTRACT_CLAIMS, {"turn_id": turn_id, **extraction.to_dict()})
@@ -201,15 +348,54 @@ def adjudicate_turn(
     for claim in claims:
         claim_text = claim.text(transcript)
 
+        # CLAUDE.md decision 3: money and dates are verified deterministically
+        # in code, and the model never compares numbers or dates. Settled here,
+        # BEFORE retrieval, so a value the code can decide never reaches either
+        # the retriever or the judge.
+        progress(
+            "claim.start",
+            claim_id=claim.claim_id,
+            claim_type=claim.claim_type.value,
+            text=claim_text[:90],
+            index=len(judgements) + 1,
+            total=len(claims),
+        )
+
+        settled = _decide_deterministically(
+            claim, claim_text, expectations, log, turn_id
+        )
+        if settled is not None:
+            progress(
+                "deterministic.decided",
+                claim_id=claim.claim_id,
+                verdict=settled.adjudication.verdict.value,
+                value=claim.normalized_value,
+            )
+            judgements.append(settled)
+            continue
+
         # The extractor's question forms are the retrieval queries when present.
         # The claim itself stays the offset span and is what the judge is shown.
         questions = list(claim.retrieval_questions) or [claim_text]
-        retrieval = merge(
-            [
-                retriever.retrieve(build_retrieval_query(q, criteria), config)
-                for q in questions
-            ],
-            config,
+        results = []
+        for number, question in enumerate(questions, start=1):
+            progress(
+                "retrieve.query",
+                claim_id=claim.claim_id,
+                query=question[:90],
+                number=number,
+                of=len(questions),
+            )
+            results.append(
+                retriever.retrieve(build_retrieval_query(question, criteria), config)
+            )
+        retrieval = merge(results, config)
+        progress(
+            "retrieve.done",
+            claim_id=claim.claim_id,
+            candidates=len(retrieval.candidates),
+            top=retrieval.candidates[0].section_id if retrieval.candidates else None,
+            score=round(retrieval.top_score, 3),
         )
         if log is not None:
             log.append(
@@ -227,6 +413,11 @@ def adjudicate_turn(
                 },
             )
 
+        progress(
+            "judge.start",
+            claim_id=claim.claim_id,
+            offered=len(retrieval.shortlist(config.judge_candidates)),
+        )
         judgement = judge_claim(
             client=client,
             claim=claim,
@@ -236,6 +427,12 @@ def adjudicate_turn(
             call_date=call_date,
             shortlist_size=config.judge_candidates,
             ceiling=config.ceiling,
+        )
+        progress(
+            "judge.done",
+            claim_id=claim.claim_id,
+            verdict=judgement.adjudication.verdict.value,
+            section_id=judgement.adjudication.section_id,
         )
         if judgement.call is not None:
             cost += judgement.call.estimated_cost_usd
@@ -253,6 +450,14 @@ def adjudicate_turn(
             log.append(SPAN_JUDGE_RULE, payload)
 
         judgements.append(judgement)
+
+    progress(
+        "evidence.written",
+        spans=len(log.spans) if log is not None else 0,
+        findings=sum(
+            1 for j in judgements if j.adjudication.verdict is Verdict.CONTRADICTED
+        ),
+    )
 
     return TurnResult(
         turn_id=turn_id,

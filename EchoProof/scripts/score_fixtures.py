@@ -120,6 +120,19 @@ def main() -> int:
     total_tokens = 0
 
     for index, row in enumerate(rows, start=1):
+        # Known-true values for this fixture, if it declares any. Fixtures carry
+        # `expected_amount` as a single value; `unmatched_is_violation` stays
+        # false because a turn can legitimately state a second figure that is
+        # not the balance, and calling that a violation would be a fabricated
+        # finding rather than a detection.
+        expectations: dict[str, Any] = {}
+        if row.get("expected_amount"):
+            expectations["amounts"] = [str(row["expected_amount"])]
+        if row.get("expected_date"):
+            expectations["dates"] = [str(row["expected_date"])]
+        if row.get("deterministic"):
+            expectations = dict(row["deterministic"])
+
         result = adjudicate_turn(
             client=client,
             retriever=retriever,
@@ -130,6 +143,7 @@ def main() -> int:
             log=log,
             criteria=criteria,
             section_obligations=obligations,
+            expectations=expectations,
         )
         total_cost += result.cost_usd
         total_tokens += result.total_tokens

@@ -39,6 +39,7 @@ from core.packs import (  # noqa: E402
 from core.hashing import short  # noqa: E402
 from engine.evidence import EvidenceLog  # noqa: E402
 from engine.pipeline import adjudicate_turn  # noqa: E402
+from engine.progress import ProgressPrinter  # noqa: E402
 from engine.retrieval.base import RetrievalConfig, is_within  # noqa: E402
 from engine.retrieval.cache import CachingRetriever  # noqa: E402
 from engine.retrieval.chunking import build_chunks  # noqa: E402
@@ -160,8 +161,13 @@ def main() -> int:
     print(f"    AGENT:    {agent_text}")
     print()
 
-    clock.stamp("adjudicating, play the fix-and-rerun clip now")
+    clock.stamp("adjudicating, live stages below")
+    print()
     log = EvidenceLog(run_id=args.run_id)
+    # Stage-by-stage output so the room sees real work rather than a blank
+    # screen for two minutes. Every line is work that happened; nothing here is
+    # a timer pretending to be progress.
+    printer = ProgressPrinter()
     result = adjudicate_turn(
         client=client,
         retriever=retriever,
@@ -172,7 +178,9 @@ def main() -> int:
         log=log,
         criteria=criteria,
         section_obligations=obligations,
+        on_progress=printer,
     )
+    print()
     path = log.write(RUNS_DIR / args.run_id / "evidence.jsonl")
     clock.stamp(f"adjudication complete: {len(result.claims)} claim(s), "
                 f"{len(result.findings)} finding(s)")

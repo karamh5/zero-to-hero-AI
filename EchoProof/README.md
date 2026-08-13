@@ -18,8 +18,8 @@ Read this before anything else.
 
 | Measure | Result |
 |---|---|
-| Claim detection at 2 percent false positives | **0.348** |
-| Citation precision at that operating point | **0.750** |
+| Claim detection at 2 percent false positives | **0.26 to 0.35** |
+| Citation precision at that operating point | **0.75 to 0.83** |
 | Campaign pass@3 across five graded scenarios | **1/5** |
 | Judge to human agreement | **0.480** against an 0.85 floor |
 | False positives on the compliant control scenario | **0 of 3 calls** |
@@ -32,10 +32,15 @@ Read this before anything else.
 gate.** That is what SPEC section 11 prescribes when judge-human agreement falls
 below its floor, and three independent measurements point the same way.
 
-What is genuinely strong is narrower and real: three findings in four cite the
-correct governing paragraph, the compliant control produced no false positives
-across three runs, every run's evidence chain verifies, and a fix applied to an
-agent demonstrably closes the finding it caused.
+Detection is given as a range because the same 77 item set was scored twice and
+produced 0.348 and 0.261. Nothing changed between the runs that could account
+for it, so a single figure would imply a precision the measurement does not
+have.
+
+What is genuinely strong is narrower and real: three or four findings in five
+cite the correct governing paragraph, the compliant control produced no false
+positives in any recorded run, every run's evidence chain verifies, and a fix
+applied to an agent demonstrably closes the finding it caused.
 
 The full accounting, including how each number was produced and what biases it
 carries, is in [LIMITATIONS.md](LIMITATIONS.md). It is not a footnote section;
@@ -152,7 +157,9 @@ and `EvidenceLog.read` verifies the chain on load rather than on request.
 | [PHASE5-SUMMARY.md](PHASE5-SUMMARY.md) | Human baseline and fix-and-rerun |
 | [PHASE6-7-SUMMARY.md](PHASE6-7-SUMMARY.md) | Pack swap and demo prep |
 | [PHASE8-SUMMARY.md](PHASE8-SUMMARY.md) | Regression suite and failure drill |
+| [UI-INTEGRATION.md](UI-INTEGRATION.md) | Building a front end: interfaces, constraints, pitfalls |
 | [demo/RUN-SHEET.md](demo/RUN-SHEET.md) | Stage sequence, timings, failure table |
+| [demo/SCENARIO-SAFETY.md](demo/SCENARIO-SAFETY.md) | Which scenario is safe to run live, with evidence |
 | [demo/FAILURE-DRILL.md](demo/FAILURE-DRILL.md) | Broken-input results, injection test |
 
 ## Two design decisions worth knowing up front
