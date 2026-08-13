@@ -15,6 +15,15 @@ the architecture, the numbers. This top-level page is just the front door.
   on a hardcoded threshold, with a simulated fleet showing how it'd federate
   across many nodes.
 
+- **[EchoProof/](EchoProof/)** — a compliance assurance layer for voice AI
+  agents. It proxies the agent's LLM call, pulls the governing rule out of a
+  real policy corpus (Regulation F, 303 sections, straight from the eCFR API),
+  and issues a verdict with the exact section cited, the rule text quoted, and
+  an audio clip of the sentence — all in a hash-chained evidence log that
+  renders to a single self-contained HTML report. Three findings in four cite
+  the right paragraph. Detection sits at 35%, so the honest verdict is that it's
+  a triage layer, not a release gate — and the report says so on its front page.
+
 More projects will land here over time!
 
 ## Reference

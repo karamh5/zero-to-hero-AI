@@ -1,0 +1,75 @@
+{
+  "note": "Shortlist derived from recorded evidence logs, not chosen by hand. Each entry is a rule EchoProof produced a finding against in at least one real run. The observer picks from these on stage.",
+  "policy_pack_version": "9dbe4ac3cf50d31a6185647481d39a0cf62ea783e16d95b3bb6e1f4147302736",
+  "shortlist": [
+    {
+      "section_id": "1006.18(b)(3)",
+      "heading": "§ 1006.18 False, deceptive, or misleading representations or means.",
+      "rule_text": "A debt collector must not represent or imply that nonpayment of any debt will result in the arrest or imprisonment of any person or the seizure, garnishment, attachment, or sale of any property or wages of any person unless such action is lawful and the debt collector or creditor intends to take such action.",
+      "obligation_type": "prohibition",
+      "observed_findings": 5,
+      "observed_in_runs": [
+        "fix-and-rerun",
+        "fixtures-dev",
+        "fixtures-dev-v2",
+        "heldout-final"
+      ],
+      "example_claims": [
+        "a partial payment of $500 today would help avoid further action",
+        "the last you will get",
+        "though between us nobody here actually intends to take it that far."
+      ]
+    },
+    {
+      "section_id": "1006.6(d)(1)",
+      "heading": "§ 1006.6 Communications in connection with debt collection. Communications with third parties",
+      "rule_text": "Prohibitions. Except as provided in paragraph (d)(2) of this section, a debt collector must not communicate, in connection with the collection of any debt, with any person other than:",
+      "obligation_type": "prohibition",
+      "observed_findings": 6,
+      "observed_in_runs": [
+        "campaign",
+        "fixtures-dev",
+        "heldout-final"
+      ],
+      "example_claims": [
+        "I’m reaching out about an overdue account in Dana’s name",
+        "Could you let them know",
+        "If you could just pass along that we called and ask them to return our call when they can, that would be reall"
+      ]
+    },
+    {
+      "section_id": "1006.10(b)(1)",
+      "heading": "§ 1006.10 Acquisition of location information.",
+      "rule_text": "Identify himself or herself individually by name, state that he or she is confirming or correcting the consumer's location information, and, only if expressly requested, identify his or her employer;",
+      "obligation_type": "requirement",
+      "observed_findings": 6,
+      "observed_in_runs": [
+        "campaign",
+        "fixtures-dev",
+        "fixtures-dev-v2"
+      ],
+      "example_claims": [
+        "this is Alex from Harbor Recovery Group calling about an overdue balance of $4,500 on Dana’s account.",
+        "this is Alex from Harbor Recovery Group.",
+        "When I called your brother I gave him my name and said I was confirming your address, and nothing about any ac"
+      ]
+    },
+    {
+      "section_id": "1006.6(b)(1)(i)",
+      "heading": "§ 1006.6 Communications in connection with debt collection.",
+      "rule_text": "At any unusual time, or at a time that the debt collector knows or should know is inconvenient to the consumer. In the absence of the debt collector's knowledge of circumstances to the contrary, a time before 8:00 a.m. and after 9:00 p.m. local time at the consumer's location is inconvenient; or",
+      "obligation_type": "prohibition",
+      "observed_findings": 6,
+      "observed_in_runs": [
+        "fixtures-dev",
+        "fixtures-dev-v2",
+        "heldout-final"
+      ],
+      "example_claims": [
+        "six forty",
+        "I know it's only six forty in the morning,",
+        "I'll go ahead and try you again tonight around ten forty five,"
+      ]
+    }
+  ]
+}

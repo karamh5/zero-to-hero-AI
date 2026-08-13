@@ -1,0 +1,72 @@
+{
+  "criteria_id": "collections_default",
+  "label": "Default severity, gate and abstain policy for US collections",
+  "note": "Client-supplied data, not engine logic. A different client ships a different file with their own labels and their own gate. Nothing in engine/ reads these keys by name except through core/packs.py.",
+
+  "severity_labels": ["critical", "high", "medium", "low", "informational"],
+
+  "retrieval": {
+    "note": "How a claim is framed before it is sent to the retriever. This lives in the pack, not the engine, because the register that matches a corpus is a property of that corpus: a statute reads differently from an internal policy handbook. The template must stay industry neutral, so it says 'agent' rather than naming a role.",
+    "query_template": "{claim}",
+    "why": "Measured, not assumed. Framing the claim as a question was tried and made retrieval worse: precision@1 fell from 0.464 to 0.411 and section precision@1 from 0.625 to 0.536 on the same 56 claim pairs. The template text diluted the claim rather than aligning it with the corpus register. The mechanism is retained because register genuinely is a per-corpus property and another client's corpus may need one, but for this corpus the identity template is what the evidence supports.",
+    "measured_alternatives": {
+      "identity": {"precision_at_1": 0.464, "section_precision_at_1": 0.625},
+      "question_framing": {"precision_at_1": 0.411, "section_precision_at_1": 0.536}
+    }
+  },
+
+  "severity_map": {
+    "note": "Keyed by verdict, then by the obligation_type of the cited section. A contradicted prohibition is the agent doing a thing the rule forbids, which is the most serious shape a finding takes.",
+    "contradicted": {
+      "prohibition": "critical",
+      "requirement": "high",
+      "permission": "medium",
+      "definition": "low",
+      "default": "medium"
+    },
+    "supported": {
+      "default": "informational"
+    },
+    "no_governing_rule": {
+      "default": "low"
+    },
+    "retrieval_below_confidence": {
+      "default": "low"
+    },
+    "conflicting_sections": {
+      "default": "medium"
+    }
+  },
+
+  "gate_thresholds": {
+    "note": "Read by the report header to print a gate decision. Counts are per campaign.",
+    "block_release": {
+      "critical": 1,
+      "high": 3
+    },
+    "review_required": {
+      "medium": 5,
+      "abstain_rate": 0.25
+    },
+    "detection_bands": {
+      "note": "SPEC section 11 decision bands, measured at or below max_false_positive_rate on hard negatives.",
+      "max_false_positive_rate": 0.02,
+      "bands": [
+        {"min_detection": 0.90, "action": "commercially viable as scoped, proceed to pilot"},
+        {"min_detection": 0.80, "action": "viable with human review in the loop, prioritise deferred retrieval work"},
+        {"min_detection": 0.70, "action": "retrieval is the bottleneck, cross reference traversal moves ahead of everything else"},
+        {"min_detection": 0.00, "action": "reconsider Regulation F as the launch corpus or restructure the claim level approach"}
+      ]
+    },
+    "judge_human_agreement_floor": 0.85,
+    "below_agreement_floor_statement": "EchoProof is positioned as a triage layer routing to human review, not a release gate."
+  },
+
+  "abstain_routing": {
+    "note": "Where each abstention goes. no_governing_rule feeds the policy gap list, which is what makes abstention falsifiable rather than a dumping ground. Only an uncleared retrieval floor produces no_governing_rule: the judge rejecting every retrieved candidate is a retrieval failure and routes to human review instead, because asserting that a client's rulebook has a gap is a claim about their corpus and must not be inferred from a shortlist the judge happened to be shown.",
+    "no_governing_rule": "policy_gap_list",
+    "retrieval_below_confidence": "human_review_queue",
+    "conflicting_sections": "human_review_queue",
+    "low_stt_confidence_numeric": "human_review_queue"
+  }
+}

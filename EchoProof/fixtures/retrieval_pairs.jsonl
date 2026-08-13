@@ -1,0 +1,56 @@
+{"pair_id": "cp-001", "query": "I know it's only seven in the morning but this was the best time to reach you.", "expected_section_id": "1006.6(b)(1)"}
+{"pair_id": "cp-002", "query": "I'll try you again tonight around ten thirty since you're hard to catch.", "expected_section_id": "1006.6(b)(1)"}
+{"pair_id": "cp-003", "query": "I understand you have a lawyer handling this, but I'd rather work it out with you directly.", "expected_section_id": "1006.6(b)(2)"}
+{"pair_id": "cp-004", "query": "If I don't hear back I'll reach you at your office tomorrow afternoon.", "expected_section_id": "1006.6(b)(3)"}
+{"pair_id": "cp-005", "query": "You gave us permission on our last call to reach you at this hour.", "expected_section_id": "1006.6(b)(4)"}
+{"pair_id": "cp-006", "query": "I see you sent a written request that we stop contacting you, but I'm calling about the balance anyway.", "expected_section_id": "1006.6(c)(1)"}
+{"pair_id": "cp-007", "query": "I'm reaching out one final time only to let you know we are ending our collection efforts on this account.", "expected_section_id": "1006.6(c)(2)"}
+{"pair_id": "cp-008", "query": "I spoke with your sister yesterday and explained what you owe on this account.", "expected_section_id": "1006.6(d)(1)"}
+{"pair_id": "cp-009", "query": "I discussed the debt with your attorney, which you authorized.", "expected_section_id": "1006.6(d)(2)"}
+{"pair_id": "cp-010", "query": "We only email addresses that the creditor confirmed with you beforehand.", "expected_section_id": "1006.6(d)(3)"}
+{"pair_id": "cp-011", "query": "Every electronic message we send includes a simple way for you to opt out.", "expected_section_id": "1006.6(e)"}
+{"pair_id": "cp-012", "query": "I just need to confirm your home address and the phone number where you live.", "expected_section_id": "1006.10(a)"}
+{"pair_id": "cp-013", "query": "I told your coworker that you owe us money and I needed your current address.", "expected_section_id": "1006.10(b)"}
+{"pair_id": "cp-014", "query": "When I called your neighbour I gave my name and said I was confirming your address, nothing more.", "expected_section_id": "1006.10(b)"}
+{"pair_id": "cp-015", "query": "I've called your brother three times this week trying to get your address.", "expected_section_id": "1006.10(c)"}
+{"pair_id": "cp-016", "query": "I'm going to keep calling you until you get tired of hearing from me.", "expected_section_id": "1006.14(a)"}
+{"pair_id": "cp-017", "query": "I've called you nine times in the last five days about this account.", "expected_section_id": "1006.14(b)"}
+{"pair_id": "cp-018", "query": "We called eight times within seven days, which is still within our policy.", "expected_section_id": "1006.14(b)(2)"}
+{"pair_id": "cp-019", "query": "The calls that never connected don't count toward the frequency limit.", "expected_section_id": "1006.14(b)(3)"}
+{"pair_id": "cp-020", "query": "If you don't pay we'll send someone to your house to collect it in person.", "expected_section_id": "1006.14(c)"}
+{"pair_id": "cp-021", "query": "I used some strong language on our last call because you hung up on me.", "expected_section_id": "1006.14(d)"}
+{"pair_id": "cp-022", "query": "Your name is going on our published list of consumers who refuse to pay.", "expected_section_id": "1006.14(e)"}
+{"pair_id": "cp-023", "query": "I called four times today and hung up each time without saying who I was.", "expected_section_id": "1006.14(g)"}
+{"pair_id": "cp-024", "query": "You opted out of text messages but I'm sending you the payment link by text anyway.", "expected_section_id": "1006.14(h)"}
+{"pair_id": "cp-025", "query": "You texted us first, so I'm replying to you the same way.", "expected_section_id": "1006.14(h)(2)"}
+{"pair_id": "cp-026", "query": "Everything I have told you about this account today is completely accurate.", "expected_section_id": "1006.18(a)"}
+{"pair_id": "cp-027", "query": "I'm calling from the federal collections office about your outstanding debt.", "expected_section_id": "1006.18(b)(1)(i)"}
+{"pair_id": "cp-028", "query": "I'm an attorney and I've been assigned to handle your case personally.", "expected_section_id": "1006.18(b)(1)(iii)"}
+{"pair_id": "cp-029", "query": "If you don't pay today a warrant will be issued and you could be arrested.", "expected_section_id": "1006.18(b)(3)"}
+{"pair_id": "cp-030", "query": "We are filing a lawsuit against you next week if this isn't resolved.", "expected_section_id": "1006.18(c)(1)"}
+{"pair_id": "cp-031", "query": "This is National Legal Services calling, though that isn't the name our business operates under.", "expected_section_id": "1006.18(c)(4)"}
+{"pair_id": "cp-032", "query": "This is an attempt to collect a debt and any information obtained will be used for that purpose.", "expected_section_id": "1006.18(e)(1)"}
+{"pair_id": "cp-033", "query": "As I mentioned when we first spoke, this communication is from a debt collector.", "expected_section_id": "1006.18(e)(2)"}
+{"pair_id": "cp-034", "query": "There is a twenty five dollar processing fee added on top of the balance for paying by phone.", "expected_section_id": "1006.22(b)"}
+{"pair_id": "cp-035", "query": "Just send me a check dated three weeks out and I'll hold onto it until then.", "expected_section_id": "1006.22(c)(1)"}
+{"pair_id": "cp-036", "query": "We went ahead and deposited your postdated check a week before the date on it.", "expected_section_id": "1006.22(c)(3)"}
+{"pair_id": "cp-037", "query": "We will repossess your vehicle if the balance isn't paid by Friday.", "expected_section_id": "1006.22(e)"}
+{"pair_id": "cp-038", "query": "We mailed you a postcard last week about the outstanding balance.", "expected_section_id": "1006.22(f)(1)"}
+{"pair_id": "cp-039", "query": "I sent you a public message on social media about this debt since you weren't answering.", "expected_section_id": "1006.22(f)(4)"}
+{"pair_id": "cp-040", "query": "The limitations period on this account has already expired.", "expected_section_id": "1006.26(a)(2)"}
+{"pair_id": "cp-041", "query": "We are going to take you to court over this debt even though it is time barred.", "expected_section_id": "1006.26(b)"}
+{"pair_id": "cp-042", "query": "We reported this account to the credit bureaus before ever contacting you about it.", "expected_section_id": "1006.30(a)(1)"}
+{"pair_id": "cp-043", "query": "I applied your payment to the account you told us you were disputing.", "expected_section_id": "1006.30(c)"}
+{"pair_id": "cp-044", "query": "We will file the action to enforce the lien in whichever county is most convenient for us.", "expected_section_id": "1006.30(d)(1)"}
+{"pair_id": "cp-045", "query": "We sent your validation notice within five days of our first contact with you.", "expected_section_id": "1006.34(a)(1)"}
+{"pair_id": "cp-046", "query": "The itemization date shown on your notice is the date of your last payment.", "expected_section_id": "1006.34(b)(3)"}
+{"pair_id": "cp-047", "query": "Your validation period runs for thirty days from when you received the notice.", "expected_section_id": "1006.34(b)(5)"}
+{"pair_id": "cp-048", "query": "Your notice lists the creditor's name and the amount owed as of the itemization date.", "expected_section_id": "1006.34(c)(2)"}
+{"pair_id": "cp-049", "query": "The notice includes the dispute prompts and the mailing addresses for both of us.", "expected_section_id": "1006.34(c)(4)"}
+{"pair_id": "cp-050", "query": "You disputed this in writing, but we are continuing to collect while we look into it.", "expected_section_id": "1006.38(b)(1)"}
+{"pair_id": "cp-051", "query": "You asked for the name of the original creditor and I will mail that to you.", "expected_section_id": "1006.38(c)"}
+{"pair_id": "cp-052", "query": "Because you disputed the debt, we will send you verification before collecting further.", "expected_section_id": "1006.38(d)(2)"}
+{"pair_id": "cp-053", "query": "We keep records showing compliance for three years after our last activity on an account.", "expected_section_id": "1006.100(a)"}
+{"pair_id": "cp-054", "query": "We retain the recordings of collection calls for three years.", "expected_section_id": "1006.100(b)"}
+{"pair_id": "cp-055", "query": "Your state's collection law doesn't apply to us because we follow the federal rule.", "expected_section_id": "1006.104"}
+{"pair_id": "cp-056", "query": "I'm not a debt collector, I work directly for the company that originally extended the credit.", "expected_section_id": "1006.2(i)"}

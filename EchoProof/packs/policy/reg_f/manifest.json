@@ -1,0 +1,55 @@
+{
+  "pack_id": "reg_f",
+  "label": "12 CFR Part 1006 (Regulation F), Debt Collection Practices",
+  "source": "ecfr.gov",
+  "issue_date": "2026-08-06",
+  "citation": "12 CFR 1006",
+  "hash_scheme": "sha256/canonical-json/v1",
+  "source_document_hash": "9138aa90547a14dac979a600a2f057f1005a5a90b74b1f4837e1ae1063f02432",
+  "policy_pack_version": "9dbe4ac3cf50d31a6185647481d39a0cf62ea783e16d95b3bb6e1f4147302736",
+  "record_count": 303,
+  "root_section_count": 15,
+  "root_sections": [
+    "1006.1",
+    "1006.10",
+    "1006.100",
+    "1006.104",
+    "1006.108",
+    "1006.14",
+    "1006.18",
+    "1006.2",
+    "1006.22",
+    "1006.26",
+    "1006.30",
+    "1006.34",
+    "1006.38",
+    "1006.42",
+    "1006.6"
+  ],
+  "defined_terms": [
+    "Act",
+    "Attempt to communicate",
+    "Bureau",
+    "Communicate",
+    "Consumer",
+    "Consumer financial product or service",
+    "Creditor",
+    "Debt",
+    "Debt collector",
+    "Limited-content message",
+    "Required content",
+    "Optional content",
+    "Person",
+    "State"
+  ],
+  "section_id_scheme": {
+    "hierarchy_separators": ["(", "#"],
+    "root_pattern_example": "1006.14(b)(1) -> 1006.14"
+  },
+  "obligation_counts": {
+    "definition": 88,
+    "permission": 83,
+    "prohibition": 69,
+    "requirement": 63
+  }
+}

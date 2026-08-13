@@ -1,0 +1,54 @@
+{"pair_id": "rp-001", "query": "Can a debt collector call a consumer at seven in the morning?", "expected_section_id": "1006.6(b)(1)"}
+{"pair_id": "rp-002", "query": "Is it allowed to contact a consumer about a debt after nine at night?", "expected_section_id": "1006.6(b)(1)"}
+{"pair_id": "rp-003", "query": "The consumer says they are represented by an attorney for this debt", "expected_section_id": "1006.6(b)(2)"}
+{"pair_id": "rp-004", "query": "The consumer says their employer does not allow personal calls at work", "expected_section_id": "1006.6(b)(3)"}
+{"pair_id": "rp-005", "query": "When do the time and place restrictions on contacting a consumer not apply?", "expected_section_id": "1006.6(b)(4)"}
+{"pair_id": "rp-006", "query": "The consumer sent a written notice refusing to pay and asking that communication stop", "expected_section_id": "1006.6(c)(1)"}
+{"pair_id": "rp-007", "query": "After a cease communication request, may a collector write once to say collection efforts are ending?", "expected_section_id": "1006.6(c)(2)"}
+{"pair_id": "rp-008", "query": "May a collector discuss the consumer's debt with a neighbor or relative?", "expected_section_id": "1006.6(d)(1)"}
+{"pair_id": "rp-009", "query": "When may a debt collector communicate with a third party about a debt?", "expected_section_id": "1006.6(d)(2)"}
+{"pair_id": "rp-010", "query": "What procedures make email communication to a consumer reasonable?", "expected_section_id": "1006.6(d)(3)"}
+{"pair_id": "rp-011", "query": "What must a notice contain that lets a consumer opt out of electronic communications?", "expected_section_id": "1006.6(e)"}
+{"pair_id": "rp-012", "query": "What is location information for purposes of debt collection?", "expected_section_id": "1006.10(a)"}
+{"pair_id": "rp-013", "query": "What must a collector say when asking a third party where the consumer lives?", "expected_section_id": "1006.10(b)"}
+{"pair_id": "rp-014", "query": "May a collector tell a third party that the consumer owes a debt while seeking an address?", "expected_section_id": "1006.10(b)"}
+{"pair_id": "rp-015", "query": "How often may a collector contact a third party to confirm location information?", "expected_section_id": "1006.10(c)"}
+{"pair_id": "rp-016", "query": "General prohibition on conduct that harasses or abuses a person in debt collection", "expected_section_id": "1006.14(a)"}
+{"pair_id": "rp-017", "query": "How many telephone calls may a collector place about one debt in a week?", "expected_section_id": "1006.14(b)"}
+{"pair_id": "rp-018", "query": "Is calling more than seven times in seven consecutive days presumed to be a violation?", "expected_section_id": "1006.14(b)(2)"}
+{"pair_id": "rp-019", "query": "Which telephone calls do not count toward the call frequency limits?", "expected_section_id": "1006.14(b)(3)"}
+{"pair_id": "rp-020", "query": "Threatening violence or harm to collect a debt", "expected_section_id": "1006.14(c)"}
+{"pair_id": "rp-021", "query": "Using obscene or profane language on a collection call", "expected_section_id": "1006.14(d)"}
+{"pair_id": "rp-022", "query": "Publishing a list of consumers who refuse to pay their debts", "expected_section_id": "1006.14(e)"}
+{"pair_id": "rp-023", "query": "Placing repeated calls without meaningfully identifying who is calling", "expected_section_id": "1006.14(g)"}
+{"pair_id": "rp-024", "query": "May a collector keep emailing a person who opted out of electronic communications?", "expected_section_id": "1006.14(h)"}
+{"pair_id": "rp-025", "query": "General prohibition on false or misleading representations in debt collection", "expected_section_id": "1006.18(a)"}
+{"pair_id": "rp-026", "query": "A collection agent falsely says they are an attorney", "expected_section_id": "1006.18(b)(1)(iii)"}
+{"pair_id": "rp-027", "query": "Falsely implying the collector is affiliated with a government agency", "expected_section_id": "1006.18(b)(1)(i)"}
+{"pair_id": "rp-028", "query": "Telling a consumer they will be arrested or jailed for not paying", "expected_section_id": "1006.18(b)(3)"}
+{"pair_id": "rp-029", "query": "Threatening a lawsuit the collector does not actually intend to file", "expected_section_id": "1006.18(c)(1)"}
+{"pair_id": "rp-030", "query": "Operating under a business name that is not the collector's true name", "expected_section_id": "1006.18(c)(4)"}
+{"pair_id": "rp-031", "query": "Must a collector state in the first contact that the call is an attempt to collect a debt?", "expected_section_id": "1006.18(e)(1)"}
+{"pair_id": "rp-032", "query": "What disclosure is required in communications after the first one?", "expected_section_id": "1006.18(e)(2)"}
+{"pair_id": "rp-033", "query": "Collecting interest or a fee that the agreement and law do not authorize", "expected_section_id": "1006.22(b)"}
+{"pair_id": "rp-034", "query": "Accepting a check postdated by more than five days", "expected_section_id": "1006.22(c)(1)"}
+{"pair_id": "rp-035", "query": "Depositing a postdated payment instrument before its date", "expected_section_id": "1006.22(c)(3)"}
+{"pair_id": "rp-036", "query": "Threatening to repossess property when there is no enforceable security interest", "expected_section_id": "1006.22(e)"}
+{"pair_id": "rp-037", "query": "Sending a debt collection communication to a consumer on a postcard", "expected_section_id": "1006.22(f)(1)"}
+{"pair_id": "rp-038", "query": "Contacting a consumer about a debt through a public social media post", "expected_section_id": "1006.22(f)(4)"}
+{"pair_id": "rp-039", "query": "What does statute of limitations mean for a collected debt?", "expected_section_id": "1006.26(a)(1)"}
+{"pair_id": "rp-040", "query": "What is a time-barred debt?", "expected_section_id": "1006.26(a)(2)"}
+{"pair_id": "rp-041", "query": "May a collector sue on a debt whose limitations period has expired?", "expected_section_id": "1006.26(b)"}
+{"pair_id": "rp-042", "query": "Furnishing debt information to a credit bureau before speaking with the consumer", "expected_section_id": "1006.30(a)(1)"}
+{"pair_id": "rp-043", "query": "Applying a consumer's payment to a debt the consumer disputes", "expected_section_id": "1006.30(c)"}
+{"pair_id": "rp-044", "query": "Where must a collector bring a legal action to enforce an interest in real property?", "expected_section_id": "1006.30(d)(1)"}
+{"pair_id": "rp-045", "query": "When must a debt collector provide the validation notice?", "expected_section_id": "1006.34(a)(1)"}
+{"pair_id": "rp-046", "query": "What is the itemization date on a validation notice?", "expected_section_id": "1006.34(b)(3)"}
+{"pair_id": "rp-047", "query": "What is the validation period?", "expected_section_id": "1006.34(b)(5)"}
+{"pair_id": "rp-048", "query": "What information about the debt must appear in the validation notice?", "expected_section_id": "1006.34(c)(2)"}
+{"pair_id": "rp-049", "query": "Must a collector stop collection activity while a written dispute is pending?", "expected_section_id": "1006.38(b)(1)"}
+{"pair_id": "rp-050", "query": "The consumer asks for the name and address of the original creditor", "expected_section_id": "1006.38(c)"}
+{"pair_id": "rp-051", "query": "What must a collector do after receiving a written dispute in the validation period?", "expected_section_id": "1006.38(d)(2)"}
+{"pair_id": "rp-052", "query": "How long must a debt collector retain records evidencing compliance?", "expected_section_id": "1006.100(a)"}
+{"pair_id": "rp-053", "query": "How long must recordings of collection telephone calls be kept?", "expected_section_id": "1006.100(b)"}
+{"pair_id": "rp-054", "query": "Does a more protective state debt collection law still apply?", "expected_section_id": "1006.104"}

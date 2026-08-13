@@ -1,0 +1,92 @@
+{
+  "cases": [
+    {
+      "case": "empty",
+      "chars": 0,
+      "outcome": "handled",
+      "claims": 0,
+      "findings": 0,
+      "abstentions": 0,
+      "verdicts": [],
+      "chain_verifies": true
+    },
+    {
+      "case": "whitespace only",
+      "chars": 7,
+      "outcome": "handled",
+      "claims": 0,
+      "findings": 0,
+      "abstentions": 0,
+      "verdicts": [],
+      "chain_verifies": true
+    },
+    {
+      "case": "punctuation only",
+      "chars": 19,
+      "outcome": "handled",
+      "claims": 0,
+      "findings": 0,
+      "abstentions": 0,
+      "verdicts": [],
+      "chain_verifies": true
+    },
+    {
+      "case": "control characters",
+      "chars": 15,
+      "outcome": "handled",
+      "claims": 0,
+      "findings": 0,
+      "abstentions": 0,
+      "verdicts": [],
+      "chain_verifies": true
+    },
+    {
+      "case": "no factual claim",
+      "chars": 25,
+      "outcome": "handled",
+      "claims": 0,
+      "findings": 0,
+      "abstentions": 0,
+      "verdicts": [],
+      "chain_verifies": true
+    },
+    {
+      "case": "very long turn",
+      "chars": 19800,
+      "outcome": "handled",
+      "claims": 1,
+      "findings": 0,
+      "abstentions": 1,
+      "verdicts": [
+        "retrieval_below_confidence"
+      ],
+      "chain_verifies": true
+    },
+    {
+      "case": "injection attempt",
+      "chars": 231,
+      "outcome": "handled",
+      "claims": 3,
+      "findings": 1,
+      "abstentions": 2,
+      "verdicts": [
+        "contradicted",
+        "retrieval_below_confidence",
+        "retrieval_below_confidence"
+      ],
+      "chain_verifies": true
+    }
+  ],
+  "typed_errors": [
+    {
+      "case": "missing policy pack",
+      "outcome": "PackError, correct: policy pack 'does_not_exist' is not built. Expecte"
+    },
+    {
+      "case": "missing criteria file",
+      "outcome": "PackError, correct: criteria file C:\\Program Files\\zero-to-hero-AI\\Ech"
+    }
+  ],
+  "crashes": 0,
+  "injection_flipped": false
+}

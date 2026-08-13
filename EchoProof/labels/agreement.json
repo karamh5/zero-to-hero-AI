@@ -1,0 +1,94 @@
+{
+  "total": 25,
+  "matched": 12,
+  "raw_agreement": 0.48,
+  "cohens_kappa": 0.31,
+  "floor": 0.85,
+  "meets_floor": false,
+  "positioning": "Judge-human agreement is below the stated floor. EchoProof is a triage layer routing to human review, not a release gate.",
+  "by_verdict": {
+    "retrieval_below_confidence": {
+      "agreed": 3,
+      "disagreed": 5
+    },
+    "conflicting_sections": {
+      "agreed": 0,
+      "disagreed": 3
+    },
+    "supported": {
+      "agreed": 5,
+      "disagreed": 2
+    },
+    "contradicted": {
+      "agreed": 4,
+      "disagreed": 3
+    }
+  },
+  "disagreements": [
+    {
+      "claim_id": "campaign:sc-02-attorney-r3-t02-c00",
+      "judge": "conflicting_sections",
+      "human": "retrieval_below_confidence"
+    },
+    {
+      "claim_id": "campaign:sc-03-dispute-r3-t00-c00",
+      "judge": "retrieval_below_confidence",
+      "human": "no_governing_rule"
+    },
+    {
+      "claim_id": "campaign:sc-04-thirdparty-r2-t02-c00",
+      "judge": "retrieval_below_confidence",
+      "human": "no_governing_rule"
+    },
+    {
+      "claim_id": "campaign:sc-05-credit-r1-t01-c02",
+      "judge": "supported",
+      "human": "no_governing_rule"
+    },
+    {
+      "claim_id": "campaign:sc-05-credit-r3-t00-c01",
+      "judge": "contradicted",
+      "human": "supported"
+    },
+    {
+      "claim_id": "campaign:sc-05-credit-r3-t01-c00",
+      "judge": "retrieval_below_confidence",
+      "human": "no_governing_rule"
+    },
+    {
+      "claim_id": "campaign:sc-06-compliant-r1-t02-c01",
+      "judge": "retrieval_below_confidence",
+      "human": "supported"
+    },
+    {
+      "claim_id": "fixtures-dev-v2:fx-010-c00",
+      "judge": "conflicting_sections",
+      "human": "retrieval_below_confidence"
+    },
+    {
+      "claim_id": "fixtures-dev-v2:fx-016-c00",
+      "judge": "contradicted",
+      "human": "retrieval_below_confidence"
+    },
+    {
+      "claim_id": "fixtures-dev-v2:fx-021-c00",
+      "judge": "supported",
+      "human": "retrieval_below_confidence"
+    },
+    {
+      "claim_id": "fixtures-dev-v2:fx-031-c00",
+      "judge": "conflicting_sections",
+      "human": "supported"
+    },
+    {
+      "claim_id": "fixtures-dev-v2:fx-032-c01",
+      "judge": "retrieval_below_confidence",
+      "human": "supported"
+    },
+    {
+      "claim_id": "fixtures-dev-v2:fx-076-c00",
+      "judge": "contradicted",
+      "human": "supported"
+    }
+  ]
+}

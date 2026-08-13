@@ -1,0 +1,57 @@
+{
+  "packs": {
+    "reg_f": {
+      "section_count": 303,
+      "policy_pack_version": "9dbe4ac3cf50d31a6185647481d39a0cf62ea783e16d95b3bb6e1f4147302736",
+      "hierarchy_separators": [
+        "(",
+        "#"
+      ],
+      "chunk_count": 303,
+      "embed_text_digest": "d6ea58e978cdb20ab2941d6e95a0de7648a821420e23c499ce7e0b24b7acdfc6",
+      "obligation_counts": {
+        "definition": 88,
+        "permission": 83,
+        "prohibition": 69,
+        "requirement": 63
+      }
+    },
+    "synth_telecom": {
+      "section_count": 15,
+      "policy_pack_version": "synth-telecom-v1",
+      "hierarchy_separators": [
+        "."
+      ],
+      "chunk_count": 15,
+      "embed_text_digest": "e9b89b849e2136a5ea8d3bf5889b4d463c43dd4536c725082c56e2fa19b1932d",
+      "obligation_counts": {
+        "definition": 5,
+        "permission": 1,
+        "prohibition": 7,
+        "requirement": 2
+      }
+    }
+  },
+  "thresholds": {
+    "ceiling": 0.7404,
+    "conflict_margin": 0.02,
+    "first_stage_k": 50,
+    "floor": 0.4937,
+    "judge_candidates": 10,
+    "rerank_k": 50,
+    "top_k": 50
+  },
+  "severity_labels": [
+    "critical",
+    "high",
+    "medium",
+    "low",
+    "informational"
+  ],
+  "abstain_routing": {
+    "no_governing_rule": "policy_gap_list",
+    "retrieval_below_confidence": "human_review_queue",
+    "conflicting_sections": "human_review_queue",
+    "low_stt_confidence_numeric": "human_review_queue"
+  }
+}

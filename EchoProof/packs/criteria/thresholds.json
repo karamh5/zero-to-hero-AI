@@ -1,0 +1,33 @@
+{
+  "measured": {
+    "ceiling_precision_target": 0.9,
+    "floor_recall_target": 0.98,
+    "pairs": 56,
+    "precision_at_1": 0.4286,
+    "recall_at_5": 0.625
+  },
+  "pack_id": "reg_f",
+  "policy_pack_version": "9dbe4ac3cf50d31a6185647481d39a0cf62ea783e16d95b3bb6e1f4147302736",
+  "retriever": {
+    "chunk_count": 303,
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "embedding_revision": "main",
+    "fusion": "rrf",
+    "model": "BAAI/bge-reranker-base",
+    "query_prefix": "Represent this sentence for searching relevant passages: ",
+    "reranker": "cross_encoder",
+    "retriever": "local_faiss_bm25",
+    "revision": "main",
+    "rrf_k": 60,
+    "score_transform": "sigmoid"
+  },
+  "thresholds": {
+    "ceiling": 0.7404,
+    "conflict_margin": 0.02,
+    "first_stage_k": 50,
+    "floor": 0.4937,
+    "judge_candidates": 10,
+    "rerank_k": 50,
+    "top_k": 50
+  }
+}

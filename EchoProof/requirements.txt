@@ -1,0 +1,58 @@
+# ---------------------------------------------------------------------------
+# EchoProof runtime dependencies.
+#
+# Versions are pinned exactly, not floored. A scored evaluation run has to be
+# reproducible, and a floor like ">=3.0" lets a future install silently pick up
+# a different embedding or reranking implementation and change the numbers with
+# no change on our side. That is the same failure mode CLAUDE.md decision 9
+# forbids for the model backend, and it applies just as much to the libraries
+# that produce retrieval scores.
+#
+# Everything here is CPU-only and installs on Windows, macOS and Linux.
+# ---------------------------------------------------------------------------
+
+# Config and HTTP
+python-dotenv==1.2.2
+requests==2.34.2
+
+# Policy corpus. eCFR serves XML; lxml is used for parsing, never for output.
+lxml==6.1.1
+
+# Retrieval. BM25 is pure Python; FAISS holds the dense half. Both sit behind
+# engine/retrieval/base.py so the Production OpenSearch swap touches one file.
+rank-bm25==0.2.2
+faiss-cpu==1.15.0
+numpy==2.5.2
+
+# Local embeddings and cross-encoder reranking. Pinned because they produce the
+# retrieval scores the floor and ceiling thresholds are calibrated against.
+# Models used, both pinned in code rather than here:
+#   BAAI/bge-small-en-v1.5   embeddings
+#   BAAI/bge-reranker-base   reranking
+sentence-transformers==5.7.0
+
+# Transitive, pinned because they carry the model implementations that decide
+# retrieval scores rather than being incidental plumbing.
+torch==2.13.0
+transformers==5.15.0
+
+# The single model seam. OpenAI SDK against an OpenAI-compatible base_url;
+# swapping to Bedrock is a base_url plus model string change and nothing else.
+openai==3.0.0
+
+# Capture proxy. The OpenAI-compatible ingress a client points their agent at.
+fastapi==0.141.1
+uvicorn==0.52.1
+starlette==1.6.0
+httpx==0.28.1
+
+# Speech is plain HTTP against Deepgram, so `requests` above covers it and no
+# vendor SDK is pulled in. Models are pinned in core/config.py and were read
+# from the live /v1/models endpoint rather than copied from documentation:
+#   nova-3              speech to text, word level timings and confidence
+#   aura-2-asteria-en   speech synthesis. There is no bare "aura-2" model; a
+#                       voice must be named.
+# ffmpeg and ffprobe are called as external binaries for clip extraction.
+
+# Tests
+pytest==9.1.1

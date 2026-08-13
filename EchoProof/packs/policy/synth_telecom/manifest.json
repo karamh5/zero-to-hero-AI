@@ -1,0 +1,26 @@
+{
+  "pack_id": "synth_telecom",
+  "label": "Synthetic control corpus: telecom customer contact standard",
+  "source": "hand authored for the pack swap demonstration",
+  "citation": "Customer Contact Standard CC",
+  "issue_date": "2026-08-12",
+  "hash_scheme": "sha256/canonical-json/v1",
+  "source_document_hash": "synthetic-no-source-document",
+  "policy_pack_version": "synth-telecom-v1",
+  "record_count": 15,
+  "root_section_count": 5,
+  "root_sections": ["CC-1", "CC-2", "CC-3", "CC-4", "CC-5"],
+  "defined_terms": ["Subscriber", "Contact window"],
+  "obligation_counts": {
+    "definition": 5,
+    "permission": 1,
+    "prohibition": 7,
+    "requirement": 2
+  },
+
+  "section_id_scheme": {
+    "note": "How hierarchy levels are separated in this corpus's identifiers. Declared by the pack because it is a property of the client's drafting conventions, not of the engine. Regulation F uses parentheses (1006.14(b)(1)); this corpus uses dots (CC-3.4.2). The engine reads this rather than assuming either.",
+    "hierarchy_separators": ["."],
+    "root_pattern_example": "CC-3.1 -> CC-3"
+  }
+}
