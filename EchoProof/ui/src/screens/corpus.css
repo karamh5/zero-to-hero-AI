@@ -1,0 +1,129 @@
+.corpus-head {
+  margin: var(--gap) 0 var(--gap-2);
+}
+
+.corpus-display {
+  font-size: var(--text-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.corpus-lede {
+  margin-top: 0.8rem;
+  color: var(--ink-muted);
+}
+
+.corpus-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.6rem;
+  align-items: flex-end;
+  padding: var(--gap) 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.corpus-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.corpus-control select,
+.corpus-control input {
+  background: var(--ground-raised);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 0.35rem 0.5rem;
+  font-family: var(--font-machine);
+  font-size: var(--text-mono);
+}
+
+.corpus-search input {
+  width: 260px;
+}
+
+.corpus-gaps {
+  margin-top: var(--gap-2);
+  border-left: var(--rule-w) solid var(--sig-abstain-ngr);
+  padding-left: 1.1rem;
+  max-width: var(--measure);
+}
+
+.corpus-gaps p {
+  margin-top: 0.5rem;
+}
+
+.corpus-gaplist {
+  margin: 0.7rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.corpus-gaplist li {
+  margin-bottom: 0.5rem;
+}
+
+.corpus-body {
+  margin-top: var(--gap-2);
+}
+
+.corpus-root {
+  margin-bottom: var(--gap-3);
+}
+
+.corpus-root-id {
+  font-size: 1.5rem;
+  font-weight: 500;
+  border-bottom: 2px solid var(--ink);
+  display: inline-block;
+  padding-bottom: 0.2rem;
+}
+
+.corpus-root-heading {
+  margin-top: 0.4rem;
+}
+
+.corpus-sections {
+  list-style: none;
+  margin: var(--gap) 0 0;
+  padding: 0;
+}
+
+.corpus-section {
+  padding: 0.9rem 0 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.corpus-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.corpus-section-id {
+  font-weight: 500;
+}
+
+[data-obligation="prohibition"] {
+  color: var(--sig-contradicted);
+}
+
+[data-obligation="requirement"] {
+  color: var(--ink);
+}
+
+.corpus-coverage {
+  font-size: var(--text-micro);
+}
+
+.corpus-text {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+.corpus-refs {
+  margin-top: 0.4rem;
+  font-size: var(--text-micro);
+}

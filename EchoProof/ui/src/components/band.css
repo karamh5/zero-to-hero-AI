@@ -1,0 +1,105 @@
+.band {
+  margin: 0;
+  padding: var(--gap) 0 var(--gap-2);
+  border-bottom: 1px solid var(--line);
+}
+
+.band-name {
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+.band-row {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.band-endpoint {
+  font-family: var(--font-machine);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.band-rail {
+  position: relative;
+  flex: 1;
+  height: 34px;
+  border-left: 1px solid var(--line-strong);
+  border-right: 1px solid var(--line-strong);
+  background:
+    linear-gradient(var(--line) 0 0) left center / 100% 1px no-repeat;
+}
+
+.band-interval {
+  position: absolute;
+  top: 12px;
+  height: 10px;
+  background: var(--ink);
+  opacity: 0.85;
+}
+
+.band-fails .band-interval {
+  background: var(--sig-contradicted);
+}
+
+.band-tick {
+  position: absolute;
+  top: 8px;
+  width: 1px;
+  height: 18px;
+  background: var(--ink);
+}
+
+.band-floor {
+  position: absolute;
+  top: 2px;
+  width: 0;
+  height: 30px;
+  border-left: 2px solid var(--ink);
+}
+
+.band-floor-label {
+  position: absolute;
+  left: 6px;
+  top: -2px;
+  font-size: var(--text-micro);
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+.band-zero,
+.band-one {
+  position: absolute;
+  bottom: -16px;
+  font-size: var(--text-micro);
+  color: var(--ink-faint);
+}
+
+.band-zero { left: 0; }
+.band-one { right: 0; }
+
+.band-verdict-word {
+  font-size: var(--text-mono);
+  letter-spacing: 0.05em;
+}
+
+.band-fails .band-verdict-word {
+  color: var(--sig-contradicted);
+  font-weight: 600;
+}
+
+.band-caption {
+  margin-top: 1.3rem;
+  max-width: var(--measure);
+  font-size: var(--text-body);
+  color: var(--ink-muted);
+}
+
+.band-source {
+  margin-top: 0.3rem;
+  font-size: var(--text-micro);
+  color: var(--ink-faint);
+}
