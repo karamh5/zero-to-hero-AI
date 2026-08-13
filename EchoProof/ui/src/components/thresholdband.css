@@ -1,0 +1,139 @@
+.tband {
+  display: grid;
+  grid-template-columns: minmax(300px, 420px) 1fr;
+  gap: var(--gap-2);
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .tband {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tband-svg {
+  width: 100%;
+  height: auto;
+  touch-action: none;
+  user-select: none;
+}
+
+.tband-region {
+  opacity: 0.5;
+}
+
+.tband-region.above {
+  fill: color-mix(in srgb, var(--sig-supported) 7%, transparent);
+}
+
+.tband-region.band {
+  fill: color-mix(in srgb, var(--sig-abstain-rbc) 10%, transparent);
+}
+
+.tband-region.below {
+  fill: color-mix(in srgb, var(--sig-abstain-ngr) 14%, transparent);
+}
+
+.tband-conflict {
+  fill: color-mix(in srgb, var(--sig-abstain-cs) 18%, transparent);
+}
+
+.tband-axis {
+  stroke: var(--line-strong);
+  stroke-width: 1;
+}
+
+.tband-ticklabel {
+  font-family: var(--font-machine);
+  font-size: 9px;
+  fill: var(--ink-faint);
+}
+
+.tband-threshold {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.tband-threshold.floor {
+  stroke-dasharray: 5 3;
+}
+
+.tband-grab {
+  fill: transparent;
+  cursor: ns-resize;
+}
+
+.tband-grab:focus-visible {
+  outline: none;
+  fill: color-mix(in srgb, var(--sig-trace) 18%, transparent);
+}
+
+.tband-thlabel {
+  font-family: var(--font-machine);
+  font-size: 10px;
+  fill: var(--ink-muted);
+}
+
+.tband-mark {
+  fill: var(--ground);
+  stroke: var(--ink-muted);
+  stroke-width: 1.2;
+}
+
+.tband-mark.selected {
+  fill: var(--ink);
+  stroke: var(--ink);
+}
+
+.tband-selectedscore {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.tband-marklabel {
+  font-family: var(--font-machine);
+  font-size: 10px;
+  fill: var(--ink);
+}
+
+.tband-region-label {
+  font-family: var(--font-machine);
+  font-size: 9.5px;
+  fill: var(--ink-muted);
+}
+
+.tband-side {
+  max-width: 40ch;
+}
+
+.tband-counts {
+  display: flex;
+  gap: 1.4rem;
+  margin: 0 0 1rem;
+}
+
+.tband-counts div {
+  display: flex;
+  flex-direction: column;
+}
+
+.tband-counts dt {
+  font-size: var(--text-micro);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--ink-muted);
+}
+
+.tband-counts dd {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.tband-note {
+  font-size: var(--text-body);
+}
+
+.tband-reset {
+  border-bottom: 1px solid var(--ink-muted);
+  font-size: var(--text-mono);
+}
