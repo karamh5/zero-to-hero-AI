@@ -1,0 +1,43 @@
+/* Content is visible by default and only hides itself once JS has confirmed
+   it can reveal it again. `.js-motion` is set on <html> at startup, so a
+   failed bundle, a disabled script or a paused-animation context leaves the
+   page readable instead of blank. Invisible content is a far worse failure
+   than a missing animation. */
+
+.reveal,
+.reveal-line-inner {
+  opacity: 1;
+  transform: none;
+}
+
+.js-motion .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--dur-reveal) var(--ease-settle),
+    transform var(--dur-reveal) var(--ease-settle);
+}
+
+.js-motion .reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-lines {
+  display: block;
+}
+
+.reveal-line {
+  display: block;
+  overflow: hidden;
+}
+
+.js-motion .reveal-line-inner {
+  transform: translateY(105%);
+  transition: transform var(--dur-reveal) var(--ease-reveal);
+  will-change: transform;
+}
+
+.js-motion .reveal-line-inner.in {
+  transform: none;
+}

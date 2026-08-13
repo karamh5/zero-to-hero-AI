@@ -28,7 +28,13 @@
   --text-h3: 1.125rem;
   --text-h2: 1.5rem;
   --text-h1: clamp(1.75rem, 3.5vw, 2.625rem);
-  --text-display: clamp(2.5rem, 7vw, 5.25rem);
+  /* Display type goes genuinely large, with a line-height below 1 and
+     negative tracking. Both are what make oversized type read as composed
+     rather than merely big. */
+  --text-display: clamp(2.75rem, 9vw, 7.5rem);
+  --text-colossal: clamp(4rem, 19vw, 17rem);
+  --lh-display: 0.86;
+  --track-display: -0.035em;
 
   --track-caps: 0.08em;
 
@@ -65,8 +71,11 @@
   --sig-abstain-ngr: #52657e;    /* no_governing_rule                    */
   --sig-abstain-rbc: #5d6e82;    /* retrieval_below_confidence           */
   --sig-abstain-cs: #5e6a79;     /* conflicting_sections, de-weighted    */
-  /* live retrieval trace, alive only while a query is in flight */
-  --sig-trace: #187582;
+  /* Live retrieval trace, alive only while a query is genuinely in flight.
+     Doubles as the interface accent: cursor, links, focus. Dark enough to
+     hold AA on all three bench grounds, including the sunken one the rig
+     stage log sits on. */
+  --sig-trace: #166c78;
   /* the only place a hard alert tone is permitted */
   --sig-seal-broken: #c9271a;
 
@@ -84,11 +93,16 @@
 
   /* -- motion ---------------------------------------------------------- */
   /* Two families. Instrument motion is driven by real events and has no
-     CSS duration here on purpose. Transport motion uses these. */
-  --ease-settle: cubic-bezier(0.2, 0.9, 0.25, 1);
-  --dur-settle: 420ms;
-  --dur-move: 240ms;
-  --dur-small: 130ms;
+     CSS duration here on purpose. Transport motion uses these.
+     The curves are expo-out: almost all of the distance is covered in the
+     first third, so movement reads as decisive rather than floaty. */
+  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-reveal: cubic-bezier(0.9, 0, 0.1, 1);
+  --ease-swift: cubic-bezier(0.7, 0, 0.3, 1);
+  --dur-settle: 620ms;
+  --dur-reveal: 900ms;
+  --dur-move: 400ms;
+  --dur-small: 150ms;
 }
 
 /* The rig ground rebinds the neutral roles; signal tokens brighten just
@@ -115,6 +129,7 @@
 @media (prefers-reduced-motion: reduce) {
   :root {
     --dur-settle: 0ms;
+    --dur-reveal: 0ms;
     --dur-move: 0ms;
     --dur-small: 0ms;
   }

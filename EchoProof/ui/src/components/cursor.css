@@ -1,0 +1,110 @@
+.reticle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9000;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  opacity: 1;
+  transition: opacity var(--dur-move) var(--ease-settle);
+}
+
+.reticle.gone {
+  opacity: 0;
+}
+
+.reticle-ring,
+.reticle-hair,
+.reticle-readout {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.reticle-ring {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--sig-trace);
+  border-radius: 50%;
+  opacity: 0;
+  transition:
+    width var(--dur-move) var(--ease-settle),
+    height var(--dur-move) var(--ease-settle),
+    opacity var(--dur-move) var(--ease-settle);
+}
+
+.reticle-hair {
+  background: var(--sig-trace);
+  transition:
+    width var(--dur-move) var(--ease-settle),
+    height var(--dur-move) var(--ease-settle),
+    opacity var(--dur-move) var(--ease-settle);
+}
+
+.reticle-hair-h {
+  width: 15px;
+  height: 1px;
+}
+
+.reticle-hair-v {
+  width: 1px;
+  height: 15px;
+}
+
+/* over an interactive element: the crosshair opens into a ring */
+.reticle.mode-interactive .reticle-ring {
+  opacity: 1;
+  width: 40px;
+  height: 40px;
+}
+
+.reticle.mode-interactive .reticle-hair-h,
+.reticle.mode-interactive .reticle-hair-v {
+  opacity: 0.35;
+}
+
+/* over running text: the crosshair narrows to a caret bar */
+.reticle.mode-text .reticle-hair-h {
+  width: 3px;
+}
+
+.reticle.mode-text .reticle-hair-v {
+  height: 22px;
+}
+
+.reticle.down .reticle-ring {
+  width: 26px;
+  height: 26px;
+}
+
+.reticle-readout {
+  left: 18px;
+  top: 20px;
+  transform: none;
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--dur-move) var(--ease-settle);
+}
+
+.reticle.mode-interactive .reticle-readout {
+  opacity: 1;
+  left: 26px;
+  top: 26px;
+}
+
+.reticle-label {
+  color: var(--sig-trace);
+}
+
+@media (pointer: coarse) {
+  .reticle {
+    display: none;
+  }
+}
