@@ -7,3 +7,11 @@ runs/
 packs/policy/*/index/
 packs/policy/*/retrieval_cache/
 .hf_cache/
+
+# frontend build artifacts
+node_modules/
+ui/node_modules/
+ui/dist/
+ui/.vite/
+.DS_Store
+*.tsbuildinfo
