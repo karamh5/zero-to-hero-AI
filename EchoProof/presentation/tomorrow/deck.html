@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EchoProof, AI Launchpad, 5 minutes</title>
+<style>
+/* ==========================================================================
+   EchoProof internal deck. Offline, self contained, no external reference.
+   Palette and type discipline taken from ui/src/styles/tokens.css so the
+   slides and the product read as one thing. Fonts are system stacks, because
+   nothing may load over a network.
+   ========================================================================== */
+:root{
+  --ground:#0f1114; --ground-raised:#171a20; --ground-sunken:#0a0c0f;
+  --ink:#e9e7e1; --ink-muted:#a4a9b4; --ink-faint:#868c97;
+  --line:#23272e; --line-strong:#363c46;
+  --paper:#f2efe7; --paper-ink:#201e19;
+  --sig-supported:#5bb295; --sig-contradicted:#e4705f;
+  --sig-abstain:#97a9be; --sig-trace:#45c8da; --sig-deterministic:#cbb268;
+  --font-interface:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --font-law:Georgia,"Source Serif 4",'Times New Roman',serif;
+  --font-machine:"Cascadia Mono",Consolas,ui-monospace,"Courier New",monospace;
+  --track-caps:.08em; --lh-display:.86; --track-display:-.035em;
+  --ease-settle:cubic-bezier(.16,1,.3,1);
+  --dur:620ms;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--font-interface);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---- slide shell ---- */
+.slide{
+  position:fixed; inset:0;
+  display:none;
+  padding:clamp(2.5rem,6vw,6rem);
+  flex-direction:column; justify-content:center;
+  opacity:0; transition:opacity var(--dur) var(--ease-settle);
+}
+.slide.on{display:flex; opacity:1}
+.slide.on .rise{animation:rise var(--dur) var(--ease-settle) both}
+.slide.on .rise:nth-child(2){animation-delay:80ms}
+.slide.on .rise:nth-child(3){animation-delay:160ms}
+.slide.on .rise:nth-child(4){animation-delay:240ms}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---- type ---- */
+.eyebrow{
+  font-family:var(--font-machine); font-size:.6875rem;
+  letter-spacing:var(--track-caps); text-transform:uppercase;
+  color:var(--sig-trace); margin-bottom:1.75rem;
+}
+h1{
+  font-size:clamp(2.75rem,9vw,7rem); line-height:var(--lh-display);
+  letter-spacing:var(--track-display); font-weight:700;
+}
+h2{
+  font-size:clamp(1.9rem,4.6vw,3.4rem); line-height:.98;
+  letter-spacing:-.025em; font-weight:700; max-width:22ch;
+}
+.lede{
+  font-size:clamp(1.05rem,1.7vw,1.5rem); line-height:1.45;
+  color:var(--ink-muted); max-width:52ch; margin-top:1.75rem;
+}
+.small{font-size:.9688rem;line-height:1.55;color:var(--ink-muted);max-width:60ch}
+strong{color:var(--ink);font-weight:600}
+.mono{font-family:var(--font-machine);font-size:.8125rem;letter-spacing:.02em}
+
+/* ---- pieces ---- */
+.rule{height:4px;width:64px;background:var(--sig-trace);margin:2rem 0}
+.rule.bad{background:var(--sig-contradicted)}
+
+.quote{
+  font-family:var(--font-law); font-size:clamp(1.25rem,2.4vw,2rem);
+  line-height:1.4; color:var(--ink); max-width:34ch;
+  border-left:4px solid var(--sig-contradicted); padding-left:1.5rem;
+}
+.lawcard{
+  background:var(--paper); color:var(--paper-ink);
+  font-family:var(--font-law); font-size:1.0625rem; line-height:1.5;
+  padding:1.5rem 1.75rem; max-width:46ch; border-radius:2px;
+}
+.lawcard .cite{
+  display:block;margin-top:.9rem;font-family:var(--font-machine);
+  font-size:.75rem;letter-spacing:.04em;color:#5a544a;
+}
+
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.5rem;margin-top:2.5rem}
+.col{border-top:1px solid var(--line-strong);padding-top:1rem}
+.col .n{font-family:var(--font-machine);font-size:.6875rem;letter-spacing:var(--track-caps);color:var(--sig-trace)}
+.col h3{font-size:1.05rem;margin:.5rem 0 .5rem;font-weight:600}
+.col p{font-size:.875rem;line-height:1.5;color:var(--ink-muted)}
+
+.figs{display:flex;gap:clamp(2rem,5vw,4.5rem);flex-wrap:wrap;margin-top:2.5rem}
+.fig .v{font-size:clamp(2.2rem,5vw,3.6rem);line-height:1;letter-spacing:-.03em;font-weight:700}
+.fig .k{font-family:var(--font-machine);font-size:.6875rem;letter-spacing:var(--track-caps);
+  text-transform:uppercase;color:var(--ink-faint);margin-top:.6rem}
+.fig.good .v{color:var(--sig-supported)}
+.fig.warn .v{color:var(--sig-contradicted)}
+
+/* judge isolation diagram */
+.iso{display:flex;align-items:center;gap:1.25rem;margin-top:2.5rem;flex-wrap:wrap}
+.box{border:1px solid var(--line-strong);padding:.9rem 1.1rem;border-radius:2px;background:var(--ground-raised)}
+.box .t{font-family:var(--font-machine);font-size:.6875rem;letter-spacing:var(--track-caps);color:var(--ink-faint)}
+.box .b{font-size:.95rem;margin-top:.35rem}
+.arrow{color:var(--sig-trace);font-size:1.3rem}
+.blocked{border-style:dashed;border-color:var(--sig-contradicted);opacity:.55}
+.blocked .b{text-decoration:line-through;text-decoration-color:var(--sig-contradicted)}
+
+/* ---- chrome ---- */
+.chrome{
+  position:fixed;left:0;right:0;bottom:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1rem clamp(1.5rem,4vw,3rem);
+  font-family:var(--font-machine);font-size:.6875rem;
+  letter-spacing:var(--track-caps);color:var(--ink-faint);
+  border-top:1px solid var(--line);background:var(--ground);
+}
+.notes{
+  position:fixed;left:0;right:0;bottom:0;
+  max-height:42vh;overflow:auto;display:none;
+  background:var(--ground-sunken);border-top:2px solid var(--sig-trace);
+  padding:1.5rem clamp(1.5rem,4vw,3rem) 3.5rem;
+}
+.notes.on{display:block}
+.notes h4{font-family:var(--font-machine);font-size:.6875rem;letter-spacing:var(--track-caps);
+  color:var(--sig-trace);margin-bottom:.75rem;text-transform:uppercase}
+.notes p{font-size:.9375rem;line-height:1.6;color:var(--ink-muted);max-width:90ch;margin-bottom:.6rem}
+.notes .say{color:var(--ink);border-left:2px solid var(--line-strong);padding-left:.9rem}
+
+@media (prefers-reduced-motion:reduce){
+  .slide{transition:none}
+  .slide.on .rise{animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- 1 ................................................................. -->
+<section class="slide on" data-notes="
+<h4>Opening, 0:00 to 0:12</h4>
+<p class='say'>Say: Voice AI agents are being deployed into regulated conversations right now. Debt collection, insurance, healthcare, telecom. The agent talks to a customer, and every sentence it says is either allowed or it is not.</p>
+<p>Do not read the slide aloud. Let it sit.</p>">
+  <div class="eyebrow rise">AI Launchpad / EchoProof</div>
+  <h1 class="rise">ECHOPROOF</h1>
+  <p class="lede rise">Catching what a voice AI agent says wrong, before it is deployed, with the exact rule it broke.</p>
+</section>
+
+<!-- 2 ................................................................. -->
+<section class="slide" data-notes="
+<h4>The problem, 0:12 to 0:25</h4>
+<p class='say'>Say: Here is a real sentence from a collections agent. It sounds helpful. It is also a federal violation, because you cannot discuss someone's debt with a person who is not them. Today, nobody catches that before the agent goes live. You find out from a regulator, or a lawsuit.</p>
+<p>Then move straight to the browser. Do not linger.</p>">
+  <div class="eyebrow rise">01 / The problem</div>
+  <div class="quote rise">Yes, please tell her that she owes four thousand five hundred dollars on a collection account.</div>
+  <p class="lede rise">Sounds helpful. It is a federal violation.<br>
+  Nothing in a normal deployment pipeline catches it.</p>
+</section>
+
+<!-- 3 ................................................................. -->
+<section class="slide" data-notes="
+<h4>Value, 1:00 to 1:40. The run is going in the background.</h4>
+<p class='say'>Say: What a compliance review looks like today is a person listening to call recordings with a rulebook open next to them. It is slow, it is sampled, and it happens after the agent is already talking to customers. EchoProof does it before deployment, on every single turn, and it shows its work.</p>
+<p>Three words carry this slide: before, every, and evidence.</p>">
+  <div class="eyebrow rise">02 / The value</div>
+  <h2 class="rise">A compliance review that runs before you ship, not after.</h2>
+  <div class="cols rise">
+    <div class="col"><div class="n">TODAY</div><h3>Sampled, after the fact</h3>
+      <p>A person listens to a fraction of recorded calls with the rulebook open beside them, weeks after the agent went live.</p></div>
+    <div class="col"><div class="n">WITH ECHOPROOF</div><h3>Every turn, before launch</h3>
+      <p>Every sentence the agent produced is checked against the client's own rulebook while the agent is still in staging.</p></div>
+    <div class="col"><div class="n">WHAT YOU GET</div><h3>A citation, not an opinion</h3>
+      <p>Each finding names the exact paragraph, quotes it, and carries a tamper evident record of how it was reached.</p></div>
+  </div>
+</section>
+
+<!-- 4 ................................................................. -->
+<section class="slide" data-notes="
+<h4>How it works, 1:40 to 2:20</h4>
+<p class='say'>Say: Four steps. We read only what the agent said, never the customer. We pull the claims out as exact quotes. We search the client's rulebook for the provision that governs each one. And then a model rules on it, using only that retrieved text.</p>
+<p>If you are short on time, this is the slide to compress, not to skip.</p>">
+  <div class="eyebrow rise">03 / How it works</div>
+  <h2 class="rise">Four moves, and a sealed record of all of them.</h2>
+  <div class="cols rise">
+    <div class="col"><div class="n">01 / READ</div><h3>Only the agent</h3>
+      <p>The customer's words are context and never receive a verdict. Only the agent is being assessed.</p></div>
+    <div class="col"><div class="n">02 / CLAIM</div><h3>Exact quotes</h3>
+      <p>Claims are stored as character positions in the real transcript. Nothing is paraphrased.</p></div>
+    <div class="col"><div class="n">03 / RETRIEVE</div><h3>Find the rule</h3>
+      <p>Search the client's rulebook for the provision that governs that specific sentence.</p></div>
+    <div class="col"><div class="n">04 / JUDGE</div><h3>Rule from that text</h3>
+      <p>A verdict, with the paragraph printed beside it so anyone can check it.</p></div>
+  </div>
+</section>
+
+<!-- 5 ................................................................. -->
+<section class="slide" data-notes="
+<h4>The design decision, 2:20 to 2:50. OPTIONAL, cut this first if you are behind.</h4>
+<p class='say'>Say: The one decision that makes this different from asking ChatGPT if something is compliant. The judge never sees the whole rulebook and never uses what it learned in training. It sees one retrieved paragraph and rules from that. That is why a verdict can be checked instead of trusted.</p>
+<p>If a technical person is in the room, this is the slide they will remember.</p>">
+  <div class="eyebrow rise">04 / Why you can check it</div>
+  <h2 class="rise">The judge only ever sees the rule we retrieved.</h2>
+  <div class="iso rise">
+    <div class="box"><div class="t">IN</div><div class="b">The claim</div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="box"><div class="t">IN</div><div class="b">One retrieved paragraph</div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="box" style="border-color:var(--sig-trace)"><div class="t">JUDGE</div><div class="b">Verdict</div></div>
+  </div>
+  <div class="iso rise" style="margin-top:1rem">
+    <div class="box blocked"><div class="t">NEVER</div><div class="b">The full rulebook</div></div>
+    <div class="box blocked"><div class="t">NEVER</div><div class="b">Its own training knowledge</div></div>
+  </div>
+  <p class="small rise" style="margin-top:2rem">An opinion cannot be audited. A verdict tied to one printed paragraph can.</p>
+</section>
+
+<!-- 6 ................................................................. -->
+<section class="slide" data-notes="
+<h4>The honest slide, 2:50 to 3:25. Do not skip this one.</h4>
+<p class='say'>Say: I want to be straight about where this actually is. When it flags something, three quarters of the time it names the right paragraph, and it stayed silent on the clean control call every time we ran it. But it only catches about a third of the violations we planted, and when I graded it against a human it agreed less than half the time. So this is a triage layer that routes work to a human reviewer. It is not a release gate, and I am not going to call it one.</p>
+<p>Erik and Patrick will trust the rest of the talk more because of this slide, not less.</p>">
+  <div class="eyebrow rise">05 / Where it actually is</div>
+  <h2 class="rise">A triage layer that routes to human review. Not a release gate.</h2>
+  <div class="figs rise">
+    <div class="fig good"><div class="v">0.75</div><div class="k">Cites the right paragraph</div></div>
+    <div class="fig good"><div class="v">0</div><div class="k">False alarms on the clean control</div></div>
+    <div class="fig warn"><div class="v">0.35</div><div class="k">Of planted violations caught</div></div>
+    <div class="fig warn"><div class="v">0.48</div><div class="k">Agreement with a human, floor was 0.85</div></div>
+  </div>
+  <p class="small rise" style="margin-top:2.5rem">Three separate measurements point the same way, so the honest positioning is the narrow one. What is genuinely strong: when it does speak, it is usually right about which rule, and it never invented a problem on the compliant call.</p>
+</section>
+
+<!-- 7 ................................................................. -->
+<section class="slide" data-notes="
+<h4>Landing, 4:35 to 5:00</h4>
+<p class='say'>Say: So that is EchoProof. It read what the agent said, found the rule in the client's own rulebook, and gave a verdict you can check against the printed paragraph, with a sealed record behind it. It is a triage layer today, and the honest gap is detection. Happy to take questions.</p>
+<p>Stop talking here. Do not add a summary.</p>">
+  <div class="eyebrow rise">06 / What you just saw</div>
+  <h2 class="rise">Every claim has a source. Every verdict has a rule. Every finding has evidence.</h2>
+  <div class="rule rise"></div>
+  <p class="small rise">Fixed engine, swappable rulebook. The same engine ran a 303 provision federal regulation and a 15 provision telecom standard with no code change.</p>
+</section>
+
+<div class="chrome">
+  <span id="ct">ECHOPROOF</span>
+  <span><span id="pg">1</span> / 7 &nbsp;&nbsp; N NOTES &nbsp; &larr; &rarr; MOVE</span>
+</div>
+<div class="notes" id="nt"></div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0, notesOn=false;
+  var nt=document.getElementById('nt'), pg=document.getElementById('pg');
+  function render(){
+    slides.forEach(function(s,n){ s.classList.toggle('on', n===i); });
+    pg.textContent=i+1;
+    nt.innerHTML=slides[i].getAttribute('data-notes')||'<h4>No notes</h4>';
+  }
+  function go(d){ var n=i+d; if(n<0||n>=slides.length) return; i=n; render(); }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(-1);}
+    else if(e.key==='n'||e.key==='N'){notesOn=!notesOn;nt.classList.toggle('on',notesOn);}
+    else if(e.key==='Home'){i=0;render();}
+    else if(e.key==='End'){i=slides.length-1;render();}
+  });
+  document.addEventListener('click',function(e){ if(e.clientY<window.innerHeight-90) go(1); });
+  render();
+})();
+</script>
+</body>
+</html>
