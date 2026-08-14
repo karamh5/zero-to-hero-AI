@@ -2,276 +2,520 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EchoProof, AI Launchpad, 5 minutes</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EchoProof, AI Launchpad</title>
 <style>
 /* ==========================================================================
-   EchoProof internal deck. Offline, self contained, no external reference.
-   Palette and type discipline taken from ui/src/styles/tokens.css so the
-   slides and the product read as one thing. Fonts are system stacks, because
-   nothing may load over a network.
+   EchoProof deck. Self contained: no CDN, no external font, no raster.
+   Palette and type roles taken from ui/src/styles/tokens.css so the deck and
+   the product read as one instrument.
    ========================================================================== */
 :root{
   --ground:#0f1114; --ground-raised:#171a20; --ground-sunken:#0a0c0f;
   --ink:#e9e7e1; --ink-muted:#a4a9b4; --ink-faint:#868c97;
   --line:#23272e; --line-strong:#363c46;
   --paper:#f2efe7; --paper-ink:#201e19;
-  --sig-supported:#5bb295; --sig-contradicted:#e4705f;
-  --sig-abstain:#97a9be; --sig-trace:#45c8da; --sig-deterministic:#cbb268;
-  --font-interface:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
-  --font-law:Georgia,"Source Serif 4",'Times New Roman',serif;
-  --font-machine:"Cascadia Mono",Consolas,ui-monospace,"Courier New",monospace;
-  --track-caps:.08em; --lh-display:.86; --track-display:-.035em;
+  --sig-trace:#45c8da; --sig-supported:#5bb295; --sig-contradicted:#e4705f;
+  --sig-det:#cbb268; --sig-seal:#ff6152;
+  --glow:rgba(69,200,218,.16);
+  --paper-cite:#5a544a; --blackout:#000; --print-ground:#fff;
+  --mask-on:#000; --vignette:rgba(0,0,0,.55);
+
+  --font-ui:"Archivo","Archivo Variable","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --font-mono:"IBM Plex Mono","Cascadia Mono",Consolas,ui-monospace,"Courier New",monospace;
+  --font-law:"Source Serif 4","Source Serif 4 Variable",Georgia,"Times New Roman",serif;
+
   --ease-settle:cubic-bezier(.16,1,.3,1);
-  --dur:620ms;
+  --ease-reveal:cubic-bezier(.9,0,.1,1);
+  --track-caps:.08em;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{
-  background:var(--ground); color:var(--ink);
-  font-family:var(--font-interface);
-  overflow:hidden;
-  -webkit-font-smoothing:antialiased;
-}
+html,body{height:100%;overflow:hidden;background:var(--ground)}
+body{font-family:var(--font-ui);color:var(--ink);-webkit-font-smoothing:antialiased}
 
-/* ---- slide shell ---- */
-.slide{
-  position:fixed; inset:0;
-  display:none;
-  padding:clamp(2.5rem,6vw,6rem);
-  flex-direction:column; justify-content:center;
-  opacity:0; transition:opacity var(--dur) var(--ease-settle);
-}
-.slide.on{display:flex; opacity:1}
-.slide.on .rise{animation:rise var(--dur) var(--ease-settle) both}
-.slide.on .rise:nth-child(2){animation-delay:80ms}
-.slide.on .rise:nth-child(3){animation-delay:160ms}
-.slide.on .rise:nth-child(4){animation-delay:240ms}
-@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#stage{position:absolute;top:50%;left:50%;width:1600px;height:900px;
+  transform:translate(-50%,-50%);transform-origin:center center;
+  background:var(--ground);overflow:hidden}
 
-/* ---- type ---- */
-.eyebrow{
-  font-family:var(--font-machine); font-size:.6875rem;
-  letter-spacing:var(--track-caps); text-transform:uppercase;
-  color:var(--sig-trace); margin-bottom:1.75rem;
-}
-h1{
-  font-size:clamp(2.75rem,9vw,7rem); line-height:var(--lh-display);
-  letter-spacing:var(--track-display); font-weight:700;
-}
-h2{
-  font-size:clamp(1.9rem,4.6vw,3.4rem); line-height:.98;
-  letter-spacing:-.025em; font-weight:700; max-width:22ch;
-}
-.lede{
-  font-size:clamp(1.05rem,1.7vw,1.5rem); line-height:1.45;
-  color:var(--ink-muted); max-width:52ch; margin-top:1.75rem;
-}
-.small{font-size:.9688rem;line-height:1.55;color:var(--ink-muted);max-width:60ch}
-strong{color:var(--ink);font-weight:600}
-.mono{font-family:var(--font-machine);font-size:.8125rem;letter-spacing:.02em}
+#bg{position:absolute;inset:0;pointer-events:none;z-index:0}
+#grid{position:absolute;inset:-40px;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:40px 40px;opacity:.30;
+  -webkit-mask-image:radial-gradient(120% 90% at 50% 45%,var(--mask-on) 25%,transparent 78%);
+  mask-image:radial-gradient(120% 90% at 50% 45%,var(--mask-on) 25%,transparent 78%)}
+#glow{position:absolute;width:1500px;height:1100px;left:0;top:0;
+  background:radial-gradient(circle at center,var(--glow) 0%,transparent 62%);
+  transition:transform 2400ms var(--ease-settle);will-change:transform}
+#vig{position:absolute;inset:0;
+  background:radial-gradient(130% 100% at 50% 50%,transparent 52%,var(--vignette) 100%)}
 
-/* ---- pieces ---- */
-.rule{height:4px;width:64px;background:var(--sig-trace);margin:2rem 0}
-.rule.bad{background:var(--sig-contradicted)}
+.slide{position:absolute;inset:0;z-index:1;display:none;flex-direction:column;
+  justify-content:center;padding:96px 110px 118px}
+.slide.on{display:flex}
 
-.quote{
-  font-family:var(--font-law); font-size:clamp(1.25rem,2.4vw,2rem);
-  line-height:1.4; color:var(--ink); max-width:34ch;
-  border-left:4px solid var(--sig-contradicted); padding-left:1.5rem;
-}
-.lawcard{
-  background:var(--paper); color:var(--paper-ink);
-  font-family:var(--font-law); font-size:1.0625rem; line-height:1.5;
-  padding:1.5rem 1.75rem; max-width:46ch; border-radius:2px;
-}
-.lawcard .cite{
-  display:block;margin-top:.9rem;font-family:var(--font-machine);
-  font-size:.75rem;letter-spacing:.04em;color:#5a544a;
-}
+.armed .rise{opacity:0;transform:translateY(16px)}
+.armed .slide.on .rise{opacity:1;transform:none;
+  transition:opacity 620ms var(--ease-settle),transform 620ms var(--ease-settle)}
+.armed .slide.on .rise:nth-of-type(1){transition-delay:0ms}
+.armed .slide.on .rise:nth-of-type(2){transition-delay:70ms}
+.armed .slide.on .rise:nth-of-type(3){transition-delay:140ms}
+.armed .slide.on .rise:nth-of-type(4){transition-delay:210ms}
+.armed .slide.on .rise:nth-of-type(5){transition-delay:280ms}
+.armed .slide.on .rise:nth-of-type(6){transition-delay:350ms}
 
-.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.5rem;margin-top:2.5rem}
-.col{border-top:1px solid var(--line-strong);padding-top:1rem}
-.col .n{font-family:var(--font-machine);font-size:.6875rem;letter-spacing:var(--track-caps);color:var(--sig-trace)}
-.col h3{font-size:1.05rem;margin:.5rem 0 .5rem;font-weight:600}
-.col p{font-size:.875rem;line-height:1.5;color:var(--ink-muted)}
+.armed [data-step]{opacity:0;transition:opacity 520ms var(--ease-settle)}
+.armed [data-step].shown{opacity:1}
+.armed .draw{transition:stroke-dashoffset 1000ms var(--ease-reveal)}
 
-.figs{display:flex;gap:clamp(2rem,5vw,4.5rem);flex-wrap:wrap;margin-top:2.5rem}
-.fig .v{font-size:clamp(2.2rem,5vw,3.6rem);line-height:1;letter-spacing:-.03em;font-weight:700}
-.fig .k{font-family:var(--font-machine);font-size:.6875rem;letter-spacing:var(--track-caps);
-  text-transform:uppercase;color:var(--ink-faint);margin-top:.6rem}
-.fig.good .v{color:var(--sig-supported)}
-.fig.warn .v{color:var(--sig-contradicted)}
+.eyebrow{font-family:var(--font-mono);font-size:13px;letter-spacing:var(--track-caps);
+  text-transform:uppercase;color:var(--sig-trace);margin-bottom:26px}
+h1{font-size:clamp(3rem,9.5vw,8rem);line-height:.86;letter-spacing:-.035em;font-weight:700}
+#stage h1{font-size:132px}
+h2{font-size:52px;line-height:1.02;letter-spacing:-.03em;font-weight:700;max-width:24ch}
+h2.big{font-size:72px;max-width:20ch}
+.lede{font-size:23px;line-height:1.45;color:var(--ink-muted);max-width:56ch;margin-top:26px}
+.small{font-size:17px;line-height:1.55;color:var(--ink-muted);max-width:78ch}
+.mono{font-family:var(--font-mono);font-size:14px;letter-spacing:.03em;color:var(--ink-faint)}
+.mono.trace{color:var(--sig-trace)}
+strong{font-weight:600;color:var(--ink)}
 
-/* judge isolation diagram */
-.iso{display:flex;align-items:center;gap:1.25rem;margin-top:2.5rem;flex-wrap:wrap}
-.box{border:1px solid var(--line-strong);padding:.9rem 1.1rem;border-radius:2px;background:var(--ground-raised)}
-.box .t{font-family:var(--font-machine);font-size:.6875rem;letter-spacing:var(--track-caps);color:var(--ink-faint)}
-.box .b{font-size:.95rem;margin-top:.35rem}
-.arrow{color:var(--sig-trace);font-size:1.3rem}
-.blocked{border-style:dashed;border-color:var(--sig-contradicted);opacity:.55}
-.blocked .b{text-decoration:line-through;text-decoration-color:var(--sig-contradicted)}
+.quote{font-family:var(--font-law);font-size:44px;line-height:1.32;max-width:26ch;color:var(--ink)}
+.flag{border-bottom:4px solid var(--sig-contradicted);padding-bottom:2px}
+.lawcard{background:var(--paper);color:var(--paper-ink);font-family:var(--font-law);
+  font-size:21px;line-height:1.5;padding:30px 34px;max-width:46ch;border-radius:2px}
+.lawcard .cite{display:block;margin-top:18px;font-family:var(--font-mono);
+  font-size:13px;letter-spacing:.05em;color:var(--paper-cite)}
+.wrap{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.stack2{display:flex;flex-direction:column;gap:26px}
 
-/* ---- chrome ---- */
-.chrome{
-  position:fixed;left:0;right:0;bottom:0;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:1rem clamp(1.5rem,4vw,3rem);
-  font-family:var(--font-machine);font-size:.6875rem;
+svg{display:block;overflow:visible}
+.sl{font-family:"IBM Plex Mono","Cascadia Mono",Consolas,monospace;font-size:10px;
+  letter-spacing:.09em;fill:var(--ink-faint);text-transform:uppercase}
+.sl.t{fill:var(--sig-trace)} .sl.g{fill:var(--sig-det)} .sl.r{fill:var(--sig-contradicted)}
+.sl.k{fill:var(--sig-supported)} .sl.s{fill:var(--sig-seal)}
+.sb{font-family:"Archivo",Helvetica,Arial,sans-serif;font-size:14px;fill:var(--ink)}
+.sbm{font-family:"Archivo",Helvetica,Arial,sans-serif;font-size:12px;fill:var(--ink-muted)}
+.sm{font-family:"IBM Plex Mono","Cascadia Mono",Consolas,monospace;font-size:12px;fill:var(--sig-trace)}
+.node{fill:var(--ground-raised);stroke:var(--line-strong);stroke-width:1.5;rx:2}
+.node.key{stroke:var(--sig-trace)}
+.node.sunk{fill:var(--ground-sunken);stroke:var(--sig-trace)}
+.fl{stroke:var(--sig-trace);stroke-width:1.5;fill:none}
+.gold{stroke:var(--sig-det);stroke-width:1.5;fill:none;stroke-dasharray:5 4}
+.bad{stroke:var(--sig-contradicted);stroke-width:1.5;fill:none}
+
+#chrome{position:absolute;left:0;right:0;bottom:0;height:46px;z-index:3;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 110px;font-family:var(--font-mono);font-size:12px;
   letter-spacing:var(--track-caps);color:var(--ink-faint);
-  border-top:1px solid var(--line);background:var(--ground);
-}
-.notes{
-  position:fixed;left:0;right:0;bottom:0;
-  max-height:42vh;overflow:auto;display:none;
-  background:var(--ground-sunken);border-top:2px solid var(--sig-trace);
-  padding:1.5rem clamp(1.5rem,4vw,3rem) 3.5rem;
-}
-.notes.on{display:block}
-.notes h4{font-family:var(--font-machine);font-size:.6875rem;letter-spacing:var(--track-caps);
-  color:var(--sig-trace);margin-bottom:.75rem;text-transform:uppercase}
-.notes p{font-size:.9375rem;line-height:1.6;color:var(--ink-muted);max-width:90ch;margin-bottom:.6rem}
-.notes .say{color:var(--ink);border-left:2px solid var(--line-strong);padding-left:.9rem}
+  border-top:1px solid var(--line);background:var(--ground)}
+#rail{position:absolute;left:0;right:0;bottom:46px;height:1px;background:var(--line);z-index:3}
+#railfill{height:1px;background:var(--sig-trace);width:0;transition:width 420ms var(--ease-settle)}
+
+.ov{position:absolute;inset:0;z-index:5;display:none;background:var(--ground-sunken);
+  padding:70px 110px;overflow:auto}
+.ov.on{display:block}
+.ov h3{font-family:var(--font-mono);font-size:13px;letter-spacing:var(--track-caps);
+  color:var(--sig-trace);text-transform:uppercase;margin-bottom:26px}
+#notes{position:absolute;left:0;right:0;bottom:47px;max-height:400px;overflow:auto;z-index:4;
+  display:none;background:var(--ground-sunken);border-top:2px solid var(--sig-trace);
+  padding:26px 110px 30px}
+#notes.on{display:block}
+#notes p{font-size:17px;line-height:1.62;color:var(--ink-muted);max-width:104ch;margin-bottom:12px}
+#notes p.say{color:var(--ink);border-left:2px solid var(--line-strong);padding-left:16px}
+#ogrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.ocard{border:1px solid var(--line-strong);background:var(--ground-raised);padding:16px;
+  border-radius:2px;cursor:pointer}
+.ocard .n{font-family:var(--font-mono);font-size:11px;color:var(--sig-trace);letter-spacing:.08em}
+.ocard .t{font-size:14px;margin-top:8px;line-height:1.3}
+.ocard.cur{border-color:var(--sig-trace)}
+#keys dl{display:grid;grid-template-columns:120px 1fr;gap:12px 22px;font-size:16px;color:var(--ink-muted)}
+#keys dt{font-family:var(--font-mono);color:var(--ink);font-size:13px;letter-spacing:.06em}
+#black{position:absolute;inset:0;z-index:9;background:var(--blackout);display:none}
+#black.on{display:block}
 
 @media (prefers-reduced-motion:reduce){
-  .slide{transition:none}
-  .slide.on .rise{animation:none}
+  #glow{display:none} #grid{opacity:.18}
+  .armed .rise{opacity:1;transform:none;transition:none}
+  .armed [data-step]{transition:none}
+  .armed .draw{transition:none;stroke-dashoffset:0!important}
+}
+
+@page{size:1600px 900px landscape;margin:0}
+@media print{
+  html,body{overflow:visible;background:var(--print-ground)}
+  #stage{position:static;width:1600px;height:auto;transform:none}
+  #bg,#chrome,#rail,#notes,.ov,#black{display:none!important}
+  .slide{position:relative;display:flex!important;width:1600px;height:900px;
+    page-break-after:always;break-after:page;background:var(--ground)}
+  .rise,[data-step]{opacity:1!important;transform:none!important}
+  .draw{stroke-dashoffset:0!important}
 }
 </style>
 </head>
 <body>
+<div id="stage">
+  <div id="bg"><div id="grid"></div><div id="glow"></div><div id="vig"></div></div>
 
-<!-- 1 ................................................................. -->
-<section class="slide on" data-notes="
-<h4>Opening, 0:00 to 0:12</h4>
-<p class='say'>Say: Voice AI agents are being deployed into regulated conversations right now. Debt collection, insurance, healthcare, telecom. The agent talks to a customer, and every sentence it says is either allowed or it is not.</p>
-<p>Do not read the slide aloud. Let it sit.</p>">
-  <div class="eyebrow rise">AI Launchpad / EchoProof</div>
+<!-- 01 THE IDEA =========================================================== -->
+<section class="slide on" data-eyebrow="THE IDEA" data-glow="1080,140" data-notes="
+<p class='say'>Companies are starting to put AI voice agents into conversations that are governed by law. Debt collection, insurance, healthcare.</p>
+<p class='say'>The agent sounds great. It is polite, it is fast, and it has no idea which of the things it says are actually legal.</p>
+<p class='say'>EchoProof checks that before the agent is ever put in front of a customer.</p>">
+  <div style="position:absolute;right:80px;top:120px;width:520px;height:520px">
+    <svg viewBox="0 0 520 520" aria-label="A ring of rulebook segments with a cluster of statement marks at the centre and a sealed record closing around the outside.">
+      <g data-step="0">
+        <circle cx="260" cy="260" r="182" fill="none" stroke="var(--line)" stroke-width="1"/>
+        <g stroke="var(--sig-trace)" stroke-width="3" fill="none" opacity=".85">
+          <path class="draw" d="M260,78 A182,182 0 0,1 389,131"/>
+          <path class="draw" d="M400,144 A182,182 0 0,1 437,241"/>
+          <path class="draw" d="M441,277 A182,182 0 0,1 394,385"/>
+          <path class="draw" d="M376,401 A182,182 0 0,1 278,443"/>
+          <path class="draw" d="M242,442 A182,182 0 0,1 137,393"/>
+          <path class="draw" d="M121,375 A182,182 0 0,1 79,278"/>
+          <path class="draw" d="M78,242 A182,182 0 0,1 123,140"/>
+        </g>
+      </g>
+      <g data-step="1" fill="var(--ink)">
+        <rect x="222" y="236" width="32" height="3"/><rect x="222" y="250" width="54" height="3"/>
+        <rect x="222" y="264" width="20" height="3"/><rect x="222" y="278" width="44" height="3"/>
+        <rect x="222" y="292" width="28" height="3"/>
+        <rect x="212" y="230" width="3" height="68" fill="var(--sig-contradicted)"/>
+      </g>
+      <g data-step="2" fill="none" stroke="var(--sig-supported)" stroke-width="2">
+        <rect class="draw" x="230" y="30" width="60" height="24" rx="12"/>
+        <rect class="draw" x="418" y="138" width="60" height="24" rx="12" transform="rotate(60 448 150)"/>
+        <rect class="draw" x="418" y="358" width="60" height="24" rx="12" transform="rotate(120 448 370)"/>
+        <rect class="draw" x="230" y="466" width="60" height="24" rx="12"/>
+        <rect class="draw" x="42" y="358" width="60" height="24" rx="12" transform="rotate(60 72 370)"/>
+        <rect class="draw" x="42" y="138" width="60" height="24" rx="12" transform="rotate(120 72 150)"/>
+      </g>
+    </svg>
+  </div>
+  <div class="eyebrow rise">AI Launchpad</div>
   <h1 class="rise">ECHOPROOF</h1>
-  <p class="lede rise">Catching what a voice AI agent says wrong, before it is deployed, with the exact rule it broke.</p>
+  <p class="lede rise">It checks what an AI voice agent says against the rules it has to follow, before the agent ever talks to a customer.</p>
 </section>
 
-<!-- 2 ................................................................. -->
-<section class="slide" data-notes="
-<h4>The problem, 0:12 to 0:25</h4>
-<p class='say'>Say: Here is a real sentence from a collections agent. It sounds helpful. It is also a federal violation, because you cannot discuss someone's debt with a person who is not them. Today, nobody catches that before the agent goes live. You find out from a regulator, or a lawsuit.</p>
-<p>Then move straight to the browser. Do not linger.</p>">
+<!-- 02 THE PROBLEM ======================================================== -->
+<section class="slide" data-eyebrow="THE PROBLEM" data-glow="180,640" data-notes="
+<p class='say'>Here is a real thing a collections agent said on a call. Read it for a second.</p>
+<p class='say'>It sounds helpful. It sounds like good customer service. And it is against federal law, because you are not allowed to tell somebody else about another person's debt. The agent was talking to her brother.</p>
+<p class='say'>That is the rule it broke, printed exactly as it is written.</p>
+<p class='say'>And here is the uncomfortable part. Nothing in a normal build process catches this. It is not a bug and it is not a wrong answer, so every test you would normally run says this agent is working perfectly.</p>">
   <div class="eyebrow rise">01 / The problem</div>
-  <div class="quote rise">Yes, please tell her that she owes four thousand five hundred dollars on a collection account.</div>
-  <p class="lede rise">Sounds helpful. It is a federal violation.<br>
-  Nothing in a normal deployment pipeline catches it.</p>
-</section>
-
-<!-- 3 ................................................................. -->
-<section class="slide" data-notes="
-<h4>Value, 1:00 to 1:40. The run is going in the background.</h4>
-<p class='say'>Say: What a compliance review looks like today is a person listening to call recordings with a rulebook open next to them. It is slow, it is sampled, and it happens after the agent is already talking to customers. EchoProof does it before deployment, on every single turn, and it shows its work.</p>
-<p>Three words carry this slide: before, every, and evidence.</p>">
-  <div class="eyebrow rise">02 / The value</div>
-  <h2 class="rise">A compliance review that runs before you ship, not after.</h2>
-  <div class="cols rise">
-    <div class="col"><div class="n">TODAY</div><h3>Sampled, after the fact</h3>
-      <p>A person listens to a fraction of recorded calls with the rulebook open beside them, weeks after the agent went live.</p></div>
-    <div class="col"><div class="n">WITH ECHOPROOF</div><h3>Every turn, before launch</h3>
-      <p>Every sentence the agent produced is checked against the client's own rulebook while the agent is still in staging.</p></div>
-    <div class="col"><div class="n">WHAT YOU GET</div><h3>A citation, not an opinion</h3>
-      <p>Each finding names the exact paragraph, quotes it, and carries a tamper evident record of how it was reached.</p></div>
+  <div class="wrap">
+    <div class="rise">
+      <p class="quote">Yes, please tell her that <span class="flag">she owes four thousand five hundred dollars on a collection account</span>, and that she needs to call Harbor Recovery back today.</p>
+      <p class="mono" style="margin-top:28px">SOMETHING AN AGENT ACTUALLY SAID</p>
+    </div>
+    <div class="stack2">
+      <div data-step="1" class="lawcard">Prohibitions. Except as provided in paragraph (d)(2) of this section, a debt collector must not communicate, in connection with the collection of any debt, with any person other than:
+        <span class="cite">12 CFR 1006.6(d)(1)</span></div>
+      <p data-step="2" class="mono trace" style="font-size:19px;line-height:1.6">nothing in the stack catches this before it ships.</p>
+    </div>
   </div>
 </section>
 
-<!-- 4 ................................................................. -->
-<section class="slide" data-notes="
-<h4>How it works, 1:40 to 2:20</h4>
-<p class='say'>Say: Four steps. We read only what the agent said, never the customer. We pull the claims out as exact quotes. We search the client's rulebook for the provision that governs each one. And then a model rules on it, using only that retrieved text.</p>
-<p>If you are short on time, this is the slide to compress, not to skip.</p>">
-  <div class="eyebrow rise">03 / How it works</div>
-  <h2 class="rise">Four moves, and a sealed record of all of them.</h2>
-  <div class="cols rise">
-    <div class="col"><div class="n">01 / READ</div><h3>Only the agent</h3>
-      <p>The customer's words are context and never receive a verdict. Only the agent is being assessed.</p></div>
-    <div class="col"><div class="n">02 / CLAIM</div><h3>Exact quotes</h3>
-      <p>Claims are stored as character positions in the real transcript. Nothing is paraphrased.</p></div>
-    <div class="col"><div class="n">03 / RETRIEVE</div><h3>Find the rule</h3>
-      <p>Search the client's rulebook for the provision that governs that specific sentence.</p></div>
-    <div class="col"><div class="n">04 / JUDGE</div><h3>Rule from that text</h3>
-      <p>A verdict, with the paragraph printed beside it so anyone can check it.</p></div>
+<!-- 03 WHY NOTHING CATCHES IT ============================================= -->
+<section class="slide" data-eyebrow="WHY NOTHING CATCHES IT" data-glow="800,760" data-notes="
+<p class='say'>So why does nothing catch it. Three reasons, and they compound.</p>
+<p class='say'>The first is that checking this is a person listening to call recordings with the rulebook open beside them. There are thousands of calls, so they listen to a handful. Most calls are never checked by anyone.</p>
+<p class='say'>The second is timing. That review happens weeks after the agent is already live and already talking to real customers. You are finding out about a problem that has been running the whole time.</p>
+<p class='say'>The third is what you get at the end. A spreadsheet of somebody's opinion, with no rule attached. If you want to know why a call was marked bad, you have to go and ask them.</p>">
+  <div class="eyebrow rise">02 / Why nothing catches it today</div>
+  <div style="margin-top:20px">
+    <svg width="1380" height="420" viewBox="0 0 1380 420" aria-label="Three panels. A person sampling a handful of calls from thousands. A timeline where the review happens long after the agent went live. An output that is an opinion with no rule attached.">
+      <!-- 1 sampling -->
+      <g data-step="1">
+        <rect class="node" x="0" y="0" width="430" height="380"/>
+        <text class="sl t" x="26" y="38">01</text>
+        <text class="sb" x="26" y="72" style="font-size:19px">Somebody listens, by hand</text>
+        <g fill="var(--line-strong)">
+          <rect x="26" y="110" width="14" height="14"/><rect x="50" y="110" width="14" height="14"/><rect x="74" y="110" width="14" height="14"/><rect x="98" y="110" width="14" height="14"/><rect x="122" y="110" width="14" height="14"/><rect x="146" y="110" width="14" height="14"/><rect x="170" y="110" width="14" height="14"/><rect x="194" y="110" width="14" height="14"/><rect x="218" y="110" width="14" height="14"/><rect x="242" y="110" width="14" height="14"/><rect x="266" y="110" width="14" height="14"/><rect x="290" y="110" width="14" height="14"/><rect x="314" y="110" width="14" height="14"/><rect x="338" y="110" width="14" height="14"/><rect x="362" y="110" width="14" height="14"/><rect x="386" y="110" width="14" height="14"/>
+          <rect x="26" y="134" width="14" height="14"/><rect x="50" y="134" width="14" height="14"/><rect x="74" y="134" width="14" height="14"/><rect x="98" y="134" width="14" height="14"/><rect x="122" y="134" width="14" height="14"/><rect x="146" y="134" width="14" height="14"/><rect x="170" y="134" width="14" height="14"/><rect x="194" y="134" width="14" height="14"/><rect x="218" y="134" width="14" height="14"/><rect x="242" y="134" width="14" height="14"/><rect x="266" y="134" width="14" height="14"/><rect x="290" y="134" width="14" height="14"/><rect x="314" y="134" width="14" height="14"/><rect x="338" y="134" width="14" height="14"/><rect x="362" y="134" width="14" height="14"/><rect x="386" y="134" width="14" height="14"/>
+          <rect x="26" y="158" width="14" height="14"/><rect x="50" y="158" width="14" height="14"/><rect x="74" y="158" width="14" height="14"/><rect x="98" y="158" width="14" height="14"/><rect x="122" y="158" width="14" height="14"/><rect x="146" y="158" width="14" height="14"/><rect x="170" y="158" width="14" height="14"/><rect x="194" y="158" width="14" height="14"/><rect x="218" y="158" width="14" height="14"/><rect x="242" y="158" width="14" height="14"/><rect x="266" y="158" width="14" height="14"/><rect x="290" y="158" width="14" height="14"/><rect x="314" y="158" width="14" height="14"/><rect x="338" y="158" width="14" height="14"/><rect x="362" y="158" width="14" height="14"/><rect x="386" y="158" width="14" height="14"/>
+          <rect x="26" y="182" width="14" height="14"/><rect x="50" y="182" width="14" height="14"/><rect x="74" y="182" width="14" height="14"/><rect x="98" y="182" width="14" height="14"/><rect x="122" y="182" width="14" height="14"/><rect x="146" y="182" width="14" height="14"/><rect x="170" y="182" width="14" height="14"/><rect x="194" y="182" width="14" height="14"/><rect x="218" y="182" width="14" height="14"/><rect x="242" y="182" width="14" height="14"/><rect x="266" y="182" width="14" height="14"/><rect x="290" y="182" width="14" height="14"/><rect x="314" y="182" width="14" height="14"/><rect x="338" y="182" width="14" height="14"/><rect x="362" y="182" width="14" height="14"/><rect x="386" y="182" width="14" height="14"/>
+        </g>
+        <g fill="var(--sig-trace)">
+          <rect x="74" y="110" width="14" height="14"/><rect x="266" y="134" width="14" height="14"/><rect x="146" y="182" width="14" height="14"/>
+        </g>
+        <text class="sl t" x="26" y="232">CHECKED</text>
+        <text class="sl" x="130" y="232">EVERYTHING ELSE, NEVER LOOKED AT</text>
+        <text class="sbm" x="26" y="288" style="font-size:14px">Thousands of calls. A person can</text>
+        <text class="sbm" x="26" y="310" style="font-size:14px">listen to a handful of them.</text>
+      </g>
+      <!-- 2 too late -->
+      <g data-step="2">
+        <rect class="node" x="474" y="0" width="430" height="380"/>
+        <text class="sl t" x="500" y="38">02</text>
+        <text class="sb" x="500" y="72" style="font-size:19px">And it happens too late</text>
+        <line x1="500" y1="160" x2="878" y2="160" stroke="var(--line-strong)" stroke-width="1.5"/>
+        <g>
+          <circle cx="530" cy="160" r="7" fill="var(--sig-trace)"/>
+          <text class="sl t" x="500" y="192">AGENT GOES LIVE</text>
+          <circle cx="840" cy="160" r="7" fill="var(--sig-contradicted)"/>
+          <text class="sl r" x="782" y="192">REVIEW HAPPENS</text>
+        </g>
+        <rect x="530" y="128" width="310" height="18" fill="var(--sig-contradicted)" opacity=".2"/>
+        <text class="sl r" x="580" y="122">REAL CUSTOMERS, REAL CALLS, UNCHECKED</text>
+        <text class="sbm" x="500" y="288" style="font-size:14px">By the time anyone looks, the agent</text>
+        <text class="sbm" x="500" y="310" style="font-size:14px">has been doing it for weeks.</text>
+      </g>
+      <!-- 3 opinion -->
+      <g data-step="3">
+        <rect class="node" x="948" y="0" width="430" height="380"/>
+        <text class="sl t" x="974" y="38">03</text>
+        <text class="sb" x="974" y="72" style="font-size:19px">And you get an opinion</text>
+        <rect x="974" y="110" width="378" height="120" rx="2" fill="var(--ground-sunken)" stroke="var(--line-strong)" stroke-width="1.5"/>
+        <text class="sbm" x="996" y="142">Call 2214</text>
+        <text class="sb" x="1180" y="142" fill="var(--sig-contradicted)">not compliant</text>
+        <text class="sbm" x="996" y="176">Call 2219</text>
+        <text class="sb" x="1180" y="176" fill="var(--sig-contradicted)">not compliant</text>
+        <text class="sbm" x="996" y="210">Call 2231</text>
+        <text class="sb" x="1180" y="210" fill="var(--sig-supported)">fine</text>
+        <text class="sl r" x="974" y="256">NO RULE ATTACHED TO ANY OF IT</text>
+        <text class="sbm" x="974" y="288" style="font-size:14px">If you want to know why, you have</text>
+        <text class="sbm" x="974" y="310" style="font-size:14px">to go and ask the person.</text>
+      </g>
+    </svg>
   </div>
 </section>
 
-<!-- 5 ................................................................. -->
-<section class="slide" data-notes="
-<h4>The design decision, 2:20 to 2:50. OPTIONAL, cut this first if you are behind.</h4>
-<p class='say'>Say: The one decision that makes this different from asking ChatGPT if something is compliant. The judge never sees the whole rulebook and never uses what it learned in training. It sees one retrieved paragraph and rules from that. That is why a verdict can be checked instead of trusted.</p>
-<p>If a technical person is in the room, this is the slide they will remember.</p>">
-  <div class="eyebrow rise">04 / Why you can check it</div>
-  <h2 class="rise">The judge only ever sees the rule we retrieved.</h2>
-  <div class="iso rise">
-    <div class="box"><div class="t">IN</div><div class="b">The claim</div></div>
-    <div class="arrow">&rarr;</div>
-    <div class="box"><div class="t">IN</div><div class="b">One retrieved paragraph</div></div>
-    <div class="arrow">&rarr;</div>
-    <div class="box" style="border-color:var(--sig-trace)"><div class="t">JUDGE</div><div class="b">Verdict</div></div>
+<!-- 04 THE VALUE ========================================================== -->
+<section class="slide" data-eyebrow="THE VALUE" data-glow="500,220" data-notes="
+<p class='say'>So here is what you get instead.</p>
+<p class='say'>Every single thing the agent said gets checked, not a sample, and it happens before the agent is deployed rather than weeks after.</p>
+<p class='say'>When something is flagged, the exact rule it broke comes attached to it, quoted word for word. Nobody has to take anybody's word for it.</p>
+<p class='say'>And all of it is written into a sealed record you could hand to a regulator, where you can prove afterwards that nothing was edited.</p>">
+  <div class="eyebrow rise">03 / The value</div>
+  <h2 class="big rise">Every turn checked before launch. Every flag carrying the rule it broke. A sealed record at the end.</h2>
+  <div style="margin-top:64px">
+    <svg width="1380" height="120" viewBox="0 0 1380 120" aria-label="Three outcomes: every turn checked before deployment, every flag carrying the exact rule, and a sealed record that can be handed to a regulator.">
+      <g data-step="1"><rect class="node key" x="0" y="0" width="430" height="104"/>
+        <text class="sl t" x="26" y="34">EVERYTHING, NOT A SAMPLE</text>
+        <text class="sb" x="26" y="64" style="font-size:17px">Every turn the agent produced</text>
+        <text class="sbm" x="26" y="88">Checked before deployment, not after</text></g>
+      <g data-step="2"><rect class="node key" x="474" y="0" width="430" height="104"/>
+        <text class="sl t" x="500" y="34">WITH THE RULE ATTACHED</text>
+        <text class="sb" x="500" y="64" style="font-size:17px">The exact rule, quoted</text>
+        <text class="sbm" x="500" y="88">Nobody has to take anybody's word for it</text></g>
+      <g data-step="3"><rect class="node key" x="948" y="0" width="430" height="104"/>
+        <text class="sl t" x="974" y="34">AND SEALED</text>
+        <text class="sb" x="974" y="64" style="font-size:17px">A record you can hand over</text>
+        <text class="sbm" x="974" y="88">Provably unedited afterwards</text></g>
+    </svg>
   </div>
-  <div class="iso rise" style="margin-top:1rem">
-    <div class="box blocked"><div class="t">NEVER</div><div class="b">The full rulebook</div></div>
-    <div class="box blocked"><div class="t">NEVER</div><div class="b">Its own training knowledge</div></div>
-  </div>
-  <p class="small rise" style="margin-top:2rem">An opinion cannot be audited. A verdict tied to one printed paragraph can.</p>
 </section>
 
-<!-- 6 ................................................................. -->
-<section class="slide" data-notes="
-<h4>The honest slide, 2:50 to 3:25. Do not skip this one.</h4>
-<p class='say'>Say: I want to be straight about where this actually is. When it flags something, three quarters of the time it names the right paragraph, and it stayed silent on the clean control call every time we ran it. But it only catches about a third of the violations we planted, and when I graded it against a human it agreed less than half the time. So this is a triage layer that routes work to a human reviewer. It is not a release gate, and I am not going to call it one.</p>
-<p>Erik and Patrick will trust the rest of the talk more because of this slide, not less.</p>">
-  <div class="eyebrow rise">05 / Where it actually is</div>
-  <h2 class="rise">A triage layer that routes to human review. Not a release gate.</h2>
-  <div class="figs rise">
-    <div class="fig good"><div class="v">0.75</div><div class="k">Cites the right paragraph</div></div>
-    <div class="fig good"><div class="v">0</div><div class="k">False alarms on the clean control</div></div>
-    <div class="fig warn"><div class="v">0.35</div><div class="k">Of planted violations caught</div></div>
-    <div class="fig warn"><div class="v">0.48</div><div class="k">Agreement with a human, floor was 0.85</div></div>
+<!-- 05 WHAT IT DOES ======================================================= -->
+<section class="slide" data-eyebrow="WHAT IT DOES" data-glow="900,700" data-notes="
+<p class='say'>Four steps, and they are simpler than you would think.</p>
+<p class='say'>One. It reads what the agent said. Only the agent. What the customer said is context, and the customer never gets judged.</p>
+<p class='say'>Two. It finds the rule that governs that specific sentence, in the client's own rulebook. Not a general idea of the law, their actual document.</p>
+<p class='say'>Three. It rules on it, using only that one rule. It is not allowed to use anything it happens to know from training, which is what makes the answer something you can check.</p>
+<p class='say'>Four. It attaches the evidence. The sentence, the rule, the reasoning, and a clip of the audio where the agent said it.</p>">
+  <div class="eyebrow rise">04 / What the solution does</div>
+  <div style="margin-top:10px">
+    <svg width="1380" height="330" viewBox="0 0 1380 330" aria-label="Four steps: read what the agent said, find the governing rule in the client's own rulebook, rule on it using only that rule, and attach the evidence.">
+      <defs><marker id="tA" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-trace)"/></marker></defs>
+      <g data-step="1"><rect class="node" x="0" y="60" width="310" height="130"/>
+        <text class="sl t" x="26" y="94">01</text>
+        <text class="sb" x="26" y="128" style="font-size:19px">Read what the</text><text class="sb" x="26" y="152" style="font-size:19px">agent said</text>
+        <text class="sbm" x="26" y="180">Only the agent, never the customer</text></g>
+      <g data-step="2"><rect class="node" x="356" y="60" width="310" height="130"/>
+        <text class="sl t" x="382" y="94">02</text>
+        <text class="sb" x="382" y="128" style="font-size:19px">Find the rule</text><text class="sb" x="382" y="152" style="font-size:19px">that governs it</text>
+        <text class="sbm" x="382" y="180">In the client's own rulebook</text></g>
+      <g data-step="3"><rect class="node key" x="712" y="60" width="310" height="130"/>
+        <text class="sl t" x="738" y="94">03</text>
+        <text class="sb" x="738" y="128" style="font-size:19px">Rule on it, using</text><text class="sb" x="738" y="152" style="font-size:19px">only that rule</text>
+        <text class="sbm" x="738" y="180">Nothing it learned in training</text></g>
+      <g data-step="4"><rect class="node" x="1068" y="60" width="310" height="130"/>
+        <text class="sl t" x="1094" y="94">04</text>
+        <text class="sb" x="1094" y="128" style="font-size:19px">Attach the</text><text class="sb" x="1094" y="152" style="font-size:19px">evidence</text>
+        <text class="sbm" x="1094" y="180">The rule, the reasoning, the audio</text></g>
+      <g class="fl">
+        <path class="draw" d="M310,125 L354,125" marker-end="url(#tA)"/>
+        <path class="draw" d="M666,125 L710,125" marker-end="url(#tA)"/>
+        <path class="draw" d="M1022,125 L1066,125" marker-end="url(#tA)"/>
+      </g>
+      <g data-step="4">
+        <text class="sl t" x="712" y="252">THIS IS THE ONE THAT MATTERS. IT ONLY EVER SEES ONE RULE AT A TIME,</text>
+        <text class="sl t" x="712" y="272">WHICH IS WHY YOU CAN CHECK THE ANSWER INSTEAD OF TRUSTING IT.</text>
+      </g>
+    </svg>
   </div>
-  <p class="small rise" style="margin-top:2.5rem">Three separate measurements point the same way, so the honest positioning is the narrow one. What is genuinely strong: when it does speak, it is usually right about which rule, and it never invented a problem on the compliant call.</p>
 </section>
 
-<!-- 7 ................................................................. -->
-<section class="slide" data-notes="
-<h4>Landing, 4:35 to 5:00</h4>
-<p class='say'>Say: So that is EchoProof. It read what the agent said, found the rule in the client's own rulebook, and gave a verdict you can check against the printed paragraph, with a sealed record behind it. It is a triage layer today, and the honest gap is detection. Happy to take questions.</p>
-<p>Stop talking here. Do not add a summary.</p>">
-  <div class="eyebrow rise">06 / What you just saw</div>
-  <h2 class="rise">Every claim has a source. Every verdict has a rule. Every finding has evidence.</h2>
-  <div class="rule rise"></div>
-  <p class="small rise">Fixed engine, swappable rulebook. The same engine ran a 303 provision federal regulation and a 15 provision telecom standard with no code change.</p>
+<!-- 06 WHERE IT PLUGS IN AND THE ASK ====================================== -->
+<section class="slide" data-eyebrow="WHERE IT PLUGS IN" data-glow="700,400" data-notes="
+<p class='say'>Last thing, which is how it actually connects to an agent.</p>
+<p class='say'>A voice agent is a chain. The customer speaks, that gets turned into text, something decides what to say next, a model writes the reply, and it gets turned back into speech.</p>
+<p class='say'>EchoProof sits at exactly one point in that chain, in front of the model. You change one setting to point at us. Nothing else in the stack changes.</p>
+<p class='say'>And the reply goes straight back, untouched. We do not sit in the middle of the call slowing it down. The checking happens off to the side, after the customer already has their answer.</p>
+<p class='say'>So: every claim has a source, every verdict has a rule, and every finding has evidence. Let me show you it running.</p>">
+  <div class="eyebrow rise">05 / Where it plugs in</div>
+  <div style="margin-top:0">
+    <svg width="1380" height="300" viewBox="0 0 1380 300" aria-label="A simplified voice agent chain: speech to text, an orchestrator, and the model. EchoProof attaches at a single point in front of the model and returns the reply unmodified, with the checking happening off to the side.">
+      <defs><marker id="tB" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-trace)"/></marker></defs>
+      <g data-step="1">
+        <circle cx="40" cy="90" r="26" fill="var(--ground-raised)" stroke="var(--line-strong)" stroke-width="1.5"/>
+        <path d="M32,82 q8,-6 16,0 M34,98 q6,5 12,0" stroke="var(--ink-muted)" stroke-width="1.5" fill="none"/>
+        <text class="sl" x="10" y="140">CUSTOMER</text>
+        <rect class="node" x="120" y="60" width="230" height="62"/>
+        <text class="sl" x="140" y="86">SPEECH TO TEXT</text><text class="sb" x="140" y="108">What they said</text>
+        <rect class="node" x="400" y="60" width="230" height="62"/>
+        <text class="sl" x="420" y="86">ORCHESTRATOR</text><text class="sb" x="420" y="108">What to do next</text>
+        <rect class="node" x="1040" y="60" width="230" height="62"/>
+        <text class="sl" x="1060" y="86">MODEL</text><text class="sb" x="1060" y="108">Writes the reply</text>
+        <g class="fl">
+          <path class="draw" d="M66,90 L118,90" marker-end="url(#tB)"/>
+          <path class="draw" d="M350,90 L398,90" marker-end="url(#tB)"/>
+        </g>
+      </g>
+      <g data-step="2">
+        <rect class="node key" x="700" y="50" width="250" height="82"/>
+        <text class="sl t" x="722" y="78">ECHOPROOF</text>
+        <text class="sb" x="722" y="102">One connection point</text>
+        <text class="sbm" x="722" y="122">Change one setting</text>
+        <g class="fl">
+          <path class="draw" d="M630,90 L698,90" marker-end="url(#tB)"/>
+          <path class="draw" d="M950,90 L1038,90" marker-end="url(#tB)"/>
+        </g>
+      </g>
+      <g data-step="3">
+        <path class="fl draw" d="M1040,122 L1040,170 L730,170" marker-end="url(#tB)" opacity=".85"/>
+        <text class="sl t" x="746" y="190">THE REPLY GOES BACK UNTOUCHED, AND IS NEVER DELAYED</text>
+        <path class="gold draw" d="M825,132 L825,222"/>
+        <rect class="node" x="716" y="228" width="220" height="54"/>
+        <text class="sl g" x="736" y="252">THE CHECKING</text>
+        <text class="sbm" x="736" y="272">Happens off to the side, afterwards</text>
+      </g>
+    </svg>
+  </div>
+  <p class="mono trace" data-step="4" style="font-size:19px;margin-top:34px">every claim has a source. every verdict has a rule. every finding has evidence.</p>
 </section>
 
-<div class="chrome">
-  <span id="ct">ECHOPROOF</span>
-  <span><span id="pg">1</span> / 7 &nbsp;&nbsp; N NOTES &nbsp; &larr; &rarr; MOVE</span>
+  <div id="rail"><div id="railfill"></div></div>
+  <div id="chrome">
+    <span>ECHOPROOF / AI LAUNCHPAD</span>
+    <span id="eyeb">THE IDEA</span>
+    <span><span id="idx">1</span> / 6</span>
+  </div>
+  <div id="notes"></div>
+  <div class="ov" id="over"><h3>Overview</h3><div id="ogrid"></div></div>
+  <div class="ov" id="keys"><h3>Key map</h3><dl>
+    <dt>&rarr; space</dt><dd>Next build step, then next slide</dd>
+    <dt>&larr;</dt><dd>Back one step, then previous slide</dd>
+    <dt>N</dt><dd>Presenter notes</dd>
+    <dt>O</dt><dd>Overview grid</dd>
+    <dt>F</dt><dd>Fullscreen</dd>
+    <dt>B</dt><dd>Blackout</dd>
+    <dt>?</dt><dd>This key map</dd>
+    <dt>Home End</dt><dd>First and last slide</dd>
+    <dt>1 to 6</dt><dd>Jump to slide</dd>
+  </dl></div>
+  <div id="black"></div>
 </div>
-<div class="notes" id="nt"></div>
 
 <script>
 (function(){
-  var slides=[].slice.call(document.querySelectorAll('.slide'));
-  var i=0, notesOn=false;
-  var nt=document.getElementById('nt'), pg=document.getElementById('pg');
-  function render(){
-    slides.forEach(function(s,n){ s.classList.toggle('on', n===i); });
-    pg.textContent=i+1;
-    nt.innerHTML=slides[i].getAttribute('data-notes')||'<h4>No notes</h4>';
+  var stage=document.getElementById('stage'),
+      slides=[].slice.call(document.querySelectorAll('.slide')),
+      idx=document.getElementById('idx'), eyeb=document.getElementById('eyeb'),
+      notes=document.getElementById('notes'), over=document.getElementById('over'),
+      keys=document.getElementById('keys'), black=document.getElementById('black'),
+      glow=document.getElementById('glow'), fill=document.getElementById('railfill'),
+      ogrid=document.getElementById('ogrid');
+  var i=0, step=0, notesOn=false;
+
+  function fit(){
+    var s=Math.min(window.innerWidth/1600, window.innerHeight/900);
+    // A zero or non finite viewport would scale the stage to nothing and leave
+    // a blank screen in front of a room. Fall back to unscaled instead.
+    if(!isFinite(s) || s<=0) s=1;
+    stage.style.transform='translate(-50%,-50%) scale('+s+')';
   }
-  function go(d){ var n=i+d; if(n<0||n>=slides.length) return; i=n; render(); }
-  document.addEventListener('keydown',function(e){
-    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(1);}
-    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(-1);}
-    else if(e.key==='n'||e.key==='N'){notesOn=!notesOn;nt.classList.toggle('on',notesOn);}
-    else if(e.key==='Home'){i=0;render();}
-    else if(e.key==='End'){i=slides.length-1;render();}
+  window.addEventListener('resize',fit);
+  window.addEventListener('orientationchange',fit);
+  document.addEventListener('visibilitychange',fit);
+  window.addEventListener('load',fit);
+  fit();
+
+  function maxStep(n){
+    var v=0;
+    slides[n].querySelectorAll('[data-step]').forEach(function(el){
+      v=Math.max(v, parseInt(el.getAttribute('data-step'),10)||0);
+    });
+    return v;
+  }
+  document.body.classList.add('armed');
+
+  document.querySelectorAll('.draw').forEach(function(p){
+    try{ var L=p.getTotalLength();
+      p.style.strokeDasharray=L; p.style.strokeDashoffset=L; p.dataset.len=L;
+    }catch(e){}
   });
-  document.addEventListener('click',function(e){ if(e.clientY<window.innerHeight-90) go(1); });
-  render();
+
+  function paint(){
+    slides.forEach(function(s,n){ s.classList.toggle('on', n===i); });
+    var cur=slides[i];
+    cur.querySelectorAll('[data-step]').forEach(function(el){
+      var n=parseInt(el.getAttribute('data-step'),10)||0;
+      var show=n<=step;
+      el.classList.toggle('shown',show);
+      if(show) el.querySelectorAll('.draw').forEach(function(p){ p.style.strokeDashoffset=0; });
+    });
+    idx.textContent=i+1;
+    eyeb.textContent=cur.getAttribute('data-eyebrow')||'';
+    notes.innerHTML=cur.getAttribute('data-notes')||'<p>No notes.</p>';
+    fill.style.width=((i+1)/slides.length*100)+'%';
+    var g=(cur.getAttribute('data-glow')||'800,450').split(',');
+    glow.style.transform='translate('+(parseInt(g[0],10)-750)+'px,'+(parseInt(g[1],10)-550)+'px)';
+    [].forEach.call(ogrid.children,function(c,n){ c.classList.toggle('cur',n===i); });
+  }
+  function fwd(){ if(step<maxStep(i)){ step++; paint(); } else if(i<slides.length-1){ i++; step=0; paint(); } }
+  function back(){ if(step>0){ step--; paint(); } else if(i>0){ i--; step=maxStep(i); paint(); } }
+  function goTo(n){ if(n>=0&&n<slides.length){ i=n; step=0; paint(); } }
+
+  slides.forEach(function(s,n){
+    var c=document.createElement('div'); c.className='ocard';
+    c.innerHTML='<div class="n">'+String(n+1).padStart(2,'0')+'</div><div class="t">'+
+      (s.getAttribute('data-eyebrow')||'')+'</div>';
+    c.onclick=function(){ over.classList.remove('on'); goTo(n); };
+    ogrid.appendChild(c);
+  });
+
+  document.addEventListener('keydown',function(e){
+    var k=e.key;
+    if(k==='ArrowRight'||k===' '||k==='PageDown'){e.preventDefault();fwd();}
+    else if(k==='ArrowLeft'||k==='PageUp'){e.preventDefault();back();}
+    else if(k==='n'||k==='N'){notesOn=!notesOn;notes.classList.toggle('on',notesOn);}
+    else if(k==='o'||k==='O'){over.classList.toggle('on');keys.classList.remove('on');}
+    else if(k==='b'||k==='B'){black.classList.toggle('on');}
+    else if(k==='?'){keys.classList.toggle('on');over.classList.remove('on');}
+    else if(k==='f'||k==='F'){ if(!document.fullscreenElement){document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();} else {document.exitFullscreen&&document.exitFullscreen();} }
+    else if(k==='Home'){goTo(0);}
+    else if(k==='End'){goTo(slides.length-1);}
+    else if(/^[1-9]$/.test(k)){goTo(parseInt(k,10)-1);}
+    else if(k==='Escape'){over.classList.remove('on');keys.classList.remove('on');black.classList.remove('on');}
+  });
+  document.addEventListener('click',function(e){
+    if(over.classList.contains('on')||keys.classList.contains('on'))return;
+    if(e.clientY>window.innerHeight-70)return;
+    fwd();
+  });
+  var tx=0;
+  document.addEventListener('touchstart',function(e){tx=e.changedTouches[0].clientX;},{passive:true});
+  document.addEventListener('touchend',function(e){
+    var d=e.changedTouches[0].clientX-tx;
+    if(d<-45)fwd(); else if(d>45)back();
+  },{passive:true});
+
+  paint();
 })();
 </script>
 </body>

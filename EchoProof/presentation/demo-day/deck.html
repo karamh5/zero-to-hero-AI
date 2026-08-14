@@ -2,559 +2,943 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>EchoProof, Demo Day</title>
 <style>
 /* ==========================================================================
-   EchoProof demo day deck. 10 to 15 minutes.
-   Offline and self contained: no CDN, no external font, no external image.
-   Palette, type roles and easing taken from ui/src/styles/tokens.css.
-   Every diagram below is hand built inline SVG.
+   EchoProof deck. Self contained: no CDN, no external font, no raster.
+   Palette and type roles taken from ui/src/styles/tokens.css so the deck and
+   the product read as one instrument.
    ========================================================================== */
 :root{
   --ground:#0f1114; --ground-raised:#171a20; --ground-sunken:#0a0c0f;
   --ink:#e9e7e1; --ink-muted:#a4a9b4; --ink-faint:#868c97;
   --line:#23272e; --line-strong:#363c46;
   --paper:#f2efe7; --paper-ink:#201e19;
-  --sig-supported:#5bb295; --sig-contradicted:#e4705f;
-  --sig-ngr:#8aa0bd; --sig-rbc:#97a9be; --sig-cs:#a6b1bf;
-  --sig-trace:#45c8da; --sig-seal:#ff6152; --sig-det:#cbb268;
-  --font-interface:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
-  --font-law:Georgia,"Source Serif 4","Times New Roman",serif;
-  --font-machine:"Cascadia Mono",Consolas,ui-monospace,"Courier New",monospace;
-  --track-caps:.08em; --lh-display:.86; --track-display:-.035em;
+  --sig-trace:#45c8da; --sig-supported:#5bb295; --sig-contradicted:#e4705f;
+  --sig-det:#cbb268; --sig-seal:#ff6152;
+  --glow:rgba(69,200,218,.16);
+  --paper-cite:#5a544a; --blackout:#000; --print-ground:#fff;
+  --mask-on:#000; --vignette:rgba(0,0,0,.55);
+
+  --font-ui:"Archivo","Archivo Variable","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --font-mono:"IBM Plex Mono","Cascadia Mono",Consolas,ui-monospace,"Courier New",monospace;
+  --font-law:"Source Serif 4","Source Serif 4 Variable",Georgia,"Times New Roman",serif;
+
   --ease-settle:cubic-bezier(.16,1,.3,1);
   --ease-reveal:cubic-bezier(.9,0,.1,1);
-  --dur:620ms;
+  --track-caps:.08em;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{background:var(--ground);color:var(--ink);font-family:var(--font-interface);
-  overflow:hidden;-webkit-font-smoothing:antialiased}
+html,body{height:100%;overflow:hidden;background:var(--ground)}
+body{font-family:var(--font-ui);color:var(--ink);-webkit-font-smoothing:antialiased}
 
-.slide{position:fixed;inset:0;display:none;flex-direction:column;justify-content:center;
-  padding:clamp(2rem,5vw,5rem) clamp(2.5rem,6vw,6rem);
-  opacity:0;transition:opacity var(--dur) var(--ease-settle)}
-.slide.on{display:flex;opacity:1}
-.slide.on .rise{animation:rise var(--dur) var(--ease-settle) both}
-.slide.on .rise:nth-child(2){animation-delay:70ms}
-.slide.on .rise:nth-child(3){animation-delay:140ms}
-.slide.on .rise:nth-child(4){animation-delay:210ms}
-.slide.on .rise:nth-child(5){animation-delay:280ms}
-@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-.slide.on svg .draw{animation:draw 1s var(--ease-reveal) both}
-@keyframes draw{from{stroke-dashoffset:var(--len,400)}to{stroke-dashoffset:0}}
+/* ---- stage: fixed 1600x900, scaled by JS ------------------------------- */
+#stage{position:absolute;top:50%;left:50%;width:1600px;height:900px;
+  transform:translate(-50%,-50%);transform-origin:center center;
+  background:var(--ground);overflow:hidden}
 
-.eyebrow{font-family:var(--font-machine);font-size:.6875rem;letter-spacing:var(--track-caps);
-  text-transform:uppercase;color:var(--sig-trace);margin-bottom:1.5rem}
-h1{font-size:clamp(2.75rem,9vw,7rem);line-height:var(--lh-display);
-  letter-spacing:var(--track-display);font-weight:700}
-h2{font-size:clamp(1.7rem,3.9vw,2.9rem);line-height:1;letter-spacing:-.025em;
-  font-weight:700;max-width:24ch}
-.lede{font-size:clamp(1rem,1.55vw,1.35rem);line-height:1.45;color:var(--ink-muted);
-  max-width:56ch;margin-top:1.5rem}
-.small{font-size:.9375rem;line-height:1.55;color:var(--ink-muted);max-width:70ch}
-.note{font-family:var(--font-machine);font-size:.75rem;letter-spacing:.02em;
-  color:var(--ink-faint);margin-top:1.25rem}
-strong{color:var(--ink);font-weight:600}
-.opt{display:inline-block;font-family:var(--font-machine);font-size:.625rem;
-  letter-spacing:var(--track-caps);color:var(--sig-det);border:1px solid var(--sig-det);
-  padding:.15rem .45rem;border-radius:2px;margin-left:.6rem;vertical-align:middle}
+/* ---- background: grid, drifting glow, vignette -------------------------- */
+#bg{position:absolute;inset:0;pointer-events:none;z-index:0}
+#grid{position:absolute;inset:-40px;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:40px 40px;opacity:.30;
+  -webkit-mask-image:radial-gradient(120% 90% at 50% 45%,var(--mask-on) 25%,transparent 78%);
+  mask-image:radial-gradient(120% 90% at 50% 45%,var(--mask-on) 25%,transparent 78%)}
+#glow{position:absolute;width:1500px;height:1100px;left:0;top:0;
+  background:radial-gradient(circle at center,var(--glow) 0%,transparent 62%);
+  transition:transform 2400ms var(--ease-settle);will-change:transform}
+#vig{position:absolute;inset:0;
+  background:radial-gradient(130% 100% at 50% 50%,transparent 52%,var(--vignette) 100%)}
 
-.quote{font-family:var(--font-law);font-size:clamp(1.2rem,2.2vw,1.9rem);line-height:1.4;
-  max-width:36ch;border-left:4px solid var(--sig-contradicted);padding-left:1.5rem}
+/* ---- slides ------------------------------------------------------------- */
+.slide{position:absolute;inset:0;z-index:1;display:none;flex-direction:column;
+  justify-content:center;padding:96px 110px 118px}
+.slide.on{display:flex}
+
+/* motion fails open: visible unless JS has armed the system */
+.armed .rise{opacity:0;transform:translateY(16px)}
+.armed .slide.on .rise{opacity:1;transform:none;
+  transition:opacity 620ms var(--ease-settle),transform 620ms var(--ease-settle)}
+.armed .slide.on .rise:nth-of-type(1){transition-delay:0ms}
+.armed .slide.on .rise:nth-of-type(2){transition-delay:70ms}
+.armed .slide.on .rise:nth-of-type(3){transition-delay:140ms}
+.armed .slide.on .rise:nth-of-type(4){transition-delay:210ms}
+.armed .slide.on .rise:nth-of-type(5){transition-delay:280ms}
+.armed .slide.on .rise:nth-of-type(6){transition-delay:350ms}
+
+/* build steps: visible unless armed */
+.armed [data-step]{opacity:0;transition:opacity 520ms var(--ease-settle)}
+.armed [data-step].shown{opacity:1}
+.armed .draw{transition:stroke-dashoffset 1000ms var(--ease-reveal)}
+
+/* ---- type --------------------------------------------------------------- */
+.eyebrow{font-family:var(--font-mono);font-size:13px;letter-spacing:var(--track-caps);
+  text-transform:uppercase;color:var(--sig-trace);margin-bottom:26px}
+h1{font-size:clamp(3rem,9.5vw,8rem);line-height:.86;letter-spacing:-.035em;font-weight:700}
+#stage h1{font-size:132px}
+h2{font-size:52px;line-height:1.02;letter-spacing:-.03em;font-weight:700;max-width:24ch}
+h2.big{font-size:72px;max-width:20ch}
+.lede{font-size:23px;line-height:1.45;color:var(--ink-muted);max-width:56ch;margin-top:26px}
+.small{font-size:17px;line-height:1.55;color:var(--ink-muted);max-width:78ch}
+.mono{font-family:var(--font-mono);font-size:14px;letter-spacing:.03em;color:var(--ink-faint)}
+.mono.trace{color:var(--sig-trace)}
+strong{font-weight:600;color:var(--ink)}
+
+.quote{font-family:var(--font-law);font-size:44px;line-height:1.32;max-width:26ch;color:var(--ink)}
+.flag{border-bottom:4px solid var(--sig-contradicted);padding-bottom:2px}
 .lawcard{background:var(--paper);color:var(--paper-ink);font-family:var(--font-law);
-  font-size:1.0625rem;line-height:1.5;padding:1.4rem 1.6rem;max-width:48ch;border-radius:2px}
-.lawcard .cite{display:block;margin-top:.8rem;font-family:var(--font-machine);
-  font-size:.75rem;letter-spacing:.04em;color:#5a544a}
+  font-size:21px;line-height:1.5;padding:30px 34px;max-width:46ch;border-radius:2px}
+.lawcard .cite{display:block;margin-top:18px;font-family:var(--font-mono);
+  font-size:13px;letter-spacing:.05em;color:var(--paper-cite)}
+.wrap{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.stack2{display:flex;flex-direction:column;gap:26px}
 
-.wrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.5rem,4vw,3.5rem);align-items:center}
-@media (max-width:900px){.wrap{grid-template-columns:1fr}}
-figure{width:100%}
-svg{width:100%;height:auto;display:block;overflow:visible}
-.sl{font-family:"Cascadia Mono",Consolas,monospace;font-size:9px;letter-spacing:.07em;
-  fill:#868c97;text-transform:uppercase}
-.sb{font-family:"Archivo",Helvetica,Arial,sans-serif;font-size:12.5px;fill:#e9e7e1}
-.sbm{font-family:"Archivo",Helvetica,Arial,sans-serif;font-size:11px;fill:#a4a9b4}
-.sn{font-family:"Cascadia Mono",Consolas,monospace;font-size:10px;fill:#45c8da}
+/* ---- svg text roles ----------------------------------------------------- */
+svg{display:block;overflow:visible}
+.sl{font-family:"IBM Plex Mono","Cascadia Mono",Consolas,monospace;font-size:10px;
+  letter-spacing:.09em;fill:var(--ink-faint);text-transform:uppercase}
+.sl.t{fill:var(--sig-trace)} .sl.g{fill:var(--sig-det)} .sl.r{fill:var(--sig-contradicted)}
+.sl.k{fill:var(--sig-supported)} .sl.s{fill:var(--sig-seal)}
+.sb{font-family:"Archivo",Helvetica,Arial,sans-serif;font-size:14px;fill:var(--ink)}
+.sbm{font-family:"Archivo",Helvetica,Arial,sans-serif;font-size:12px;fill:var(--ink-muted)}
+.sm{font-family:"IBM Plex Mono","Cascadia Mono",Consolas,monospace;font-size:12px;fill:var(--sig-trace)}
+.node{fill:var(--ground-raised);stroke:var(--line-strong);stroke-width:1.5;rx:2}
+.node.key{stroke:var(--sig-trace)}
+.node.sunk{fill:var(--ground-sunken);stroke:var(--sig-trace)}
+.fl{stroke:var(--sig-trace);stroke-width:1.5;fill:none}
+.gold{stroke:var(--sig-det);stroke-width:1.5;fill:none;stroke-dasharray:5 4}
+.bad{stroke:var(--sig-contradicted);stroke-width:1.5;fill:none}
 
-.figs{display:flex;gap:clamp(1.5rem,4vw,3.5rem);flex-wrap:wrap;margin-top:2rem}
-.fig .v{font-size:clamp(1.9rem,4vw,3rem);line-height:1;letter-spacing:-.03em;font-weight:700}
-.fig .k{font-family:var(--font-machine);font-size:.625rem;letter-spacing:var(--track-caps);
-  text-transform:uppercase;color:var(--ink-faint);margin-top:.5rem;max-width:16ch}
-.fig.good .v{color:var(--sig-supported)}
-.fig.bad .v{color:var(--sig-contradicted)}
-
-table{border-collapse:collapse;margin-top:1.75rem;font-size:.9375rem;width:100%;max-width:64ch}
-th,td{text-align:left;padding:.55rem .9rem .55rem 0;border-bottom:1px solid var(--line)}
-th{font-family:var(--font-machine);font-size:.625rem;letter-spacing:var(--track-caps);
-  text-transform:uppercase;color:var(--ink-faint);font-weight:400}
-td.m{font-family:var(--font-machine);font-size:.8125rem}
-td.good{color:var(--sig-supported)} td.bad{color:var(--sig-contradicted)}
-
-.chrome{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-between;
-  align-items:center;padding:.9rem clamp(1.5rem,4vw,3rem);font-family:var(--font-machine);
-  font-size:.625rem;letter-spacing:var(--track-caps);color:var(--ink-faint);
+/* ---- chrome ------------------------------------------------------------- */
+#chrome{position:absolute;left:0;right:0;bottom:0;height:46px;z-index:3;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 110px;font-family:var(--font-mono);font-size:12px;
+  letter-spacing:var(--track-caps);color:var(--ink-faint);
   border-top:1px solid var(--line);background:var(--ground)}
-.notes{position:fixed;left:0;right:0;bottom:0;max-height:44vh;overflow:auto;display:none;
-  background:var(--ground-sunken);border-top:2px solid var(--sig-trace);
-  padding:1.4rem clamp(1.5rem,4vw,3rem) 3.2rem}
-.notes.on{display:block}
-.notes h4{font-family:var(--font-machine);font-size:.6875rem;letter-spacing:var(--track-caps);
-  color:var(--sig-trace);margin-bottom:.7rem;text-transform:uppercase}
-.notes p{font-size:.9375rem;line-height:1.6;color:var(--ink-muted);max-width:92ch;margin-bottom:.55rem}
-.notes .say{color:var(--ink);border-left:2px solid var(--line-strong);padding-left:.85rem}
+#rail{position:absolute;left:0;right:0;bottom:46px;height:1px;background:var(--line);z-index:3}
+#railfill{height:1px;background:var(--sig-trace);width:0;transition:width 420ms var(--ease-settle)}
+
+/* ---- overlays ----------------------------------------------------------- */
+.ov{position:absolute;inset:0;z-index:5;display:none;background:var(--ground-sunken);
+  padding:70px 110px;overflow:auto}
+.ov.on{display:block}
+.ov h3{font-family:var(--font-mono);font-size:13px;letter-spacing:var(--track-caps);
+  color:var(--sig-trace);text-transform:uppercase;margin-bottom:26px}
+#notes{position:absolute;left:0;right:0;bottom:47px;max-height:400px;overflow:auto;z-index:4;
+  display:none;background:var(--ground-sunken);border-top:2px solid var(--sig-trace);
+  padding:26px 110px 30px}
+#notes.on{display:block}
+#notes p{font-size:17px;line-height:1.62;color:var(--ink-muted);max-width:104ch;margin-bottom:12px}
+#notes p.say{color:var(--ink);border-left:2px solid var(--line-strong);padding-left:16px}
+#ogrid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.ocard{border:1px solid var(--line-strong);background:var(--ground-raised);padding:16px;
+  border-radius:2px;cursor:pointer}
+.ocard .n{font-family:var(--font-mono);font-size:11px;color:var(--sig-trace);letter-spacing:.08em}
+.ocard .t{font-size:14px;margin-top:8px;line-height:1.3}
+.ocard.cur{border-color:var(--sig-trace)}
+#keys dl{display:grid;grid-template-columns:120px 1fr;gap:12px 22px;font-size:16px;color:var(--ink-muted)}
+#keys dt{font-family:var(--font-mono);color:var(--ink);font-size:13px;letter-spacing:.06em}
+#black{position:absolute;inset:0;z-index:9;background:var(--blackout);display:none}
+#black.on{display:block}
 
 @media (prefers-reduced-motion:reduce){
-  .slide{transition:none}
-  .slide.on .rise,.slide.on svg .draw{animation:none}
-  .slide.on svg .draw{stroke-dashoffset:0}
+  #glow{display:none} #grid{opacity:.18}
+  .armed .rise{opacity:1;transform:none;transition:none}
+  .armed [data-step]{transition:none}
+  .armed .draw{transition:none;stroke-dashoffset:0!important}
+}
+
+/* ---- print: one slide per landscape page, all steps shown --------------- */
+@page{size:1600px 900px landscape;margin:0}
+@media print{
+  html,body{overflow:visible;background:var(--print-ground)}
+  #stage{position:static;width:1600px;height:auto;transform:none}
+  #bg,#chrome,#rail,#notes,.ov,#black{display:none!important}
+  .slide{position:relative;display:flex!important;width:1600px;height:900px;
+    page-break-after:always;break-after:page;background:var(--ground)}
+  .rise,[data-step]{opacity:1!important;transform:none!important}
+  .draw{stroke-dashoffset:0!important}
 }
 </style>
 </head>
 <body>
+<div id="stage">
+  <div id="bg"><div id="grid"></div><div id="glow"></div><div id="vig"></div></div>
 
-<!-- 01 title ................................................................ -->
-<section class="slide on" data-notes="
-<h4>0:00</h4>
-<p class='say'>Say: Enterprises are putting voice AI agents into conversations that are governed by law. The agent is fluent, it is confident, and it has no idea which of its sentences are legal.</p>">
-  <div class="eyebrow rise">Deployment readiness for regulated voice AI</div>
-  <h1 class="rise">ECHOPROOF</h1>
-  <p class="lede rise">Every claim has a source. Every verdict has a rule. Every finding has evidence.</p>
-</section>
-
-<!-- 02 problem .............................................................. -->
-<section class="slide" data-notes="
-<h4>The problem, about 1 minute</h4>
-<p class='say'>Say: This is a real agent turn. It is warm, it is helpful, and it breaks federal law, because a collector may not discuss a debt with a third party. The agent cannot tell. Neither can the eval suite, because this is not a wrong answer. It is a lawful sounding sentence that happens to be prohibited.</p>
-<p>Beat before moving on. Let the sentence do the work.</p>">
-  <div class="eyebrow rise">01 / The problem</div>
-  <div class="wrap">
-    <div>
-      <div class="quote rise">Yes, please tell her that she owes four thousand five hundred dollars on a collection account, and that she needs to call Harbor Recovery back today.</div>
-      <p class="note rise">Agent turn, recorded. Reg F corpus.</p>
-    </div>
-    <div class="rise">
-      <div class="lawcard">Prohibitions. Except as provided in paragraph (d)(2) of this section, a debt collector must not communicate, in connection with the collection of any debt, with any person other than:
-        <span class="cite">12 CFR 1006.6(d)(1)</span></div>
-      <p class="small" style="margin-top:1.25rem">Not a hallucination. Not a wrong fact. A fluent, helpful, prohibited sentence, which is the failure mode no accuracy benchmark is looking for.</p>
-    </div>
-  </div>
-</section>
-
-<!-- 03 pipeline + isolation ................................................. -->
-<section class="slide" data-notes="
-<h4>Architecture, the most important diagram in the deck</h4>
-<p class='say'>Say: A proxy sits in front of the agent's model call, so nothing about the agent has to change. We extract the claims, settle in code anything code can settle, retrieve the governing rule, and only then judge. Look at the dashed boundary. The only things that cross into the judge are one claim and the rule text retrieval selected. The corpus does not cross. The model's own training knowledge does not cross. That is the whole argument for why a verdict here is checkable rather than an opinion.</p>
-<p>If you say one sentence about architecture, say the boundary sentence.</p>">
-  <div class="eyebrow rise">02 / Architecture</div>
-  <h2 class="rise">The judge is fenced in, on purpose.</h2>
-  <figure class="rise" style="margin-top:1.5rem">
-    <svg viewBox="0 0 1000 300" role="img" aria-label="Pipeline from adapter through claim extraction, deterministic checks and retrieval into an isolated judge, then the evidence log and report. The corpus and the model's training knowledge are blocked from crossing into the judge.">
-      <defs>
-        <marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-          <path d="M0,0 L8,4 L0,8 z" fill="#45c8da"/></marker>
-        <marker id="arx" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-          <path d="M0,0 L8,4 L0,8 z" fill="#e4705f"/></marker>
-      </defs>
-      <!-- main chain -->
-      <g>
-        <rect x="0" y="60" width="120" height="52" rx="2" fill="#171a20" stroke="#363c46"/>
-        <text class="sl" x="12" y="80">01 ADAPTER</text><text class="sb" x="12" y="98">proxy</text>
-        <rect x="150" y="60" width="130" height="52" rx="2" fill="#171a20" stroke="#363c46"/>
-        <text class="sl" x="162" y="80">02 EXTRACT</text><text class="sb" x="162" y="98">claims, offsets</text>
-        <rect x="310" y="60" width="140" height="52" rx="2" fill="#171a20" stroke="#cbb268"/>
-        <text class="sl" x="322" y="80" fill="#cbb268">03 VERIFY</text><text class="sb" x="322" y="98">money, dates</text>
-        <rect x="480" y="60" width="130" height="52" rx="2" fill="#171a20" stroke="#363c46"/>
-        <text class="sl" x="492" y="80">04 RETRIEVE</text><text class="sb" x="492" y="98">hybrid + rerank</text>
-      </g>
-      <path d="M120,86 L148,86" stroke="#45c8da" stroke-width="1.5" marker-end="url(#ar)"/>
-      <path d="M280,86 L308,86" stroke="#45c8da" stroke-width="1.5" marker-end="url(#ar)"/>
-      <path d="M450,86 L478,86" stroke="#45c8da" stroke-width="1.5" marker-end="url(#ar)"/>
-      <!-- deterministic short circuit -->
-      <path d="M380,112 L380,150 L860,150 L860,120" stroke="#cbb268" stroke-width="1.5"
-            stroke-dasharray="4 3" fill="none" marker-end="url(#ar)"/>
-      <text class="sl" x="392" y="145" fill="#cbb268">DECIDED IN CODE, NO MODEL</text>
-
-      <!-- isolation boundary -->
-      <rect x="640" y="18" width="200" height="136" rx="3" fill="none" stroke="#45c8da"
-            stroke-width="1.5" stroke-dasharray="6 4"/>
-      <text class="sn" x="652" y="38">ISOLATION BOUNDARY</text>
-      <rect x="662" y="52" width="156" height="60" rx="2" fill="#0a0c0f" stroke="#45c8da"/>
-      <text class="sl" x="674" y="72" fill="#45c8da">05 JUDGE</text>
-      <text class="sb" x="674" y="90">rules from that</text>
-      <text class="sb" x="674" y="104">text alone</text>
-      <path d="M610,86 L660,86" stroke="#45c8da" stroke-width="1.5" marker-end="url(#ar)"/>
-      <text class="sl" x="612" y="76">claim + rule</text>
-
-      <!-- blocked inputs -->
-      <g opacity=".85">
-        <rect x="640" y="196" width="200" height="34" rx="2" fill="none" stroke="#e4705f" stroke-dasharray="4 3"/>
-        <text class="sbm" x="652" y="217" fill="#e4705f">the full corpus</text>
-        <rect x="640" y="240" width="200" height="34" rx="2" fill="none" stroke="#e4705f" stroke-dasharray="4 3"/>
-        <text class="sbm" x="652" y="261" fill="#e4705f">its own training knowledge</text>
-        <path d="M740,196 L740,158" stroke="#e4705f" stroke-width="1.5" marker-end="url(#arx)"/>
-        <path d="M700,240 L700,158" stroke="#e4705f" stroke-width="1.5" marker-end="url(#arx)"/>
-        <line x1="712" y1="170" x2="768" y2="170" stroke="#e4705f" stroke-width="2.5"/>
-        <line x1="672" y1="182" x2="728" y2="182" stroke="#e4705f" stroke-width="2.5"/>
-      </g>
-
-      <!-- tail -->
-      <rect x="880" y="60" width="120" height="52" rx="2" fill="#171a20" stroke="#363c46"/>
-      <text class="sl" x="892" y="80">06 EVIDENCE</text><text class="sb" x="892" y="98">hash chain</text>
-      <path d="M840,86 L878,86" stroke="#45c8da" stroke-width="1.5" marker-end="url(#ar)"/>
-    </svg>
-  </figure>
-  <p class="small rise" style="margin-top:1.25rem">The engine holds no field, constant or branch that knows which industry it is running in. Everything client specific is a data pack.</p>
-</section>
-
-<!-- 04 verdict states ....................................................... -->
-<section class="slide" data-notes="
-<h4>The five states</h4>
-<p class='say'>Say: Five outcomes, never a pass or a fail. Two decide. Three decline, and declining is a designed result, not a failure to produce one. We count abstentions separately everywhere, because reporting a refusal as a detection would flatter the numbers.</p>
-<p>Be honest about the two marked states before anyone asks. It costs nothing here and buys the room.</p>">
-  <div class="eyebrow rise">03 / Verdict states</div>
-  <h2 class="rise">Two decide. Three decline. Never a pass or a fail.</h2>
-  <figure class="rise" style="margin-top:1.25rem">
-    <svg viewBox="0 0 1000 250" role="img" aria-label="Routing from a claim through retrieval score checks into five verdict states: supported and contradicted decide, while no governing rule, retrieval below confidence and conflicting sections are abstentions routed to human review.">
-      <defs><marker id="a2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-        <path d="M0,0 L8,4 L0,8 z" fill="#868c97"/></marker></defs>
-      <rect x="0" y="100" width="118" height="46" rx="2" fill="#171a20" stroke="#363c46"/>
-      <text class="sb" x="14" y="128">one claim</text>
-      <path d="M118,123 L168,123" stroke="#868c97" stroke-width="1.3" marker-end="url(#a2)"/>
-      <rect x="170" y="96" width="150" height="54" rx="2" fill="#171a20" stroke="#45c8da"/>
-      <text class="sl" x="182" y="116" fill="#45c8da">RETRIEVAL SCORE</text>
-      <text class="sbm" x="182" y="136">floor 0.4937</text>
-
-      <path d="M320,110 L400,52" stroke="#868c97" stroke-width="1.3" marker-end="url(#a2)"/>
-      <path d="M320,123 L400,123" stroke="#868c97" stroke-width="1.3" marker-end="url(#a2)"/>
-      <path d="M320,136 L400,196" stroke="#868c97" stroke-width="1.3" marker-end="url(#a2)"/>
-      <text class="sl" x="330" y="76">BELOW FLOOR</text>
-      <text class="sl" x="330" y="117">CLEARS, ONE RULE</text>
-      <text class="sl" x="330" y="190">CLEARS, TWO WAYS</text>
-
-      <!-- decisions -->
-      <rect x="560" y="18" width="230" height="42" rx="2" fill="#0a0c0f" stroke="#5bb295"/>
-      <text class="sn" x="572" y="36" fill="#5bb295">supported</text>
-      <text class="sl" x="572" y="52">DECISION</text>
-      <rect x="560" y="70" width="230" height="42" rx="2" fill="#0a0c0f" stroke="#e4705f"/>
-      <text class="sn" x="572" y="88" fill="#e4705f">contradicted</text>
-      <text class="sl" x="572" y="104">DECISION</text>
-      <path d="M400,110 L558,50" stroke="#868c97" stroke-width="1.3" marker-end="url(#a2)"/>
-      <path d="M400,123 L558,95" stroke="#868c97" stroke-width="1.3" marker-end="url(#a2)"/>
-
-      <!-- abstentions -->
-      <rect x="560" y="126" width="230" height="38" rx="2" fill="#0a0c0f" stroke="#8aa0bd" stroke-dasharray="4 3"/>
-      <text class="sn" x="572" y="144" fill="#8aa0bd">no_governing_rule</text>
-      <text class="sl" x="572" y="158">ABSTENTION, NOT REACHABLE TODAY</text>
-      <rect x="560" y="172" width="230" height="38" rx="2" fill="#0a0c0f" stroke="#97a9be"/>
-      <text class="sn" x="572" y="190" fill="#97a9be">retrieval_below_confidence</text>
-      <text class="sl" x="572" y="204">ABSTENTION</text>
-      <rect x="560" y="218" width="230" height="38" rx="2" fill="#0a0c0f" stroke="#a6b1bf" stroke-dasharray="4 3"/>
-      <text class="sn" x="572" y="236" fill="#a6b1bf">conflicting_sections</text>
-      <text class="sl" x="572" y="250">ABSTENTION, LEAST RELIABLE</text>
-
-      <rect x="840" y="150" width="160" height="60" rx="2" fill="#171a20" stroke="#363c46"/>
-      <text class="sb" x="852" y="176">human</text><text class="sb" x="852" y="194">review</text>
-      <path d="M790,145 L838,172" stroke="#868c97" stroke-width="1.3" marker-end="url(#a2)"/>
-      <path d="M790,191 L838,183" stroke="#868c97" stroke-width="1.3" marker-end="url(#a2)"/>
-      <path d="M790,237 L838,200" stroke="#868c97" stroke-width="1.3" marker-end="url(#a2)"/>
-    </svg>
-  </figure>
-  <p class="small rise" style="margin-top:1rem"><strong>Marked honestly:</strong> <span class="mono">no_governing_rule</span> is unreachable today, because the retrieval floor sits below the reranker's practical output range. Across 71 retrieval calls the lowest score seen was 0.5009 against a floor of 0.4937. <span class="mono">conflicting_sections</span> agreed with a human zero times out of three, so no weight is placed on it.</p>
-</section>
-
-<!-- 05 packs ................................................................ -->
-<section class="slide" data-notes="
-<h4>Fixed engine, swappable packs</h4>
-<p class='say'>Say: This is the commercial argument. The engine has no industry knowledge in it at all. A client brings four data packs: their rulebook, the scenarios they care about, the personas to play, and the thresholds that decide what blocks a release. We proved it by swapping a 303 provision federal regulation for a 15 provision telecom standard with entirely different identifiers, and changing no engine code.</p>
-<p>If asked what the swap proves: portability, not accuracy. Say that plainly.</p>">
-  <div class="eyebrow rise">04 / Fixed engine, swappable data</div>
-  <h2 class="rise">The engine never learns what industry it is in.</h2>
-  <figure class="rise" style="margin-top:1.5rem">
-    <svg viewBox="0 0 1000 260" role="img" aria-label="One engine in the centre with four data pack slots. Two corpora, Regulation F with 303 provisions and a telecom standard with 15 provisions, plug into the same engine.">
-      <defs><marker id="a3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-        <path d="M0,0 L8,4 L0,8 z" fill="#45c8da"/></marker></defs>
-      <rect x="360" y="60" width="280" height="140" rx="3" fill="#0a0c0f" stroke="#45c8da" stroke-width="1.5"/>
-      <text class="sl" x="380" y="86" fill="#45c8da">ENGINE, INDUSTRY AGNOSTIC</text>
-      <text class="sb" x="380" y="112">extract, verify, retrieve,</text>
-      <text class="sb" x="380" y="130">judge, seal, report</text>
-      <text class="sl" x="380" y="162">NO CORPUS CONSTANT IN ANY</text>
-      <text class="sl" x="380" y="176">EXECUTABLE LINE</text>
-
-      <g>
-        <rect x="20" y="20" width="180" height="40" rx="2" fill="#171a20" stroke="#363c46"/>
-        <text class="sbm" x="34" y="45">policy pack</text>
-        <rect x="20" y="72" width="180" height="40" rx="2" fill="#171a20" stroke="#363c46"/>
-        <text class="sbm" x="34" y="97">scenario pack</text>
-        <rect x="20" y="124" width="180" height="40" rx="2" fill="#171a20" stroke="#363c46"/>
-        <text class="sbm" x="34" y="149">persona pack</text>
-        <rect x="20" y="176" width="180" height="40" rx="2" fill="#171a20" stroke="#363c46"/>
-        <text class="sbm" x="34" y="201">criteria pack</text>
-        <path d="M200,40 L358,110" stroke="#45c8da" stroke-width="1.2" marker-end="url(#a3)" opacity=".7"/>
-        <path d="M200,92 L358,120" stroke="#45c8da" stroke-width="1.2" marker-end="url(#a3)" opacity=".7"/>
-        <path d="M200,144 L358,132" stroke="#45c8da" stroke-width="1.2" marker-end="url(#a3)" opacity=".7"/>
-        <path d="M200,196 L358,146" stroke="#45c8da" stroke-width="1.2" marker-end="url(#a3)" opacity=".7"/>
-        <text class="sl" x="20" y="240">CLIENT SUPPLIED</text>
-      </g>
-
-      <g>
-        <rect x="700" y="52" width="280" height="62" rx="2" fill="#171a20" stroke="#5bb295"/>
-        <text class="sn" x="716" y="74" fill="#5bb295">reg_f</text>
-        <text class="sbm" x="716" y="94">12 CFR 1006, 303 provisions</text>
-        <text class="sl" x="716" y="108">IDENTIFIERS LIKE 1006.6(D)(1)</text>
-        <rect x="700" y="130" width="280" height="62" rx="2" fill="#171a20" stroke="#5bb295"/>
-        <text class="sn" x="716" y="152" fill="#5bb295">synth_telecom</text>
-        <text class="sbm" x="716" y="172">customer contact standard, 15</text>
-        <text class="sl" x="716" y="186">IDENTIFIERS LIKE CC-4.2</text>
-        <path d="M640,110 L698,84" stroke="#45c8da" stroke-width="1.2" marker-end="url(#a3)"/>
-        <path d="M640,140 L698,160" stroke="#45c8da" stroke-width="1.2" marker-end="url(#a3)"/>
-        <text class="sl" x="700" y="220">SAME ENGINE, NO CODE CHANGE</text>
-      </g>
-    </svg>
-  </figure>
-</section>
-
-<!-- 06 evidence chain ....................................................... -->
-<section class="slide" data-notes="
-<h4>Evidence</h4>
-<p class='say'>Say: Every model call, every retrieval call and every finding writes a span into an append only chain. Each entry's hash covers the one before it. If anyone edits an entry in the middle, every hash after it stops matching and the seal visibly breaks. All 41 chains on disk verify on load, and the interface checks them every time it reads one.</p>">
-  <div class="eyebrow rise">05 / Evidence</div>
-  <h2 class="rise">Tamper evident by construction, not by policy.</h2>
-  <figure class="rise" style="margin-top:1.5rem">
-    <svg viewBox="0 0 1000 220" role="img" aria-label="A chain of evidence entries where each hash covers the previous entry. Editing a middle entry breaks every hash after it.">
-      <g>
-        <text class="sl" x="0" y="24">INTACT</text>
-        <g>
-          <rect x="0" y="36" width="150" height="46" rx="2" fill="#171a20" stroke="#5bb295"/>
-          <text class="sn" x="12" y="56" fill="#5bb295">entry 1</text><text class="sl" x="12" y="72">7db1ff57</text>
-          <rect x="180" y="36" width="150" height="46" rx="2" fill="#171a20" stroke="#5bb295"/>
-          <text class="sn" x="192" y="56" fill="#5bb295">entry 2</text><text class="sl" x="192" y="72">07d363c7</text>
-          <rect x="360" y="36" width="150" height="46" rx="2" fill="#171a20" stroke="#5bb295"/>
-          <text class="sn" x="372" y="56" fill="#5bb295">entry 3</text><text class="sl" x="372" y="72">203c3dad</text>
-          <rect x="540" y="36" width="150" height="46" rx="2" fill="#171a20" stroke="#5bb295"/>
-          <text class="sn" x="552" y="56" fill="#5bb295">entry 4</text><text class="sl" x="552" y="72">edb21e40</text>
-          <path d="M150,59 L178,59" stroke="#5bb295" stroke-width="1.4"/>
-          <path d="M330,59 L358,59" stroke="#5bb295" stroke-width="1.4"/>
-          <path d="M510,59 L538,59" stroke="#5bb295" stroke-width="1.4"/>
-          <text class="sl" x="720" y="63" fill="#5bb295">CHAIN VERIFIED</text>
+<!-- 01 TITLE ============================================================== -->
+<section class="slide on" data-eyebrow="TITLE" data-glow="1080,120" data-notes="
+<p class='say'>Enterprises are putting voice AI agents into conversations that are governed by law. Collections, insurance, healthcare, telecom.</p>
+<p class='say'>The agent is fluent and confident, and it has no idea which of its sentences are legal.</p>
+<p class='say'>EchoProof is a pre-deployment compliance assurance layer for those agents. Three claims, and I will show you the evidence for all three.</p>">
+  <div style="position:absolute;right:70px;top:96px;width:560px;height:560px">
+    <svg viewBox="0 0 560 560" aria-label="The compliance core: a ring of policy provision arcs, a cluster of extracted claim marks at the centre, and an evidence chain closing around the outside.">
+      <g data-step="0">
+        <circle cx="280" cy="280" r="196" fill="none" stroke="var(--line)" stroke-width="1"/>
+        <!-- policy arcs -->
+        <g stroke="var(--sig-trace)" stroke-width="3" fill="none" opacity=".85">
+          <path class="draw" d="M280,84 A196,196 0 0,1 419,141"/>
+          <path class="draw" d="M431,155 A196,196 0 0,1 470,258"/>
+          <path class="draw" d="M474,296 A196,196 0 0,1 424,411"/>
+          <path class="draw" d="M405,428 A196,196 0 0,1 300,474"/>
+          <path class="draw" d="M262,473 A196,196 0 0,1 150,420"/>
+          <path class="draw" d="M133,401 A196,196 0 0,1 87,300"/>
+          <path class="draw" d="M86,262 A196,196 0 0,1 134,152"/>
         </g>
       </g>
-      <g transform="translate(0,110)">
-        <text class="sl" x="0" y="24" fill="#ff6152">ENTRY 2 EDITED</text>
-        <rect x="0" y="36" width="150" height="46" rx="2" fill="#171a20" stroke="#5bb295"/>
-        <text class="sn" x="12" y="56" fill="#5bb295">entry 1</text><text class="sl" x="12" y="72">7db1ff57</text>
-        <rect x="180" y="36" width="150" height="46" rx="2" fill="#171a20" stroke="#ff6152"/>
-        <text class="sn" x="192" y="56" fill="#ff6152">entry 2</text><text class="sl" x="192" y="72" fill="#ff6152">a91c04ee</text>
-        <rect x="360" y="36" width="150" height="46" rx="2" fill="#171a20" stroke="#ff6152" stroke-dasharray="4 3"/>
-        <text class="sn" x="372" y="56" fill="#ff6152">entry 3</text><text class="sl" x="372" y="72" fill="#ff6152">MISMATCH</text>
-        <rect x="540" y="36" width="150" height="46" rx="2" fill="#171a20" stroke="#ff6152" stroke-dasharray="4 3"/>
-        <text class="sn" x="552" y="56" fill="#ff6152">entry 4</text><text class="sl" x="552" y="72" fill="#ff6152">MISMATCH</text>
-        <path d="M150,59 L178,59" stroke="#5bb295" stroke-width="1.4"/>
-        <path d="M330,59 L358,59" stroke="#ff6152" stroke-width="1.4" stroke-dasharray="3 3"/>
-        <path d="M510,59 L538,59" stroke="#ff6152" stroke-width="1.4" stroke-dasharray="3 3"/>
-        <text class="sl" x="720" y="63" fill="#ff6152">SEAL BROKEN</text>
+      <!-- claim marks -->
+      <g data-step="1" fill="var(--ink)">
+        <rect x="238" y="252" width="34" height="3"/><rect x="238" y="266" width="58" height="3"/>
+        <rect x="238" y="280" width="22" height="3"/><rect x="238" y="294" width="46" height="3"/>
+        <rect x="238" y="308" width="30" height="3"/>
+        <rect x="228" y="246" width="3" height="70" fill="var(--sig-contradicted)"/>
+      </g>
+      <!-- chain -->
+      <g data-step="2" fill="none" stroke="var(--sig-supported)" stroke-width="2">
+        <rect class="draw" x="248" y="30" width="64" height="26" rx="13"/>
+        <rect class="draw" x="452" y="146" width="64" height="26" rx="13" transform="rotate(60 484 159)"/>
+        <rect class="draw" x="452" y="388" width="64" height="26" rx="13" transform="rotate(120 484 401)"/>
+        <rect class="draw" x="248" y="504" width="64" height="26" rx="13"/>
+        <rect class="draw" x="44" y="388" width="64" height="26" rx="13" transform="rotate(60 76 401)"/>
+        <rect class="draw" x="44" y="146" width="64" height="26" rx="13" transform="rotate(120 76 159)"/>
       </g>
     </svg>
-  </figure>
-  <p class="small rise" style="margin-top:1rem">Evidence artifacts are content addressed files on disk. The metadata index holds run and finding records only, never evidence content, so the record cannot be quietly rewritten through the database.</p>
-</section>
-
-<!-- 07 retrieval before judge ................................................ -->
-<section class="slide" data-notes="
-<h4>Retrieval before the judge <span class='opt'>OPTIONAL</span></h4>
-<p class='say'>Say: The order we built these in was a decision, not an accident. Retrieval was built and measured before the judge was tuned. If you tune the judge first, you tune it against whatever retrieval happens to hand it, and you bake the retrieval defects into the prompt. Then every later retrieval improvement breaks the judge. We measured retrieval on its own, against pairs written while reading the corpus, and only then wired the judge to it.</p>
-<p>Cut this slide first if you are running to 10 minutes rather than 15.</p>">
-  <div class="eyebrow rise">06 / Build order <span class="opt">OPTIONAL</span></div>
-  <h2 class="rise">Retrieval was measured before the judge was tuned.</h2>
-  <figure class="rise" style="margin-top:1.5rem">
-    <svg viewBox="0 0 1000 210" role="img" aria-label="Two build orders compared. Tuning the judge first bakes retrieval defects into the prompt. Measuring retrieval first gives an independently known input.">
-      <defs><marker id="a4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-        <path d="M0,0 L8,4 L0,8 z" fill="#868c97"/></marker></defs>
-      <g>
-        <text class="sl" x="0" y="20" fill="#e4705f">THE COUNTERFACTUAL, NOT TAKEN</text>
-        <rect x="0" y="32" width="170" height="44" rx="2" fill="#171a20" stroke="#e4705f" stroke-dasharray="4 3"/>
-        <text class="sbm" x="14" y="59">tune judge first</text>
-        <path d="M170,54 L212,54" stroke="#868c97" stroke-width="1.3" marker-end="url(#a4)"/>
-        <rect x="214" y="32" width="200" height="44" rx="2" fill="#171a20" stroke="#e4705f" stroke-dasharray="4 3"/>
-        <text class="sbm" x="228" y="59">prompt absorbs bad recall</text>
-        <path d="M414,54 L456,54" stroke="#868c97" stroke-width="1.3" marker-end="url(#a4)"/>
-        <rect x="458" y="32" width="220" height="44" rx="2" fill="#171a20" stroke="#e4705f" stroke-dasharray="4 3"/>
-        <text class="sbm" x="472" y="59">fixing retrieval now regresses it</text>
-        <text class="sl" x="700" y="59" fill="#e4705f">UNFALSIFIABLE</text>
-      </g>
-      <g transform="translate(0,110)">
-        <text class="sl" x="0" y="20" fill="#5bb295">WHAT WE DID</text>
-        <rect x="0" y="32" width="170" height="44" rx="2" fill="#171a20" stroke="#5bb295"/>
-        <text class="sbm" x="14" y="59">measure retrieval</text>
-        <path d="M170,54 L212,54" stroke="#868c97" stroke-width="1.3" marker-end="url(#a4)"/>
-        <rect x="214" y="32" width="200" height="44" rx="2" fill="#171a20" stroke="#5bb295"/>
-        <text class="sbm" x="228" y="59">known input quality</text>
-        <path d="M414,54 L456,54" stroke="#868c97" stroke-width="1.3" marker-end="url(#a4)"/>
-        <rect x="458" y="32" width="220" height="44" rx="2" fill="#171a20" stroke="#5bb295"/>
-        <text class="sbm" x="472" y="59">judge failures are judge failures</text>
-        <text class="sl" x="700" y="59" fill="#5bb295">SEPARABLE</text>
-      </g>
-    </svg>
-  </figure>
-  <p class="small rise" style="margin-top:1rem">One honest cost of this ordering, measured: the extractor writes the retrieval questions, and on 56 pairs, 41 percent introduced rule vocabulary that was absent from the claim. Part of retrieval performance is the model recognising Regulation F, and that part will not transfer to a client's private corpus.</p>
-</section>
-
-<!-- 08 latency .............................................................. -->
-<section class="slide" data-notes="
-<h4>Latency</h4>
-<p class='say'>Say: Two numbers that live at opposite ends. The proxy in front of the live call adds a tenth of a millisecond, against a fifty millisecond budget, because it never blocks the call. Adjudication is slow: about a hundred and five seconds a turn, and retrieval is almost all of it, because every claim fires two or three searches and each one reranks fifty candidates on a CPU. That is a known engineering fix, not a research problem.</p>
-<p>This slide answers the real time question before it gets asked.</p>">
-  <div class="eyebrow rise">07 / Latency</div>
-  <h2 class="rise">Free on the call. Slow after it.</h2>
-  <figure class="rise" style="margin-top:1.5rem">
-    <svg viewBox="0 0 1000 230" role="img" aria-label="Latency budget by stage drawn to scale. Extraction 5.2 seconds, retrieval 91.1 seconds, judge 8.8 seconds, totalling 105.1 seconds median. Proxy overhead is 0.129 milliseconds against a 50 millisecond budget.">
-      <text class="sl" x="0" y="18">ADJUDICATION PER TURN, MEDIAN 105.1 S, DRAWN TO SCALE</text>
-      <rect x="0" y="30" width="45" height="40" fill="#45c8da" opacity=".55"/>
-      <rect x="45" y="30" width="787" height="40" fill="#45c8da"/>
-      <rect x="832" y="30" width="76" height="40" fill="#45c8da" opacity=".55"/>
-      <text class="sl" x="0" y="88">EXTRACT 5.2 S</text>
-      <text class="sl" x="380" y="88" fill="#45c8da">RETRIEVE 91.1 S</text>
-      <text class="sl" x="832" y="88">JUDGE 8.8 S</text>
-      <text class="sbm" x="0" y="112">Worst case measured 140.3 s. Retrieval worst case 125.1 s.</text>
-
-      <text class="sl" x="0" y="158">PROXY OVERHEAD ON THE LIVE CALL, SAME SCALE AS THE 50 MS BUDGET</text>
-      <rect x="0" y="170" width="908" height="26" fill="none" stroke="#363c46"/>
-      <rect x="0" y="170" width="2.3" height="26" fill="#5bb295"/>
-      <text class="sl" x="12" y="188" fill="#5bb295">0.129 MS</text>
-      <text class="sl" x="820" y="188">50 MS BUDGET</text>
-      <text class="sbm" x="0" y="222">The proxy returns the upstream response unmodified and never waits for adjudication. A capture failure never becomes a request failure.</text>
-    </svg>
-  </figure>
-</section>
-
-<!-- 09 results .............................................................. -->
-<section class="slide" data-notes="
-<h4>The results slide. Mandatory. Do not skip, do not soften.</h4>
-<p class='say'>Say: Here is everything, including what fails. Citation precision three quarters. Zero false positives on the compliant control across three runs. Every chain verifies. And then: detection between a quarter and a third, campaign pass rate one scenario in five, and judge to human agreement 0.48 against a floor I set at 0.85 before I measured it. Three independent measurements point the same way, so the conclusion is the narrow one: this is a triage layer that routes to human review. It is not a release gate.</p>
-<p>Say the conclusion out loud. Do not let the room infer it.</p>">
-  <div class="eyebrow rise">08 / What the measurements say</div>
-  <h2 class="rise">A triage layer that routes to human review. Not a release gate.</h2>
-  <figure class="rise" style="margin-top:1.25rem">
-    <svg viewBox="0 0 1000 300" role="img" aria-label="Every measured result on one zero to one scale. Citation precision 0.750 to 0.833 and control false positive rate 0 clear their targets. Claim detection 0.261 to 0.348, campaign pass at 3 of 0.200 and judge to human agreement 0.480 against a floor of 0.850 fall short. All six use the same bar treatment.">
-      <!-- shared scale -->
-      <g class="sl">
-        <line x1="300" y1="26" x2="300" y2="272" stroke="#23272e"/>
-        <line x1="475" y1="26" x2="475" y2="272" stroke="#23272e"/>
-        <line x1="650" y1="26" x2="650" y2="272" stroke="#23272e"/>
-        <line x1="825" y1="26" x2="825" y2="272" stroke="#23272e"/>
-        <line x1="1000" y1="26" x2="1000" y2="272" stroke="#23272e"/>
-        <text x="300" y="18">0</text><text x="475" y="18">0.25</text>
-        <text x="650" y="18">0.50</text><text x="825" y="18">0.75</text><text x="988" y="18">1.0</text>
-      </g>
-
-      <!-- rows: x = 300 + value*700 -->
-      <!-- citation precision 0.750 to 0.833 -->
-      <text class="sbm" x="0" y="52">Citation precision</text>
-      <rect x="300" y="38" width="525" height="18" fill="#5bb295" opacity=".35"/>
-      <rect x="825" y="38" width="58" height="18" fill="#5bb295"/>
-      <text class="sn" x="893" y="52" fill="#5bb295">0.750 to 0.833</text>
-
-      <!-- control false positives 0 -->
-      <text class="sbm" x="0" y="90">Control false positives</text>
-      <rect x="300" y="76" width="3" height="18" fill="#5bb295"/>
-      <text class="sn" x="313" y="90" fill="#5bb295">0 of 3 calls</text>
-
-      <!-- chains verified 1.0 -->
-      <text class="sbm" x="0" y="128">Evidence chains verifying</text>
-      <rect x="300" y="114" width="700" height="18" fill="#5bb295"/>
-      <text class="sn" x="893" y="106" fill="#5bb295">41 of 41</text>
-
-      <!-- detection 0.261 to 0.348 -->
-      <text class="sbm" x="0" y="166">Claim detection</text>
-      <rect x="300" y="152" width="183" height="18" fill="#e4705f" opacity=".35"/>
-      <rect x="483" y="152" width="61" height="18" fill="#e4705f"/>
-      <text class="sn" x="554" y="166" fill="#e4705f">0.261 to 0.348</text>
-
-      <!-- campaign pass@3 0.2 -->
-      <text class="sbm" x="0" y="204">Campaign pass@3</text>
-      <rect x="300" y="190" width="140" height="18" fill="#e4705f"/>
-      <text class="sn" x="450" y="204" fill="#e4705f">1 of 5 scenarios</text>
-
-      <!-- agreement 0.48 against floor 0.85 -->
-      <text class="sbm" x="0" y="242">Judge to human agreement</text>
-      <rect x="300" y="228" width="336" height="18" fill="#e4705f"/>
-      <text class="sn" x="646" y="242" fill="#e4705f">0.480</text>
-      <line x1="895" y1="222" x2="895" y2="252" stroke="#e9e7e1" stroke-width="2"/>
-      <text class="sl" x="838" y="266" fill="#e9e7e1">FLOOR 0.850</text>
-      <path d="M640,237 L888,237" stroke="#e4705f" stroke-width="1" stroke-dasharray="3 3"/>
-    </svg>
-  </figure>
-  <p class="small rise" style="margin-top:1rem">Same scale, same bar treatment, no styling trick to make one half louder. The gap between 0.480 and the 0.850 floor is drawn, not described. Detection is a range because the same 77 item split scored twice gave 0.348 and 0.261, with nothing changed between the runs that accounts for it.</p>
-</section>
-
-<!-- 10 fix and rerun ........................................................ -->
-<section class="slide" data-notes="
-<h4>Fix and rerun <span class='opt'>OPTIONAL</span></h4>
-<p class='say'>Say: A finding is only worth anything if you can prove the fix worked. Same scenario, same seed, same judge, same thresholds. Only the agent changed. The finding against 1006.18(b)(3) closed, and nothing new appeared. Both conditions matter: a change that closes one issue and opens another has not fixed the agent. We track issues by the rule they cite, never by claim id, because claim ids change every run and would report everything as closed and new at once.</p>">
-  <div class="eyebrow rise">09 / Fix and rerun <span class="opt">OPTIONAL</span></div>
-  <h2 class="rise">The loop that makes a finding worth having.</h2>
-  <div class="figs rise">
-    <div class="fig good"><div class="v">1</div><div class="k">Closed, 1006.18(b)(3)</div></div>
-    <div class="fig"><div class="v">0</div><div class="k">Persisted</div></div>
-    <div class="fig good"><div class="v">0</div><div class="k">New</div></div>
   </div>
-  <p class="small rise" style="margin-top:2rem">Tracked by section and verdict, never by claim id. Keying on claim ids would report every issue as closed and new at once, which looks like a perfect fix and is worse than useless.</p>
+  <div class="eyebrow rise">Pre-deployment compliance assurance for regulated voice AI</div>
+  <h1 class="rise">ECHOPROOF</h1>
+  <p class="lede rise">Every claim has a source.<br>Every verdict has a rule.<br>Every finding has evidence.</p>
 </section>
 
-<!-- 11 production ........................................................... -->
-<section class="slide" data-notes="
-<h4>MVP against production</h4>
-<p class='say'>Say: Everything you have seen runs on a laptop. The production path is designed and deliberately not built, because building it would have cost the measurements. One model interface throughout, so the swap to Bedrock is a base URL and a model string. Retrieval moves to OpenSearch with a GPU reranker, which is where the two minutes goes. Evidence moves to object storage with object lock.</p>">
-  <div class="eyebrow rise">10 / MVP against production</div>
-  <h2 class="rise">Designed for the swap, not rewritten for it.</h2>
-  <table class="rise">
-    <tr><th>Layer</th><th>Today</th><th>Production</th></tr>
-    <tr><td>Models</td><td class="m">Mistral, temperature 0</td><td class="m">AWS Bedrock, tiered routing</td></tr>
-    <tr><td>Retrieval</td><td class="m">local FAISS and BM25</td><td class="m">OpenSearch, hybrid, GPU rerank</td></tr>
-    <tr><td>Orchestration</td><td class="m">sequential runner</td><td class="m">LangGraph campaign runner</td></tr>
-    <tr><td>Evidence</td><td class="m">content addressed files</td><td class="m">S3, object lock, KMS signed</td></tr>
-    <tr><td>Speech</td><td class="m">Nova-3 on recordings</td><td class="m">Nova-3 streaming</td></tr>
-  </table>
-  <p class="small rise" style="margin-top:1.5rem">One model interface throughout, an OpenAI compatible base URL, so the production swap is a base URL and a model string rather than a rewrite.</p>
+<!-- 02 FAILURE MODE ======================================================= -->
+<section class="slide" data-eyebrow="THE FAILURE MODE" data-glow="180,620" data-notes="
+<p class='say'>This is a real agent turn from a collections call. Read it. It is warm, it is helpful, and it is exactly what you would want a customer service agent to say.</p>
+<p class='say'>It is also prohibited. A debt collector may not communicate about a debt with any person other than the consumer. The agent is talking to her brother.</p>
+<p class='say'>And this is the shape of the problem. It is not a hallucination and it is not a wrong fact, so nothing in a normal evaluation stack is looking for it. Your eval suite scores this as a good response.</p>">
+  <div class="eyebrow rise">01 / The failure mode</div>
+  <div class="wrap">
+    <div class="rise">
+      <p class="quote">Yes, please tell her that <span class="flag">she owes four thousand five hundred dollars on a collection account</span>, and that she needs to call Harbor Recovery back today.</p>
+      <p class="mono" style="margin-top:28px">AGENT TURN / RECORDED / REG F CORPUS</p>
+    </div>
+    <div class="stack2">
+      <div data-step="1" class="lawcard">Prohibitions. Except as provided in paragraph (d)(2) of this section, a debt collector must not communicate, in connection with the collection of any debt, with any person other than:
+        <span class="cite">12 CFR 1006.6(d)(1)</span></div>
+      <p data-step="2" class="mono trace" style="font-size:17px;line-height:1.7">not a hallucination.<br>not a wrong fact.<br>a lawful sounding sentence that is prohibited.</p>
+    </div>
+  </div>
 </section>
 
-<!-- 12 close ................................................................ -->
-<section class="slide" data-notes="
-<h4>Close</h4>
-<p class='say'>Say: Every claim has a source. Every verdict has a rule. Every finding has evidence. The honest gap is detection, and that is the next thing I would work on. What I want is an introduction to someone who actually buys compliance tooling, so I can find out what they would pay for.</p>
-<p>Then stop. Do not summarise again.</p>">
+<!-- 03 WHAT IT IS ========================================================= -->
+<section class="slide" data-eyebrow="WHAT ECHOPROOF IS" data-glow="800,760" data-notes="
+<p class='say'>So here is what EchoProof does, in one sentence. It reads what the agent said, finds the rule in the client's own rulebook that governs it, and issues a verdict carrying the evidence for that verdict.</p>
+<p class='say'>Four moves. Read the turn, and only the agent's turns are ever adjudicated. Locate the claims as exact quotes. Retrieve the governing provision. Rule on it, and seal the record.</p>
+<p class='say'>Everything after this slide is how each of those four is made trustworthy.</p>">
+  <div class="eyebrow rise">02 / What it is</div>
+  <h2 class="big rise">It reads what the agent said, finds the rule that governs it, and rules from that rule.</h2>
+  <div style="margin-top:56px">
+    <svg width="1380" height="150" viewBox="0 0 1380 150" aria-label="Four moves left to right: read the agent turn, locate claims as verbatim quotes, retrieve the governing provision, rule and seal the evidence.">
+      <g data-step="1"><rect class="node" x="0" y="30" width="300" height="86"/>
+        <text class="sl t" x="20" y="56">01 / READ</text>
+        <text class="sb" x="20" y="82">The agent turn</text>
+        <text class="sbm" x="20" y="102">Agent turns only. Consumer turns are context.</text></g>
+      <g data-step="2"><rect class="node" x="360" y="30" width="300" height="86"/>
+        <text class="sl t" x="380" y="56">02 / CLAIM</text>
+        <text class="sb" x="380" y="82">Verbatim quotes</text>
+        <text class="sbm" x="380" y="102">Resolved to character offsets in code.</text></g>
+      <g data-step="3"><rect class="node" x="720" y="30" width="300" height="86"/>
+        <text class="sl t" x="740" y="56">03 / RETRIEVE</text>
+        <text class="sb" x="740" y="82">The governing provision</text>
+        <text class="sbm" x="740" y="102">From the client's own corpus.</text></g>
+      <g data-step="4"><rect class="node key" x="1080" y="30" width="300" height="86"/>
+        <text class="sl t" x="1100" y="56">04 / RULE AND SEAL</text>
+        <text class="sb" x="1100" y="82">A verdict with its evidence</text>
+        <text class="sbm" x="1100" y="102">Written to an append only chain.</text></g>
+      <path class="fl" d="M300,73 L358,73" marker-end="url(#mA)"/>
+      <path class="fl" d="M660,73 L718,73" marker-end="url(#mA)"/>
+      <path class="fl" d="M1020,73 L1078,73" marker-end="url(#mA)"/>
+      <defs><marker id="mA" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-trace)"/></marker></defs>
+    </svg>
+  </div>
+</section>
+
+<!-- 04 PIPELINE =========================================================== -->
+<section class="slide" data-eyebrow="THE PIPELINE" data-glow="620,180" data-notes="
+<p class='say'>The pipeline. An OpenAI compatible proxy sits in front of the agent's model call. Claim extraction returns verbatim quotes, and the offsets into the transcript are computed in code by locating the quote, so a paraphrase is rejected rather than stored.</p>
+<p class='say'>Then this gold path. Money and dates are canonicalised and compared in code, ahead of retrieval. A value that arithmetic can settle never reaches a model at all, and the evidence records both sides of the comparison.</p>
+<p class='say'>And the turn itself travels as signal. The waveform is the agent turn, and it gets sliced at claim boundaries, because the claim is the unit of adjudication.</p>">
+  <div class="eyebrow rise">03 / The pipeline</div>
+  <h2 class="rise">Six stages, and one of them never involves a model.</h2>
+  <div style="margin-top:44px">
+    <svg width="1380" height="360" viewBox="0 0 1380 360" aria-label="Pipeline: proxy, claim extraction with character offsets, deterministic verification, hybrid retrieval, grounded judge, evidence log. The deterministic path for money and dates leaves ahead of retrieval and rejoins at the evidence log. The agent turn travels as a waveform and is sliced at claim boundaries.">
+      <defs><marker id="mB" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-trace)"/></marker>
+        <marker id="mG" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-det)"/></marker></defs>
+
+      <g data-step="1">
+        <rect class="node" x="0" y="96" width="190" height="76"/>
+        <text class="sl t" x="16" y="120">01 / ADAPTER</text><text class="sb" x="16" y="146">OpenAI compatible</text><text class="sb" x="16" y="164">proxy</text>
+        <rect class="node" x="238" y="96" width="200" height="76"/>
+        <text class="sl t" x="254" y="120">02 / EXTRACT</text><text class="sb" x="254" y="146">Verbatim quotes</text><text class="sb" x="254" y="164">to char offsets</text>
+        <rect class="node" x="486" y="96" width="200" height="76"/>
+        <text class="sl g" x="502" y="120">03 / VERIFY</text><text class="sb" x="502" y="146">Money and dates,</text><text class="sb" x="502" y="164">compared in code</text>
+        <rect class="node" x="734" y="96" width="200" height="76"/>
+        <text class="sl t" x="750" y="120">04 / RETRIEVE</text><text class="sb" x="750" y="146">Hybrid, fused,</text><text class="sb" x="750" y="164">reranked</text>
+        <rect class="node key" x="982" y="96" width="180" height="76"/>
+        <text class="sl t" x="998" y="120">05 / JUDGE</text><text class="sb" x="998" y="146">Grounded in one</text><text class="sb" x="998" y="164">provision</text>
+        <rect class="node" x="1210" y="96" width="170" height="76"/>
+        <text class="sl t" x="1226" y="120">06 / EVIDENCE</text><text class="sb" x="1226" y="146">Append only</text><text class="sb" x="1226" y="164">hash chain</text>
+        <path class="fl draw" d="M190,134 L236,134" marker-end="url(#mB)"/>
+        <path class="fl draw" d="M438,134 L484,134" marker-end="url(#mB)"/>
+        <path class="fl draw" d="M686,134 L732,134" marker-end="url(#mB)"/>
+        <path class="fl draw" d="M934,134 L980,134" marker-end="url(#mB)"/>
+        <path class="fl draw" d="M1162,134 L1208,134" marker-end="url(#mB)"/>
+      </g>
+
+      <g data-step="2">
+        <path class="gold draw" d="M586,172 L586,246 L1290,246 L1290,174" marker-end="url(#mG)"/>
+        <text class="sl g" x="606" y="240">DECIDED IN CODE, NO MODEL</text>
+      </g>
+
+      <g data-step="3">
+        <text class="sl" x="0" y="304">AGENT TURN, SLICED AT CLAIM BOUNDARIES</text>
+        <g stroke="var(--sig-trace)" stroke-width="2.5" opacity=".9">
+          <path d="M8,330 v-14 M18,330 v-24 M28,330 v-9 M38,330 v-30 M48,330 v-18 M58,330 v-26 M68,330 v-11 M78,330 v-22 M88,330 v-32 M98,330 v-15 M108,330 v-20 M118,330 v-28"/>
+          <path d="M158,330 v-19 M168,330 v-31 M178,330 v-12 M188,330 v-25 M198,330 v-16 M208,330 v-29 M218,330 v-21 M228,330 v-13 M238,330 v-27 M248,330 v-18 M258,330 v-24 M268,330 v-10"/>
+          <path d="M308,330 v-26 M318,330 v-14 M328,330 v-22 M338,330 v-33 M348,330 v-17 M358,330 v-25 M368,330 v-12 M378,330 v-28 M388,330 v-20 M398,330 v-15 M408,330 v-30 M418,330 v-19"/>
+          <path d="M458,330 v-13 M468,330 v-27 M478,330 v-21 M488,330 v-16 M498,330 v-31 M508,330 v-18 M518,330 v-24 M528,330 v-11 M538,330 v-29 M548,330 v-20 M558,330 v-14 M568,330 v-26"/>
+          <path d="M608,330 v-22 M618,330 v-30 M628,330 v-15 M638,330 v-19 M648,330 v-27 M658,330 v-12 M668,330 v-24 M678,330 v-17 M688,330 v-32 M698,330 v-21 M708,330 v-13 M718,330 v-25"/>
+        </g>
+        <g stroke="var(--sig-contradicted)" stroke-width="2">
+          <path d="M138,300 v42 M288,300 v42 M438,300 v42 M588,300 v42"/>
+        </g>
+        <text class="sl r" x="748" y="326">CLAIM BOUNDARY</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- 05 ISOLATION ========================================================== -->
+<section class="slide" data-eyebrow="THE ISOLATION BOUNDARY" data-glow="1180,700" data-notes="
+<p class='say'>This is the argument. Everything else is engineering, this is the reason a verdict here means anything.</p>
+<p class='say'>On the left is the corpus, every provision in the client's rulebook. Retrieval is hybrid: BM25 and dense vectors, fused by reciprocal rank fusion, then reranked by a cross encoder. It lifts exactly one provision out.</p>
+<p class='say'>And then the fence. The only two things that cross into the judge are one claim and that one retrieved provision. The judge rules from that text alone.</p>
+<p class='say'>The corpus does not cross. The model's own training knowledge does not cross. That constraint is what makes a verdict checkable rather than an opinion, because the exact text the judge was given is stored in the evidence and printed next to the verdict.</p>">
+  <div class="eyebrow rise">04 / The isolation boundary</div>
+  <h2 class="rise">The judge is fenced in, on purpose.</h2>
+  <div style="margin-top:34px">
+    <svg width="1380" height="400" viewBox="0 0 1380 400" aria-label="A dense field of policy provisions on the left. Hybrid retrieval lifts exactly one provision out. Only that provision and one claim cross a fence into the grounded judge, which sits alone on sunken ground. The full corpus and the model's own training knowledge are both shown failing to cross the fence.">
+      <defs><marker id="mC" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-trace)"/></marker>
+        <marker id="mX" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-contradicted)"/></marker></defs>
+
+      <!-- provision field -->
+      <g data-step="0">
+        <text class="sl" x="0" y="20">THE CLIENT CORPUS</text>
+        <g fill="var(--line-strong)">
+          <rect x="0" y="36" width="54" height="7"/><rect x="62" y="36" width="38" height="7"/><rect x="108" y="36" width="60" height="7"/><rect x="176" y="36" width="30" height="7"/><rect x="214" y="36" width="48" height="7"/>
+          <rect x="0" y="54" width="42" height="7"/><rect x="50" y="54" width="58" height="7"/><rect x="116" y="54" width="34" height="7"/><rect x="158" y="54" width="52" height="7"/><rect x="218" y="54" width="44" height="7"/>
+          <rect x="0" y="90" width="50" height="7"/><rect x="58" y="90" width="44" height="7"/><rect x="110" y="90" width="56" height="7"/><rect x="174" y="90" width="36" height="7"/><rect x="218" y="90" width="44" height="7"/>
+          <rect x="0" y="108" width="36" height="7"/><rect x="44" y="108" width="62" height="7"/><rect x="114" y="108" width="40" height="7"/><rect x="162" y="108" width="48" height="7"/><rect x="218" y="108" width="44" height="7"/>
+          <rect x="0" y="126" width="58" height="7"/><rect x="66" y="126" width="34" height="7"/><rect x="108" y="126" width="52" height="7"/><rect x="168" y="126" width="42" height="7"/><rect x="218" y="126" width="44" height="7"/>
+          <rect x="0" y="162" width="46" height="7"/><rect x="54" y="162" width="50" height="7"/><rect x="112" y="162" width="38" height="7"/><rect x="158" y="162" width="54" height="7"/><rect x="220" y="162" width="42" height="7"/>
+          <rect x="0" y="180" width="52" height="7"/><rect x="60" y="180" width="40" height="7"/><rect x="108" y="180" width="46" height="7"/><rect x="162" y="180" width="36" height="7"/><rect x="206" y="180" width="56" height="7"/>
+          <rect x="0" y="216" width="40" height="7"/><rect x="48" y="216" width="56" height="7"/><rect x="112" y="216" width="42" height="7"/><rect x="162" y="216" width="50" height="7"/><rect x="220" y="216" width="42" height="7"/>
+          <rect x="0" y="234" width="56" height="7"/><rect x="64" y="234" width="36" height="7"/><rect x="108" y="234" width="54" height="7"/><rect x="170" y="234" width="40" height="7"/><rect x="218" y="234" width="44" height="7"/>
+        </g>
+      </g>
+
+      <!-- retrieval sweep and lift -->
+      <g data-step="1">
+        <rect class="node" x="330" y="86" width="200" height="76"/>
+        <text class="sl t" x="346" y="110">RETRIEVAL</text>
+        <text class="sbm" x="346" y="132">BM25 and dense, fused</text>
+        <text class="sbm" x="346" y="150">by RRF, cross encoder rerank</text>
+        <path class="fl draw" d="M270,140 L328,124" marker-end="url(#mC)"/>
+        <rect x="0" y="70" width="262" height="11" fill="var(--sig-trace)" opacity=".22"/>
+        <rect x="108" y="90" width="58" height="7" fill="var(--sig-trace)"/>
+      </g>
+      <g data-step="2">
+        <rect class="node key" x="600" y="34" width="230" height="66"/>
+        <text class="sl t" x="616" y="56">ONE PROVISION</text>
+        <text class="sm" x="616" y="82">1006.6(d)(1)</text>
+        <rect class="node" x="600" y="150" width="230" height="66"/>
+        <text class="sl t" x="616" y="172">ONE CLAIM</text>
+        <text class="sm" x="616" y="198">rf-06-thirdparty-t00-c02</text>
+        <path class="fl draw" d="M530,110 L598,74" marker-end="url(#mC)"/>
+      </g>
+
+      <!-- fence and judge -->
+      <g data-step="3">
+        <g stroke="var(--sig-trace)" stroke-width="1.5">
+          <path d="M930,0 L930,400" stroke-dasharray="8 6"/>
+          <path d="M918,20 L942,20 M918,60 L942,60 M918,100 L942,100 M918,140 L942,140 M918,180 L942,180 M918,220 L942,220 M918,260 L942,260 M918,300 L942,300 M918,340 L942,340 M918,380 L942,380" opacity=".5"/>
+        </g>
+        <text class="sl t" x="946" y="16">ISOLATION BOUNDARY</text>
+        <rect class="node sunk" x="1010" y="60" width="300" height="150"/>
+        <text class="sl t" x="1032" y="90">THE JUDGE</text>
+        <text class="sb" x="1032" y="122">Receives one claim and</text>
+        <text class="sb" x="1032" y="142">one retrieved provision.</text>
+        <text class="sb" x="1032" y="170">Rules from that text alone.</text>
+        <path class="fl draw" d="M830,67 L1008,110" marker-end="url(#mC)"/>
+        <path class="fl draw" d="M830,183 L1008,160" marker-end="url(#mC)"/>
+      </g>
+
+      <!-- blocked -->
+      <g data-step="4">
+        <rect x="600" y="270" width="230" height="48" rx="2" fill="none" stroke="var(--sig-contradicted)" stroke-dasharray="5 4"/>
+        <text class="sbm" x="618" y="300" fill="var(--sig-contradicted)">the full corpus</text>
+        <rect x="600" y="332" width="230" height="48" rx="2" fill="none" stroke="var(--sig-contradicted)" stroke-dasharray="5 4"/>
+        <text class="sbm" x="618" y="362" fill="var(--sig-contradicted)">its own training knowledge</text>
+        <path class="bad" d="M830,294 L906,294" marker-end="url(#mX)"/>
+        <path class="bad" d="M830,356 L906,356" marker-end="url(#mX)"/>
+        <g stroke="var(--sig-contradicted)" stroke-width="3">
+          <path d="M872,282 L892,306 M892,282 L872,306"/>
+          <path d="M872,344 L892,368 M892,344 L872,368"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- 06 FIVE STATES ======================================================== -->
+<section class="slide" data-eyebrow="THE FIVE VERDICT STATES" data-glow="300,200" data-notes="
+<p class='say'>Five verdict states, and never a pass or a fail. These are the exact strings that appear in the evidence log.</p>
+<p class='say'>Two of them decide. The retrieved rule supports what the agent said, or it contradicts it.</p>
+<p class='say'>Three of them decline. Nothing in the corpus was a plausible match at all. Or something probably governs this but retrieval was not confident enough. Or two plausible candidates point different ways.</p>
+<p class='say'>Those three route to human review, and they are counted separately from findings everywhere in the system. Declining is a designed result, not a failure to produce one. A system that forces a verdict to avoid an abstention is a system optimising its own scoreboard.</p>">
+  <div class="eyebrow rise">05 / The five states</div>
+  <h2 class="rise">Two decide. Three decline.</h2>
+  <div style="margin-top:44px">
+    <svg width="1380" height="330" viewBox="0 0 1380 330" aria-label="Five verdict states as vertical bars. Supported and contradicted are decisions. No governing rule, retrieval below confidence and conflicting sections are abstentions that route to human review.">
+      <g data-step="1">
+        <rect x="0" y="30" width="250" height="200" rx="2" fill="var(--ground-raised)" stroke="var(--sig-supported)" stroke-width="1.5"/>
+        <rect x="0" y="30" width="6" height="200" fill="var(--sig-supported)"/>
+        <text class="sl k" x="28" y="60">DECISION</text>
+        <text class="sm" x="28" y="96" fill="var(--sig-supported)" style="font-size:15px">supported</text>
+        <text class="sbm" x="28" y="132">The retrieved rule</text><text class="sbm" x="28" y="152">supports what the</text><text class="sbm" x="28" y="172">agent said.</text>
+      </g>
+      <g data-step="2">
+        <rect x="278" y="30" width="250" height="200" rx="2" fill="var(--ground-raised)" stroke="var(--sig-contradicted)" stroke-width="1.5"/>
+        <rect x="278" y="30" width="6" height="200" fill="var(--sig-contradicted)"/>
+        <text class="sl r" x="306" y="60">DECISION</text>
+        <text class="sm" x="306" y="96" fill="var(--sig-contradicted)" style="font-size:15px">contradicted</text>
+        <text class="sbm" x="306" y="132">The retrieved rule</text><text class="sbm" x="306" y="152">contradicts what the</text><text class="sbm" x="306" y="172">agent said.</text>
+      </g>
+      <g data-step="3">
+        <rect x="600" y="30" width="242" height="200" rx="2" fill="var(--ground-raised)" stroke="var(--line-strong)" stroke-width="1.5" stroke-dasharray="6 4"/>
+        <text class="sl" x="626" y="60">ABSTENTION</text>
+        <text class="sm" x="626" y="96" fill="var(--ink-muted)" style="font-size:14px">no_governing_rule</text>
+        <text class="sbm" x="626" y="132">Nothing in the corpus</text><text class="sbm" x="626" y="152">was a plausible</text><text class="sbm" x="626" y="172">match at all.</text>
+
+        <rect x="866" y="30" width="242" height="200" rx="2" fill="var(--ground-raised)" stroke="var(--line-strong)" stroke-width="1.5" stroke-dasharray="6 4"/>
+        <text class="sl" x="892" y="60">ABSTENTION</text>
+        <text class="sm" x="892" y="96" fill="var(--ink-muted)" style="font-size:13px">retrieval_below_confidence</text>
+        <text class="sbm" x="892" y="132">Something probably</text><text class="sbm" x="892" y="152">governs this. Retrieval</text><text class="sbm" x="892" y="172">was not confident.</text>
+
+        <rect x="1132" y="30" width="242" height="200" rx="2" fill="var(--ground-raised)" stroke="var(--line-strong)" stroke-width="1.5" stroke-dasharray="6 4"/>
+        <text class="sl" x="1158" y="60">ABSTENTION</text>
+        <text class="sm" x="1158" y="96" fill="var(--ink-muted)" style="font-size:14px">conflicting_sections</text>
+        <text class="sbm" x="1158" y="132">Two plausible</text><text class="sbm" x="1158" y="152">candidates point</text><text class="sbm" x="1158" y="172">different ways.</text>
+      </g>
+      <g data-step="4">
+        <path class="fl draw" d="M721,242 L721,282 L1253,282 L1253,242" opacity=".7"/>
+        <path class="fl draw" d="M987,242 L987,282" opacity=".7"/>
+        <text class="sl t" x="820" y="306">ROUTED TO HUMAN REVIEW, COUNTED SEPARATELY FROM FINDINGS</text>
+      </g>
+    </svg>
+  </div>
+  <p class="mono trace rise" data-step="5" style="font-size:19px;margin-top:26px">declining is a designed result, not a failure to produce one.</p>
+</section>
+
+<!-- 07 EVIDENCE =========================================================== -->
+<section class="slide" data-eyebrow="EVIDENCE AND THE SEAL" data-glow="1120,240" data-notes="
+<p class='say'>Every model call, every retrieval call and every finding writes a span into an append only, hash chained evidence log. Each entry's hash covers the hash of the entry before it, so the chain is a physical structure rather than a policy.</p>
+<p class='say'>Watch what happens if somebody edits an entry in the middle. Every link after it breaks, in sequence, and the seal visibly fails. You cannot quietly amend the record, you can only visibly destroy it.</p>
+<p class='say'>The artifacts themselves are content addressed on disk, and the index holds records and never evidence content, so there is no path to rewriting the evidence through the database.</p>">
+  <div class="eyebrow rise">06 / Evidence and the seal</div>
+  <h2 class="rise">Tamper evident by construction.</h2>
+  <div style="margin-top:50px">
+    <svg width="1380" height="340" viewBox="0 0 1380 340" aria-label="An evidence chain drawn as physical links, each with an arm reaching back to its predecessor. When a middle entry is edited, every link after it breaks in sequence.">
+      <g data-step="1">
+        <text class="sl k" x="0" y="20">INTACT</text>
+        <g>
+          <rect class="node" x="0" y="36" width="200" height="76"/>
+          <text class="sl" x="18" y="60">SPAN 01 / AGENT TURN</text><text class="sm" x="18" y="90">7db1ff5750be</text>
+          <rect class="node" x="290" y="36" width="200" height="76"/>
+          <text class="sl" x="308" y="60">SPAN 02 / EXTRACT</text><text class="sm" x="308" y="90">07d363c792b3</text>
+          <rect class="node" x="580" y="36" width="200" height="76"/>
+          <text class="sl" x="598" y="60">SPAN 03 / RETRIEVE</text><text class="sm" x="598" y="90">203c3dad9d24</text>
+          <rect class="node" x="870" y="36" width="200" height="76"/>
+          <text class="sl" x="888" y="60">SPAN 04 / JUDGE</text><text class="sm" x="888" y="90">edb21e40988c</text>
+          <g stroke="var(--sig-supported)" stroke-width="2" fill="none">
+            <path class="draw" d="M290,74 L266,74 A16,16 0 0,0 266,42 L224,42 A16,16 0 0,0 224,74 L200,74"/>
+            <path class="draw" d="M580,74 L556,74 A16,16 0 0,0 556,42 L514,42 A16,16 0 0,0 514,74 L490,74"/>
+            <path class="draw" d="M870,74 L846,74 A16,16 0 0,0 846,42 L804,42 A16,16 0 0,0 804,74 L780,74"/>
+          </g>
+          <text class="sl k" x="1110" y="80">CHAIN VERIFIED</text>
+        </g>
+      </g>
+      <g data-step="2">
+        <text class="sl s" x="0" y="180">SPAN 02 EDITED</text>
+        <rect class="node" x="0" y="196" width="200" height="76"/>
+        <text class="sl" x="18" y="220">SPAN 01 / AGENT TURN</text><text class="sm" x="18" y="250">7db1ff5750be</text>
+        <rect x="290" y="196" width="200" height="76" rx="2" fill="var(--ground-raised)" stroke="var(--sig-seal)" stroke-width="1.5"/>
+        <text class="sl s" x="308" y="220">SPAN 02 / ALTERED</text><text class="sm" x="308" y="250" fill="var(--sig-seal)">a91c04ee31bd</text>
+        <rect x="580" y="196" width="200" height="76" rx="2" fill="var(--ground-raised)" stroke="var(--sig-seal)" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text class="sl s" x="598" y="220">SPAN 03 / MISMATCH</text><text class="sm" x="598" y="250" fill="var(--sig-seal)">hash does not cover</text>
+        <rect x="870" y="196" width="200" height="76" rx="2" fill="var(--ground-raised)" stroke="var(--sig-seal)" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text class="sl s" x="888" y="220">SPAN 04 / MISMATCH</text><text class="sm" x="888" y="250" fill="var(--sig-seal)">hash does not cover</text>
+        <g stroke="var(--sig-supported)" stroke-width="2" fill="none">
+          <path d="M290,234 L266,234 A16,16 0 0,0 266,202 L224,202 A16,16 0 0,0 224,234 L200,234"/>
+        </g>
+        <g stroke="var(--sig-seal)" stroke-width="2" fill="none">
+          <path d="M580,234 L556,234 A16,16 0 0,0 552,208"/>
+          <path d="M518,204 A16,16 0 0,0 514,234 L490,234"/>
+          <path d="M870,234 L846,234 A16,16 0 0,0 842,208"/>
+          <path d="M808,204 A16,16 0 0,0 804,234 L780,234"/>
+        </g>
+        <text class="sl s" x="1110" y="240">SEAL BROKEN</text>
+      </g>
+      <g data-step="3">
+        <text class="sl t" x="0" y="322">CONTENT ADDRESSED ON DISK. THE INDEX HOLDS RECORDS, NEVER EVIDENCE CONTENT.</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- 08 AUDIO ============================================================== -->
+<section class="slide" data-eyebrow="AUDIO AS EVIDENCE" data-glow="420,760" data-notes="
+<p class='say'>Audio. Speech to text is Deepgram Nova-3, which returns word level timestamps. The claim extractor gives us character offsets into the transcript. Those two map deterministically onto each other, and the resulting time span slices the source audio with ffmpeg.</p>
+<p class='say'>So a finding carries a clip of the exact sentence that was flagged, not the whole call. A reviewer hears the thing itself.</p>
+<p class='say'>And the ordering matters. Adjudication is text only. Audio is attached after the verdict already exists, so it is evidence for a finding and never an input to one.</p>">
+  <div class="eyebrow rise">07 / Audio as evidence</div>
+  <h2 class="rise">Offsets to timestamps to a clip of the sentence itself.</h2>
+  <div style="margin-top:50px">
+    <svg width="1380" height="330" viewBox="0 0 1380 330" aria-label="A transcript bar with the flagged span highlighted, word level timestamp ticks beneath it, and a bracket marking the audio clip that the offsets and timestamps together produce.">
+      <g data-step="1">
+        <text class="sl" x="0" y="20">TRANSCRIPT, CHARACTER OFFSETS</text>
+        <rect x="0" y="34" width="1380" height="44" rx="2" fill="var(--ground-raised)" stroke="var(--line-strong)" stroke-width="1.5"/>
+        <rect x="300" y="34" width="640" height="44" fill="var(--sig-contradicted)" opacity=".22"/>
+        <rect x="300" y="34" width="4" height="44" fill="var(--sig-contradicted)"/>
+        <rect x="936" y="34" width="4" height="44" fill="var(--sig-contradicted)"/>
+        <text class="sbm" x="18" y="62">Yes, please tell her that</text>
+        <text class="sb" x="316" y="62">she owes four thousand five hundred dollars on a collection account</text>
+        <text class="sbm" x="956" y="62">and that she needs to call back today.</text>
+        <text class="sl r" x="300" y="102">OFFSETS [5:147)</text>
+      </g>
+      <g data-step="2">
+        <text class="sl t" x="0" y="150">DEEPGRAM NOVA-3, WORD LEVEL TIMESTAMPS</text>
+        <g stroke="var(--sig-trace)" stroke-width="1.5">
+          <path d="M20,164 v18 M74,164 v18 M128,164 v18 M182,164 v18 M236,164 v18 M300,164 v26 M364,164 v18 M428,164 v18 M492,164 v18 M556,164 v18 M620,164 v18 M684,164 v18 M748,164 v18 M812,164 v18 M876,164 v18 M936,164 v26 M990,164 v18 M1044,164 v18 M1098,164 v18 M1152,164 v18 M1206,164 v18 M1260,164 v18 M1314,164 v18"/>
+        </g>
+        <line x1="0" y1="182" x2="1380" y2="182" stroke="var(--line-strong)" stroke-width="1"/>
+      </g>
+      <g data-step="3">
+        <path class="fl draw" d="M300,196 L300,224 L936,224 L936,196"/>
+        <path class="fl" d="M618,224 L618,244"/>
+        <rect class="node key" x="480" y="248" width="276" height="56"/>
+        <text class="sl t" x="500" y="272">FFMPEG SLICE</text>
+        <text class="sb" x="500" y="292">The flagged sentence</text>
+      </g>
+      <g data-step="4">
+        <text class="sl t" x="0" y="292">THE CLIP IS THE SENTENCE, NOT THE RECORDING.</text>
+        <text class="sl" x="0" y="312">ADJUDICATION IS TEXT ONLY. AUDIO ATTACHES AFTER THE VERDICT EXISTS.</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- 09 THE STACK (HERO) =================================================== -->
+<section class="slide" data-eyebrow="WHERE IT ATTACHES" data-glow="700,420" data-notes="
+<p class='say'>This is a cascaded voice agent. Caller on the phone, telephony, speech to text, an orchestrator holding the conversation state, a model call, text to speech, and audio back to the caller.</p>
+<p class='say'>EchoProof attaches at exactly one point. In front of the model call, as an OpenAI compatible proxy. You change a base URL.</p>
+<p class='say'>And this is the part that matters operationally. The upstream response is returned unmodified and it is never delayed. The adjudication path branches off to the side, after the response has already gone back to the orchestrator. A capture failure cannot become a request failure.</p>
+<p class='say'>Now swap every vendor in that stack. Different telephony, different speech to text, a different orchestration framework, a different model. The attachment point does not move. One endpoint, any stack.</p>">
+  <div class="eyebrow rise">08 / The stack</div>
+  <h2 class="rise">One endpoint. Any stack.</h2>
+  <div style="margin-top:30px">
+    <svg width="1380" height="470" viewBox="0 0 1380 470" aria-label="A cascaded voice agent stack: caller and telephony, speech to text, orchestrator, model behind an OpenAI compatible endpoint, text to speech, and audio back to the caller. EchoProof attaches at one point in front of the model call and returns the upstream response unmodified, with the adjudication path branching to the side after the response has gone. A second stack with different vendors shows the same single attachment point.">
+      <defs><marker id="mD" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-trace)"/></marker>
+        <marker id="mE" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="var(--ink-faint)"/></marker></defs>
+
+      <!-- stack one -->
+      <g data-step="1">
+        <text class="sl" x="0" y="18">STACK ONE</text>
+        <g>
+          <circle cx="40" cy="72" r="26" fill="var(--ground-raised)" stroke="var(--line-strong)" stroke-width="1.5"/>
+          <path d="M32,64 q8,-6 16,0 M34,80 q6,5 12,0" stroke="var(--ink-muted)" stroke-width="1.5" fill="none"/>
+          <text class="sl" x="14" y="120">CALLER</text>
+          <rect class="node" x="100" y="44" width="150" height="56"/>
+          <text class="sl" x="114" y="66">TELEPHONY</text><text class="sb" x="114" y="88">Twilio</text>
+          <rect class="node" x="286" y="44" width="150" height="56"/>
+          <text class="sl" x="300" y="66">SPEECH TO TEXT</text><text class="sb" x="300" y="88">Nova-3</text>
+          <rect class="node" x="472" y="44" width="170" height="56"/>
+          <text class="sl" x="486" y="66">ORCHESTRATOR</text><text class="sb" x="486" y="88">Conversation state</text>
+          <rect class="node" x="900" y="44" width="150" height="56"/>
+          <text class="sl" x="914" y="66">MODEL</text><text class="sb" x="914" y="88">The agent brain</text>
+          <rect class="node" x="1086" y="44" width="150" height="56"/>
+          <text class="sl" x="1100" y="66">TEXT TO SPEECH</text><text class="sb" x="1100" y="88">Voice out</text>
+          <circle cx="1320" cy="72" r="26" fill="var(--ground-raised)" stroke="var(--line-strong)" stroke-width="1.5"/>
+          <path d="M1310,66 h20 M1310,74 h14" stroke="var(--ink-muted)" stroke-width="1.5"/>
+          <text class="sl" x="1296" y="120">CALLER</text>
+        </g>
+        <g class="fl">
+          <path class="draw" d="M66,72 L98,72" marker-end="url(#mD)"/>
+          <path class="draw" d="M250,72 L284,72" marker-end="url(#mD)"/>
+          <path class="draw" d="M436,72 L470,72" marker-end="url(#mD)"/>
+          <path class="draw" d="M1050,72 L1084,72" marker-end="url(#mD)"/>
+          <path class="draw" d="M1236,72 L1292,72" marker-end="url(#mD)"/>
+        </g>
+      </g>
+
+      <!-- attachment -->
+      <g data-step="2">
+        <rect class="node key" x="686" y="34" width="172" height="76"/>
+        <text class="sl t" x="700" y="58">ECHOPROOF</text>
+        <text class="sb" x="700" y="80">OpenAI compatible</text>
+        <text class="sb" x="700" y="98">proxy</text>
+        <path class="fl draw" d="M642,72 L684,72" marker-end="url(#mD)"/>
+        <path class="fl draw" d="M858,72 L898,72" marker-end="url(#mD)"/>
+        <text class="sl t" x="672" y="128">ONE ATTACHMENT POINT. CHANGE A BASE URL.</text>
+      </g>
+
+      <!-- unmodified return + side branch -->
+      <g data-step="3">
+        <path class="fl draw" d="M900,100 L900,152 L700,152" marker-end="url(#mD)" opacity=".85"/>
+        <text class="sl t" x="712" y="170">RESPONSE RETURNED UNMODIFIED, NEVER DELAYED</text>
+        <path class="gold draw" d="M772,110 L772,206" marker-end="url(#mD)"/>
+        <rect class="node" x="666" y="212" width="212" height="60"/>
+        <text class="sl g" x="682" y="234">ADJUDICATION</text>
+        <text class="sbm" x="682" y="256">Off the hot path, after the fact</text>
+        <text class="sl g" x="898" y="248">A CAPTURE FAILURE IS NEVER A REQUEST FAILURE</text>
+      </g>
+
+      <!-- stack two -->
+      <g data-step="4">
+        <line x1="0" y1="308" x2="1380" y2="308" stroke="var(--line)" stroke-width="1"/>
+        <text class="sl" x="0" y="336">STACK TWO, DIFFERENT VENDORS THROUGHOUT</text>
+        <g opacity=".92">
+          <circle cx="40" cy="404" r="24" fill="var(--ground-raised)" stroke="var(--line-strong)" stroke-width="1.5"/>
+          <rect class="node" x="100" y="378" width="150" height="52"/>
+          <text class="sl" x="114" y="400">TELEPHONY</text><text class="sb" x="114" y="420">Vonage</text>
+          <rect class="node" x="286" y="378" width="150" height="52"/>
+          <text class="sl" x="300" y="400">SPEECH TO TEXT</text><text class="sb" x="300" y="420">Whisper</text>
+          <rect class="node" x="472" y="378" width="170" height="52"/>
+          <text class="sl" x="486" y="400">ORCHESTRATOR</text><text class="sb" x="486" y="420">LangGraph</text>
+          <rect class="node key" x="686" y="378" width="172" height="52"/>
+          <text class="sl t" x="700" y="400">ECHOPROOF</text><text class="sb" x="700" y="420">Same proxy</text>
+          <rect class="node" x="900" y="378" width="150" height="52"/>
+          <text class="sl" x="914" y="400">MODEL</text><text class="sb" x="914" y="420">Bedrock</text>
+          <rect class="node" x="1086" y="378" width="150" height="52"/>
+          <text class="sl" x="1100" y="400">TEXT TO SPEECH</text><text class="sb" x="1100" y="420">ElevenLabs</text>
+          <circle cx="1320" cy="404" r="24" fill="var(--ground-raised)" stroke="var(--line-strong)" stroke-width="1.5"/>
+        </g>
+        <g class="fl" opacity=".8">
+          <path d="M64,404 L98,404" marker-end="url(#mD)"/><path d="M250,404 L284,404" marker-end="url(#mD)"/>
+          <path d="M436,404 L470,404" marker-end="url(#mD)"/><path d="M642,404 L684,404" marker-end="url(#mD)"/>
+          <path d="M858,404 L898,404" marker-end="url(#mD)"/><path d="M1050,404 L1084,404" marker-end="url(#mD)"/>
+          <path d="M1236,404 L1294,404" marker-end="url(#mD)"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- 10 PACKS AND VERTICALS ================================================ -->
+<section class="slide" data-eyebrow="VERTICALS AND THE PACKS" data-glow="1000,180" data-notes="
+<p class='say'>This is the commercial architecture. The engine holds no field, no constant and no branch that knows which industry it is running in. It is sealed.</p>
+<p class='say'>Everything client specific arrives as one of four data packs. The policy pack is their rulebook. The scenario pack is the situations they care about. The persona pack is the customers to play against the agent. The criteria pack is the thresholds that decide what blocks a release, which is what makes the gate decision theirs rather than ours.</p>
+<p class='say'>Swap the policy cartridge from Regulation F to a telecom customer contact standard, with completely different section identifiers, and no engine code changes.</p>
+<p class='say'>Which means the same product reaches every industry where a regulated conversation happens. What changes per client is data their compliance team already maintains.</p>">
+  <div class="eyebrow rise">09 / Verticals and the packs</div>
+  <h2 class="rise">The engine never learns what industry it is in.</h2>
+  <div style="margin-top:34px">
+    <svg width="1380" height="400" viewBox="0 0 1380 400" aria-label="A sealed engine core with four data pack cartridges seating into it: policy, scenario, persona and criteria. The policy cartridge swaps from Regulation F to a telecom standard with no engine change. Industry labels surround the core.">
+      <defs><marker id="mF" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-trace)"/></marker></defs>
+
+      <g data-step="0">
+        <rect class="node sunk" x="530" y="110" width="320" height="180"/>
+        <text class="sl t" x="556" y="146">SEALED ENGINE</text>
+        <text class="sb" x="556" y="180">extract, verify, retrieve,</text>
+        <text class="sb" x="556" y="202">judge, seal, report</text>
+        <text class="sl" x="556" y="242">NO CORPUS CONSTANT IN ANY</text>
+        <text class="sl" x="556" y="258">EXECUTABLE LINE</text>
+      </g>
+
+      <g data-step="1">
+        <g>
+          <rect class="node" x="150" y="46" width="230" height="54"/>
+          <rect x="380" y="60" width="18" height="26" fill="var(--sig-trace)"/>
+          <text class="sl t" x="166" y="68">PACK 01</text><text class="sb" x="166" y="90">policy, the rulebook</text>
+          <rect class="node" x="150" y="122" width="230" height="54"/>
+          <rect x="380" y="136" width="18" height="26" fill="var(--sig-trace)"/>
+          <text class="sl t" x="166" y="144">PACK 02</text><text class="sb" x="166" y="166">scenario</text>
+          <rect class="node" x="150" y="198" width="230" height="54"/>
+          <rect x="380" y="212" width="18" height="26" fill="var(--sig-trace)"/>
+          <text class="sl t" x="166" y="220">PACK 03</text><text class="sb" x="166" y="242">persona</text>
+          <rect class="node" x="150" y="274" width="230" height="54"/>
+          <rect x="380" y="288" width="18" height="26" fill="var(--sig-trace)"/>
+          <text class="sl t" x="166" y="296">PACK 04</text><text class="sb" x="166" y="318">criteria, the gate</text>
+        </g>
+        <g class="fl">
+          <path class="draw" d="M398,73 L470,150 L528,150" marker-end="url(#mF)"/>
+          <path class="draw" d="M398,149 L470,178 L528,178" marker-end="url(#mF)"/>
+          <path class="draw" d="M398,225 L470,212 L528,212" marker-end="url(#mF)"/>
+          <path class="draw" d="M398,301 L470,244 L528,244" marker-end="url(#mF)"/>
+        </g>
+      </g>
+
+      <g data-step="2">
+        <rect class="node key" x="980" y="110" width="280" height="60"/>
+        <text class="sl t" x="998" y="132">POLICY CARTRIDGE, SEATED</text>
+        <text class="sm" x="998" y="156">reg_f</text>
+        <rect class="node key" x="980" y="196" width="280" height="60"/>
+        <text class="sl t" x="998" y="218">SWAPPED, NO ENGINE CHANGE</text>
+        <text class="sm" x="998" y="242">synth_telecom</text>
+        <path class="fl draw" d="M850,168 L978,140" marker-end="url(#mF)"/>
+        <path class="fl draw" d="M850,200 L978,226" marker-end="url(#mF)"/>
+        <text class="sl" x="980" y="282">DIFFERENT IDENTIFIER CONVENTION ENTIRELY</text>
+      </g>
+
+      <g data-step="3">
+        <text class="sl t" x="530" y="340">COLLECTIONS</text>
+        <text class="sl t" x="678" y="340">INSURANCE</text>
+        <text class="sl t" x="806" y="340">HEALTHCARE</text>
+        <text class="sl t" x="948" y="340">TELECOM</text>
+        <text class="sl t" x="1060" y="340">FINANCIAL SERVICES</text>
+        <line x1="530" y1="356" x2="1250" y2="356" stroke="var(--sig-trace)" stroke-width="1" opacity=".5"/>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- 11 TODAY AND PRODUCTION =============================================== -->
+<section class="slide" data-eyebrow="TODAY AND PRODUCTION" data-glow="240,300" data-notes="
+<p class='say'>What is real today, and what production looks like. I want to be precise about the line between them.</p>
+<p class='say'>Everything I have shown you runs end to end on this laptop. Real adjudications, real evidence on disk, chains that verify. Nothing in the demo is mocked.</p>
+<p class='say'>Production is designed and deliberately not built. There is one model interface in the codebase, the OpenAI SDK against a compatible base URL, so pointing it at Bedrock is a base URL and a model string. Artifacts move to S3 with object lock. Retrieval moves to OpenSearch and the cross encoder moves to a GPU. Adjudication becomes a horizontally scaled worker pool, and it scales cleanly because every turn is independent of every other turn.</p>
+<p class='say'>The boundary between those two columns is configuration, not a rewrite. That was a day one decision and it is the reason the swap is cheap.</p>">
+  <div class="eyebrow rise">10 / Today and production</div>
+  <h2 class="rise">The boundary between these columns is configuration.</h2>
+  <div style="margin-top:40px">
+    <svg width="1380" height="360" viewBox="0 0 1380 360" aria-label="Two columns. Today, the system runs end to end on a laptop with real evidence on disk. Production points the same model interface at Bedrock, moves artifacts to S3, retrieval to OpenSearch, the cross encoder to a GPU, and adjudication to a horizontally scaled worker pool.">
+      <g data-step="1">
+        <rect class="node" x="0" y="0" width="640" height="330"/>
+        <text class="sl t" x="26" y="36">TODAY, RUNNING</text>
+        <text class="sb" x="26" y="80" style="font-size:17px">End to end on a laptop</text>
+        <g class="sbm">
+          <text x="26" y="120">One model interface, OpenAI SDK against a compatible base URL</text>
+          <text x="26" y="152">Local hybrid retrieval, cross encoder on CPU</text>
+          <text x="26" y="184">Content addressed evidence artifacts on local disk</text>
+          <text x="26" y="216">Sequential runner, one turn at a time</text>
+          <text x="26" y="248">Speech to text on recorded audio</text>
+          <text x="26" y="280">Every chain on disk verifies on read</text>
+        </g>
+      </g>
+      <g data-step="2">
+        <rect class="node key" x="740" y="0" width="640" height="330"/>
+        <text class="sl t" x="766" y="36">PRODUCTION, DESIGNED</text>
+        <text class="sb" x="766" y="80" style="font-size:17px">Same interfaces, different substrate</text>
+        <g class="sbm">
+          <text x="766" y="120">Same model interface pointed at Bedrock: base URL and model string</text>
+          <text x="766" y="152">Retrieval to OpenSearch, cross encoder to GPU</text>
+          <text x="766" y="184">Artifacts to S3 with object lock</text>
+          <text x="766" y="216">Adjudication as a horizontally scaled worker pool</text>
+          <text x="766" y="248">Streaming speech to text</text>
+          <text x="766" y="280">Every turn is independent, so the pool scales linearly</text>
+        </g>
+      </g>
+      <g data-step="3">
+        <path class="fl draw" d="M640,165 L738,165" marker-end="url(#mF)"/>
+        <text class="sl t" x="596" y="352">CONFIGURATION, NOT A REWRITE</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- 12 FIX AND RERUN ====================================================== -->
+<section class="slide" data-eyebrow="FIX AND RE-RUN" data-glow="900,660" data-notes="
+<p class='say'>A finding is only worth having if you can prove the fix worked. So this is the loop that closes it.</p>
+<p class='say'>Same scenario, same seed, same policy pack, same judge, same thresholds. Only the agent changed. The finding against 1006.18(b)(3) closed, and nothing new opened.</p>
+<p class='say'>Both of those conditions are required, and this is the part people get wrong. A change that closes one finding while opening another has not fixed the agent. It has moved the problem.</p>
+<p class='say'>Findings are tracked by the rule they cite, never by claim id. Claim ids change every run, so keying on them would report every issue as closed and new at the same time, which looks like a perfect fix and is worse than useless.</p>">
+  <div class="eyebrow rise">11 / Fix and re-run</div>
+  <h2 class="rise">Proving the fix, not just claiming it.</h2>
+  <div style="margin-top:44px">
+    <svg width="1380" height="340" viewBox="0 0 1380 340" aria-label="Before and after runs of the same scenario with the same seed and policy pack, where only the agent changed. One finding closes and nothing new opens.">
+      <g data-step="1">
+        <rect class="node" x="0" y="0" width="560" height="200"/>
+        <text class="sl r" x="26" y="34">BEFORE</text>
+        <rect x="26" y="60" width="4" height="40" fill="var(--sig-contradicted)"/>
+        <text class="sm" x="48" y="78" fill="var(--sig-contradicted)">contradicted</text>
+        <text class="sm" x="48" y="96">1006.18(b)(3)</text>
+        <text class="sbm" x="26" y="140">One finding on the agent's</text>
+        <text class="sbm" x="26" y="162">payment pressure language.</text>
+      </g>
+      <g data-step="2">
+        <path class="fl draw" d="M560,100 L816,100" marker-end="url(#mF)"/>
+        <text class="sl t" x="600" y="86">ONLY THE AGENT CHANGED</text>
+        <text class="sl" x="600" y="128">SAME SCENARIO, SEED, POLICY PACK, JUDGE</text>
+      </g>
+      <g data-step="3">
+        <rect class="node key" x="820" y="0" width="560" height="200"/>
+        <text class="sl k" x="846" y="34">AFTER</text>
+        <text class="sm" x="846" y="78" fill="var(--sig-supported)">closed 1006.18(b)(3)</text>
+        <text class="sm" x="846" y="104" fill="var(--ink-muted)">persisted none</text>
+        <text class="sm" x="846" y="130" fill="var(--ink-muted)">new none</text>
+        <text class="sbm" x="846" y="170">The finding closed and nothing new opened.</text>
+      </g>
+      <g data-step="4">
+        <text class="sl t" x="0" y="256">CLOSING ONE FINDING WHILE OPENING ANOTHER HAS NOT FIXED THE AGENT.</text>
+        <text class="sl" x="0" y="286">TRACKED BY THE RULE EACH FINDING CITES, NEVER BY CLAIM ID.</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- 13 CLOSE ============================================================== -->
+<section class="slide" data-eyebrow="CLOSE" data-glow="800,300" data-notes="
+<p class='say'>So, three lines.</p>
+<p class='say'>Every claim has a source, because it is a verbatim quote resolved to an offset in the transcript the agent actually produced.</p>
+<p class='say'>Every verdict has a rule, because the judge only ever saw one retrieved provision and that provision is printed beside the verdict.</p>
+<p class='say'>Every finding has evidence, because every stage wrote a span into a hash chain that breaks visibly if anyone touches it.</p>
+<p class='say'>What I want from this room is an introduction to somebody who signs off that a voice agent can go live, so I can find out what they would actually pay for.</p>">
   <div class="eyebrow rise">Close</div>
-  <h1 class="rise" style="font-size:clamp(2rem,5.5vw,4.2rem)">Every claim has a source.<br>Every verdict has a rule.<br>Every finding has evidence.</h1>
-  <p class="lede rise">The honest gap is detection. The ask is an introduction to a real buyer.</p>
+  <h1 style="font-size:72px;line-height:1.12">
+    <span data-step="0">Every claim has a source.</span><br>
+    <span data-step="1">Every verdict has a rule.</span><br>
+    <span data-step="2">Every finding has evidence.</span>
+  </h1>
+  <p class="lede" data-step="3" style="margin-top:44px">The ask: an introduction to somebody who signs off that a voice agent can go live.</p>
 </section>
 
-<div class="chrome">
-  <span>ECHOPROOF / DEMO DAY</span>
-  <span><span id="pg">1</span> / 12 &nbsp;&nbsp; N NOTES &nbsp; &larr; &rarr; MOVE</span>
+  <div id="rail"><div id="railfill"></div></div>
+  <div id="chrome">
+    <span>ECHOPROOF / DEMO DAY</span>
+    <span id="eyeb">TITLE</span>
+    <span><span id="idx">1</span> / 13</span>
+  </div>
+  <div id="notes"></div>
+  <div class="ov" id="over"><h3>Overview</h3><div id="ogrid"></div></div>
+  <div class="ov" id="keys"><h3>Key map</h3><dl>
+    <dt>&rarr; space</dt><dd>Next build step, then next slide</dd>
+    <dt>&larr;</dt><dd>Back one step, then previous slide</dd>
+    <dt>N</dt><dd>Presenter notes</dd>
+    <dt>O</dt><dd>Overview grid</dd>
+    <dt>F</dt><dd>Fullscreen</dd>
+    <dt>B</dt><dd>Blackout</dd>
+    <dt>?</dt><dd>This key map</dd>
+    <dt>Home End</dt><dd>First and last slide</dd>
+    <dt>1 to 9</dt><dd>Jump to slide</dd>
+  </dl></div>
+  <div id="black"></div>
 </div>
-<div class="notes" id="nt"></div>
 
 <script>
 (function(){
-  var slides=[].slice.call(document.querySelectorAll('.slide'));
-  var i=0,notesOn=false;
-  var nt=document.getElementById('nt'),pg=document.getElementById('pg');
-  function render(){
-    slides.forEach(function(s,n){s.classList.toggle('on',n===i);});
-    pg.textContent=i+1;
-    nt.innerHTML=slides[i].getAttribute('data-notes')||'<h4>No notes</h4>';
+  var stage=document.getElementById('stage'),
+      slides=[].slice.call(document.querySelectorAll('.slide')),
+      idx=document.getElementById('idx'), eyeb=document.getElementById('eyeb'),
+      notes=document.getElementById('notes'), over=document.getElementById('over'),
+      keys=document.getElementById('keys'), black=document.getElementById('black'),
+      glow=document.getElementById('glow'), fill=document.getElementById('railfill'),
+      ogrid=document.getElementById('ogrid');
+  var i=0, step=0, notesOn=false;
+
+  /* scale the fixed stage to whatever projector we get */
+  function fit(){
+    var s=Math.min(window.innerWidth/1600, window.innerHeight/900);
+    // A zero or non finite viewport would scale the stage to nothing and leave
+    // a blank screen in front of a room. Fall back to unscaled instead.
+    if(!isFinite(s) || s<=0) s=1;
+    stage.style.transform='translate(-50%,-50%) scale('+s+')';
   }
-  function go(d){var n=i+d;if(n<0||n>=slides.length)return;i=n;render();}
-  document.addEventListener('keydown',function(e){
-    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(1);}
-    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(-1);}
-    else if(e.key==='n'||e.key==='N'){notesOn=!notesOn;nt.classList.toggle('on',notesOn);}
-    else if(e.key==='Home'){i=0;render();}
-    else if(e.key==='End'){i=slides.length-1;render();}
+  window.addEventListener('resize',fit);
+  window.addEventListener('orientationchange',fit);
+  document.addEventListener('visibilitychange',fit);
+  window.addEventListener('load',fit);
+  fit();
+
+  function maxStep(n){
+    var v=0;
+    slides[n].querySelectorAll('[data-step]').forEach(function(el){
+      v=Math.max(v, parseInt(el.getAttribute('data-step'),10)||0);
+    });
+    return v;
+  }
+  /* arm motion only once JS is known good, so a script error leaves content visible */
+  document.body.classList.add('armed');
+
+  /* prepare path drawing lengths */
+  document.querySelectorAll('.draw').forEach(function(p){
+    try{ var L=p.getTotalLength();
+      p.style.strokeDasharray=L; p.style.strokeDashoffset=L; p.dataset.len=L;
+    }catch(e){}
   });
-  document.addEventListener('click',function(e){if(e.clientY<window.innerHeight-90)go(1);});
-  render();
+
+  function paint(){
+    slides.forEach(function(s,n){ s.classList.toggle('on', n===i); });
+    var cur=slides[i];
+    cur.querySelectorAll('[data-step]').forEach(function(el){
+      var n=parseInt(el.getAttribute('data-step'),10)||0;
+      var show=n<=step;
+      el.classList.toggle('shown',show);
+      if(show) el.querySelectorAll('.draw').forEach(function(p){ p.style.strokeDashoffset=0; });
+    });
+    idx.textContent=i+1;
+    eyeb.textContent=cur.getAttribute('data-eyebrow')||'';
+    notes.innerHTML=cur.getAttribute('data-notes')||'<p>No notes.</p>';
+    fill.style.width=((i+1)/slides.length*100)+'%';
+    var g=(cur.getAttribute('data-glow')||'800,450').split(',');
+    glow.style.transform='translate('+(parseInt(g[0],10)-750)+'px,'+(parseInt(g[1],10)-550)+'px)';
+    [].forEach.call(ogrid.children,function(c,n){ c.classList.toggle('cur',n===i); });
+  }
+  function fwd(){ if(step<maxStep(i)){ step++; paint(); } else if(i<slides.length-1){ i++; step=0; paint(); } }
+  function back(){ if(step>0){ step--; paint(); } else if(i>0){ i--; step=maxStep(i); paint(); } }
+  function goTo(n){ if(n>=0&&n<slides.length){ i=n; step=0; paint(); } }
+
+  slides.forEach(function(s,n){
+    var c=document.createElement('div'); c.className='ocard';
+    c.innerHTML='<div class="n">'+String(n+1).padStart(2,'0')+'</div><div class="t">'+
+      (s.getAttribute('data-eyebrow')||'')+'</div>';
+    c.onclick=function(){ over.classList.remove('on'); goTo(n); };
+    ogrid.appendChild(c);
+  });
+
+  document.addEventListener('keydown',function(e){
+    var k=e.key;
+    if(k==='ArrowRight'||k===' '||k==='PageDown'){e.preventDefault();fwd();}
+    else if(k==='ArrowLeft'||k==='PageUp'){e.preventDefault();back();}
+    else if(k==='n'||k==='N'){notesOn=!notesOn;notes.classList.toggle('on',notesOn);}
+    else if(k==='o'||k==='O'){over.classList.toggle('on');keys.classList.remove('on');}
+    else if(k==='b'||k==='B'){black.classList.toggle('on');}
+    else if(k==='?'){keys.classList.toggle('on');over.classList.remove('on');}
+    else if(k==='f'||k==='F'){ if(!document.fullscreenElement){document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();} else {document.exitFullscreen&&document.exitFullscreen();} }
+    else if(k==='Home'){goTo(0);}
+    else if(k==='End'){goTo(slides.length-1);}
+    else if(/^[1-9]$/.test(k)){goTo(parseInt(k,10)-1);}
+    else if(k==='Escape'){over.classList.remove('on');keys.classList.remove('on');black.classList.remove('on');}
+  });
+  document.addEventListener('click',function(e){
+    if(over.classList.contains('on')||keys.classList.contains('on'))return;
+    if(e.clientY>window.innerHeight-70)return;
+    fwd();
+  });
+  var tx=0;
+  document.addEventListener('touchstart',function(e){tx=e.changedTouches[0].clientX;},{passive:true});
+  document.addEventListener('touchend',function(e){
+    var d=e.changedTouches[0].clientX-tx;
+    if(d<-45)fwd(); else if(d>45)back();
+  },{passive:true});
+
+  paint();
 })();
 </script>
 </body>

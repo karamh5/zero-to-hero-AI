@@ -1,32 +1,57 @@
-# 2 minute elevator
+# Two minutes, one screen
 
-**Latency strategy: nothing runs live.** A live adjudication takes 120 seconds
-at its fastest measured, which is the entire slot. This script works only from
-stored assessments on `/bench`, all of which are chain verified. Say nothing
-that implies something is running now.
+## Before you start
 
-Have `http://127.0.0.1:8077/runs/prepared-reg_f-rf-06-thirdparty/claims/rf-06-thirdparty-t00-c02`
-open in a tab before you start. That single screen is the whole demo.
+[run .venv/Scripts/python scripts/run_ui.py]
 
-| Clock | On screen | Say |
-|---|---|---|
-| 0:00 | Case file, top | "Enterprises are putting voice AI agents into conversations governed by law. Debt collection, insurance, healthcare." |
-| 0:10 | Point at `WHAT WAS SAID` | "This is a real thing a collections agent said: tell her she owes four thousand five hundred dollars. It is warm, it is helpful, and it is a federal violation, because you cannot discuss a debt with someone who is not the debtor." |
-| 0:25 | Same | "It is not a hallucination and not a wrong fact, so no accuracy benchmark is looking for it." |
-| 0:35 | Point at the cream `WHAT RULE GOVERNS IT` card | "EchoProof caught it before deployment and printed the rule it broke, verbatim, section 1006.6(d)(1)." |
-| 0:50 | Point at `WHY IT FAILED` | "The reasoning is right there, and the key design decision is that the judge never saw the rest of the rulebook. It gets one retrieved paragraph and rules from that alone, which is why you can check it instead of trusting it." |
-| 1:10 | Scroll to `EVIDENCE TRACE` | "Underneath is every step: the searches it ran, every candidate rule it considered, which one it chose and at what score, sealed in a hash chain so nothing can be edited afterwards." |
-| 1:30 | Look up, stop scrolling | "Honestly: it catches about a third of planted violations, so it is a triage layer that routes to a human reviewer, not a release gate. What it is good at is being right about which rule, three quarters of the time, and staying silent on clean calls." |
-| 1:50 | | "The engine has no debt collection knowledge in it. Same code ran a telecom rulebook with no changes. What I need is an introduction to someone who buys compliance tooling." |
-| 2:00 | Stop. | |
+[open http://127.0.0.1:8077/runs/prepared-reg_f-rf-06-thirdparty/claims/rf-06-thirdparty-t00-c02]
 
-## Fallback
+[leave it scrolled to the top]
 
-If the server is not running, this script still works from a screenshot of
-that one case file. Keep one on your phone. If you have neither, the spoken
-content stands alone; drop the pointing instructions and keep every word.
+## The whole pitch
 
-## The honest line is not optional
+[point at what was said]
 
-Even at two minutes, the triage sentence at 1:30 stays in. A two minute pitch
-that omits it is a two minute pitch that misrepresents the system.
+Companies are putting AI voice agents into conversations that are governed by law. Collections, insurance, healthcare.
+
+This is a real sentence one of them said. Tell her she owes four thousand five hundred dollars.
+
+It sounds helpful. It is illegal, because you cannot discuss a person's debt with somebody who is not them. It was talking to her brother.
+
+And nothing catches that. It is not a bug and not a wrong fact, so every test the team runs says the agent is fine.
+
+[point at the cream coloured card]
+
+EchoProof caught it before deployment, and printed the rule it broke.
+
+The important part is how. The model that made this call never got to browse the rulebook. It was handed exactly one rule and had to answer from that text alone, and then we print the rule next to the answer.
+
+So you are not trusting a verdict. You are checking one.
+
+[scroll down to the evidence trace]
+
+And underneath is every step. What it searched, every rule it considered, which one it picked, and a seal at the end that visibly breaks if anyone edits any of it.
+
+[stop scrolling and look at the room]
+
+The engine has nothing about debt collection inside it. Swap the rulebook and the same system runs telecom, or insurance, or healthcare. What changes per client is a document their compliance team already maintains.
+
+What I am looking for is an introduction to somebody who signs off that a voice agent can go live.
+
+## If something goes wrong
+
+### The page will not load
+
+Do not troubleshoot in front of anyone. Say the spoken text without the screen. It stands on its own.
+
+## Questions you will get
+
+### "How is it different from a guardrail product?"
+
+Guardrails sit in the live call and have to answer in milliseconds, so they block. This runs before deployment, where it can afford to think, and where the output is a finding with a citation rather than a block.
+
+They solve different halves of the problem.
+
+### "What do you need from me?"
+
+An introduction to whoever signs off that an agent can talk to customers. I want to find out what that person would actually pay for.

@@ -1,167 +1,201 @@
-# 5 minute script, AI Launchpad internal, tomorrow
+# Five minutes, AI Launchpad
 
-Audience: the AI Launchpad team, Erik and Patrick. Not the demo day audience.
-Patrick asked for a couple of slides to introduce the idea, then a brief
-walkthrough of the demo. That is exactly what this is.
+## Before you start
 
-Plain language throughout. Every technical term is defined in the same breath.
-Total spoken content is about 680 words, which is 4 minutes 50 seconds at a
-normal presenting pace. It fits with room to breathe.
+[open a terminal in the EchoProof folder]
 
----
+[run .venv/Scripts/python scripts/run_ui.py]
 
-## Pre-flight, done before the room fills
+[open http://127.0.0.1:8077/rig in tab one]
 
-Not optional. The stack is cold until something has run, and a cold start adds
-40 seconds of nothing happening.
+[under 02 / select conversation, group supported, click 04 validation notice contents described]
 
-```bash
-.venv/Scripts/python scripts/run_ui.py
-```
+[type warm up in the assessment title box, click run adjudication, let it finish]
 
-**Use `.venv/Scripts/python`, not `python`.** This matters more than it looks.
-The system interpreter has no `openai` module, so the UI serves every stored
-screen perfectly, the rig reports itself available, and then the run fails
-three seconds after you click. This exact failure happened while preparing
-this script.
+[open presentation/tomorrow/deck.html in tab two, press f for fullscreen]
 
-Then, at least ten minutes before you present:
+[open http://127.0.0.1:8077/bench in tab three and check the top card reads third party disclosure - demo baseline]
 
-1. Open `http://127.0.0.1:8077/rig`.
-2. Under `02 / SELECT CONVERSATION`, group `SUPPORTED`, click
-   `04 VALIDATION NOTICE CONTENTS DESCRIBED`.
-3. Title it `Validation notice, warm-up`.
-4. Click `RUN ADJUDICATION →` and let it finish, roughly 2 minutes.
+[press n twice in the deck to check presenter notes open and close]
 
-That warms the model weights and leaves a clean supported assessment on the
-bench that you can point at if anyone asks whether it ever says yes.
+## The idea
 
-**Check before you start:**
+[deck on slide one]
 
-- `http://127.0.0.1:8077/bench` opens with `0001 THIRD PARTY DISCLOSURE - DEMO BASELINE` at the top, and every card reads `CHAIN VERIFIED`.
-- Two browser tabs open: tab 1 on `/rig`, tab 2 on `presentation/tomorrow/deck.html`.
-- Browser zoom at 100 percent, window maximised.
-- Press `N` once in the deck to confirm presenter notes toggle, then press `N` again to hide them.
+Companies are putting AI voice agents into conversations governed by law. Debt collection, insurance, healthcare.
 
----
+The agent sounds great. It is polite, it is fast, and it has no idea which of the things it says are actually legal.
 
-## The timing, and why it works
+[click twice, the marks and the chain draw]
 
-| Event | Clock |
-|---|---|
-| Click `RUN ADJUDICATION →` | 0:55 |
-| Measured completion, warm stack, this conversation | +120 s |
-| Expected finish | 2:55 |
-| You return to the browser | 3:25 |
-| Margin | 30 s |
+EchoProof checks that before the agent is ever put in front of a customer.
 
-The 120 seconds is measured, not estimated. A full timed run of
-`Furnished to a credit bureau before contact` on a warm stack completed in
-120.2 seconds on this machine.
+## The problem
 
-**Why this conversation and not the third party one.** The third party
-conversation is the better story, but it carries 8 claims and takes 224
-seconds measured. That does not fit in a 5 minute slot. The credit bureau
-conversation carries 5 claims, produces two critical findings citing
-`1006.30(a)(1)`, and is just as easy to understand: they reported you to a
-credit bureau without ever telling you.
+[click to the next slide]
 
-The third party case is still in the talk. It is the sentence on slide 2, and
-it is sitting on the bench as assessment `0001` if anyone wants to see it.
+Here is a real thing a collections agent said on a call. Read it. It sounds helpful, like good customer service.
 
----
+[click, the rule appears on the right]
 
-## The script
+And it is against federal law, because you cannot tell somebody else about another person's debt. The agent was talking to her brother.
 
-Left column is the clock. Do not drift; the run is on its own timer.
+[click, the line underneath appears]
 
-| Clock | On screen | Action | Say, word for word |
-|---|---|---|---|
-| 0:00 | Deck, slide 1 | Stand still. Do not read the slide. | "Voice AI agents are being put into regulated conversations right now. Debt collection, insurance, healthcare. The agent talks to a real customer, and every sentence it says is either allowed or it is not." |
-| 0:15 | Deck, slide 2 (`→`) | Let them read the quote for two full seconds before speaking. | "Here is a real sentence from a collections agent. It sounds helpful. It is also a federal violation, because you cannot discuss someone's debt with a person who is not them. Right now, nothing catches that before the agent goes live. You find out from a regulator." |
-| 0:35 | Switch to browser tab 1, `/rig` | `Alt+Tab` to the browser. It is already on `/rig`. | "So let me start it running, and then I will explain what it is doing while it works." |
-| 0:42 | `/rig` | Point at `01 / SELECT CORPUS`. Regulation F already shows `SELECTED`. **Do not click it.** | "This is the client's rulebook. This one is Regulation F, the federal debt collection rule, 303 provisions pulled straight from the government source." |
-| 0:48 | `/rig` | Under `02 / SELECT CONVERSATION`, in the group headed `CONTRADICTED`, click `02 FURNISHED TO A CREDIT BUREAU BEFORE CONTACT`. The right panel `SOURCE CONVERSATION` fills in. | "And this is a recorded conversation with the agent. Notice the customer's lines are marked context only. Only the agent gets judged. The customer is never assessed." |
-| 0:53 | `/rig` | Click the `03 / ASSESSMENT TITLE` box and type `Credit bureau, live`. | "I name the run so I can find it later." |
-| 0:55 | `/rig` | **Click `RUN ADJUDICATION →`.** Wait for the first line to appear in `stage log, every line a real event`. | "And it is running. Every line in that log is a real event from the pipeline, not an animation. There is no progress bar, deliberately, because there is nothing honest to put in one." |
-| 1:00 | Switch to deck, slide 3 (`Alt+Tab`, then `→`) | Leave the run going. Do not look back at it. | "While that works. What a compliance review looks like today is a person listening to call recordings with the rulebook open next to them. It is slow, it only samples a fraction of calls, and it happens weeks after the agent is already live." |
-| 1:20 | Deck, slide 3 | Gesture at the third column. | "EchoProof does it before you deploy, on every single turn, and it shows its work. When it flags something it names the exact paragraph and quotes it back to you." |
-| 1:40 | Deck, slide 4 (`→`) | Walk the four columns left to right, about eight seconds each. | "Four steps. First, we read only what the agent said. Second, we pull the claims out as exact quotes, stored as positions in the real transcript, so nothing is ever paraphrased. Third, we search the client's rulebook for the provision that governs that specific sentence. Fourth, a model rules on it." |
-| 2:15 | Deck, slide 5 (`→`) | This is the slide to cut if you are behind. | "And here is the one decision that makes this different from just asking ChatGPT whether something is compliant. The judge never sees the whole rulebook, and it never uses what it learned in training. It sees one retrieved paragraph and rules from that alone. That is why the answer can be checked instead of trusted." |
-| 2:45 | Deck, slide 6 (`→`) | Slow down. Make eye contact with Erik and Patrick. **Do not skip this slide.** | "I want to be straight about where this actually is. When it flags something, three quarters of the time it names the right paragraph, and on the clean control call it stayed silent every single time we ran it." |
-| 3:05 | Deck, slide 6 | Point at the two red figures. | "But it only catches about a third of the violations we planted, and when I graded it against a human it agreed less than half the time. So this is a triage layer that routes work to a human reviewer. It is not a release gate, and I am not going to call it one." |
-| 3:25 | Switch to browser tab 1 | `Alt+Tab`. The run should read `SEALED assessment complete` in the stage log. | "And it has finished." |
-| 3:30 | `/rig` result, or `/bench` | Click through to the assessment. If the rig shows the finished assessment, click it. Otherwise click `BENCH` in the top nav and click the top card, `CREDIT BUREAU, LIVE`. | "Two findings. Both marked critical." |
-| 3:40 | `/runs/{id}` | Point at `GATE DECISION, COMPUTED FROM THE CLIENT'S CRITERIA PACK`, reading `BLOCK RELEASE`. | "That is the client's own threshold, not ours. They said one critical finding blocks a release, so this agent does not ship today." |
-| 3:52 | `/runs/{id}` | Scroll to `FINDINGS 2`. Click the first finding, claim `rf-04-creditreport-t00-c00`. | "Let me open one." |
-| 4:00 | Case file | Point at `WHAT WAS SAID`. | "This is what the agent said, quoted exactly: we reported this account to the credit bureau before we ever contacted you about it." |
-| 4:10 | Case file | Point at `WHAT RULE GOVERNS IT`, the cream coloured card. | "And this is the rule it broke, printed verbatim, section 1006.30(a)(1). You do not have to trust the verdict. The paragraph is right there next to it." |
-| 4:22 | Case file | Scroll to `EVIDENCE TRACE`. Do not click anything; step 04 is already open. | "And underneath, all eight steps of how it got there. The search queries it ran, every candidate rule it considered, which one it picked and at what score, and a hash chain so you can prove none of it was edited afterwards." |
-| 4:35 | Deck, slide 7 (`Alt+Tab`, `→`) | Stop moving. | "So: every claim has a source, every verdict has a rule, and every finding has evidence. It is a triage layer today, and the honest gap is detection. And the engine has nothing about debt collection in it, so the same code ran a telecom rulebook with no changes. Happy to take questions." |
-| 5:00 | | Stop talking. | |
+Here is the uncomfortable part. Nothing in a normal build process catches this. It is not a bug and it is not a wrong answer, so every test you would run says this agent is working perfectly.
 
----
+## Why nothing catches it today
 
-## If the run is still going when you return at 3:25
+[click to the next slide]
 
-Do not wait in silence and do not apologise. Say this:
+Three reasons, and they stack up.
 
-> "Still working. It takes about two minutes a conversation, and the reason is
-> honest: it runs several searches per sentence and reranks fifty candidate
-> rules for each one, on a laptop CPU. That is the number one thing production
-> would fix, by moving that step to a GPU."
+[click, the first panel appears]
 
-Then switch to `BENCH` in the top nav, open `0001 THIRD PARTY DISCLOSURE - DEMO BASELINE`,
-and run the 3:40 to 4:35 block against that assessment instead. It is the
-third party conversation from slide 2, it has two critical findings citing
-`1006.6(d)(1)`, and the case file looks identical. Claim to open:
-`rf-06-thirdparty-t00-c02`.
+Checking this today means a person listening to recordings with the rulebook open next to them. There are thousands of calls. They get through a handful.
 
-Check back at the rig at the end if there is time. If it finished, say so.
+[click, the second panel appears]
 
-## If the run failed outright
+It also happens weeks after the agent is already live and already talking to real customers.
 
-The stage log will show `FAILED`. Say this, without flinching:
+[click, the third panel appears]
 
-> "That one failed on me, which is worth seeing too. It is a live model call
-> and the provider rate limits us sometimes. It does not lose anything: every
-> assessment that has ever run is on disk with its evidence chain, so let me
-> show you one that already ran."
+And what you get at the end is a spreadsheet of somebody's opinion with no rule attached. If you want to know why a call was marked bad, you go and ask them.
 
-Then go to `BENCH`, open `0001 THIRD PARTY DISCLOSURE - DEMO BASELINE`, and
-continue from the 3:40 block. Nothing about the argument changes. Everything
-you were going to point at is on that screen.
+## What you get instead
 
-## If the whole server is down
+[click to the next slide]
 
-Skip the browser entirely. Stay in the deck, and after slide 6 say:
+[click three times, the three panels appear one at a time]
 
-> "The demo is a live run against a real model, so I will not fake it here.
-> Grab me after and I will run it in front of you."
+Every single thing the agent said gets checked, not a sample, and it happens before launch instead of weeks after.
 
-Slides alone carry the idea. Patrick asked for slides plus a walkthrough, so
-losing the walkthrough is a dent, not a disaster.
+When something is flagged, the exact rule it broke comes attached to it, quoted word for word.
 
----
+And all of it goes into a sealed record you could hand to a regulator, where you can prove afterwards that nothing was edited.
 
-## Things not to say
+## What it does
 
-- Do not say "accuracy" without a number attached. The numbers are asymmetric and the question will come back.
-- Do not say it "checks compliance". It routes claims to a human reviewer with the governing rule attached.
-- Do not promise the `no_governing_rule` verdict state. It cannot currently be produced, and the policy gap list is empty on every run for that reason.
-- Do not offer to type a custom conversation. The rig refuses free text on purpose: without speaker labels there is no way to guarantee only the agent is assessed. If asked, say exactly that, and offer to add their scenario to the library.
+[click to the next slide]
 
-## The two questions Erik or Patrick are most likely to ask
+Four steps.
 
-**"How is this different from just asking an LLM if the call was compliant?"**
-> "Because a model asked that question answers from memory, and you cannot
-> check it. Ours never sees the rulebook. It gets one paragraph that a search
-> step retrieved, and it has to rule from that text. The paragraph is printed
-> next to the verdict, so you can disagree with it in five seconds."
+[click, the first box appears]
 
-**"Only a third caught. Is that usable?"**
-> "As a gate, no, and I would not sell it as one. As triage, yes: it reads
-> every turn, and the things it does surface come with the right rule attached
-> three quarters of the time. It turns a pile of recordings into a short list
-> with citations. The gap is detection, and that is the next thing I would
-> work on."
+One. It reads what the agent said. Only the agent. What the customer said is context, and the customer never gets judged.
+
+[click, the second box appears]
+
+Two. It finds the rule that governs that specific sentence, in the client's own rulebook. Not a general idea of the law, their actual document.
+
+[click, the third box appears]
+
+Three. It rules on it, using only that one rule. It is not allowed to use anything it happens to know from training.
+
+[click, the fourth box appears]
+
+Four. It attaches the evidence. The sentence, the rule, the reasoning, and a clip of the audio where the agent said it.
+
+## Where it plugs in
+
+[click to the next slide]
+
+[click, the chain appears]
+
+A voice agent is a chain. The customer speaks, that becomes text, something decides what to say next, and a model writes the reply.
+
+[click, echoproof appears in the chain]
+
+EchoProof sits at exactly one point, in front of the model. You change one setting to point at us, and nothing else in the stack changes.
+
+[click, the return path and the side branch appear]
+
+And the reply goes straight back, untouched. We are not in the middle of the call slowing it down. The checking happens off to the side, after the customer already has their answer.
+
+[click, the three line statement appears]
+
+Every claim has a source. Every verdict has a rule. Every finding has evidence.
+
+## The walkthrough
+
+[alt tab to the browser, tab three, the bench]
+
+So let me show you the real thing.
+
+This is every assessment that has been run. Each says chain verified, meaning it was checked for tampering just now, on load.
+
+[click the top card, third party disclosure - demo baseline]
+
+This is the conversation from that slide.
+
+[point at block release at the top]
+
+At the top it says block release. That is not our opinion. The client tells us what blocks a release, and their rule was that one serious finding is enough.
+
+[point at abstentions]
+
+Down here are the ones it was not sure about, kept separate from the findings, because a maybe is not a catch.
+
+[scroll to findings and click the first one]
+
+[point at what was said]
+
+This is what the agent said, pulled straight out of the transcript, word for word.
+
+[point at the cream coloured card]
+
+And this is the rule, printed exactly as it is written in the regulation. You do not have to trust the verdict. The rule is right there next to it.
+
+[scroll down to the evidence trace]
+
+And underneath is every step of how it got there. What it searched, every rule it considered, which one it picked, and a seal that breaks visibly if anyone edits any of it.
+
+[stop scrolling and look at the room]
+
+A source, a rule, and evidence. That is EchoProof.
+
+Happy to take questions.
+
+## If something goes wrong
+
+### The bench will not load
+
+[check the terminal is still running run_ui.py]
+
+[reload the page]
+
+If it does not come back, stay in the deck and finish on the last slide. Say this.
+
+The demo runs against a real system on this laptop and I would rather show you it working properly than fight it now. Grab me after and I will run it for you.
+
+### A page looks wrong or half rendered
+
+[hard reload with control shift r]
+
+Keep talking while it reloads. Do not narrate the reload.
+
+## Questions you will get
+
+### "How is this different from just asking ChatGPT if the call was okay?"
+
+Because you cannot check the answer. It would be answering from memory of a law it might have read once, and you would have no way of knowing which version or whether it made it up.
+
+Ours never gets to browse. It gets handed one rule and it has to answer from that rule, and then we print the rule next to the answer. If it is wrong, you can see that it is wrong in about five seconds.
+
+### "Does this slow the call down?"
+
+No, and that was deliberate. The reply goes back to the customer untouched and we never hold it up. All the checking happens afterwards, off to the side.
+
+And the main way you would use this is before the agent is live at all. You run your agent against a set of test conversations, you see what it says wrong, you fix it, and then you deploy.
+
+### "What would you need from a company to run this on their agent?"
+
+Their rulebook, in a form we can read section by section. The situations they care about. And their own threshold for what is serious enough to stop a release, because that decision should be theirs and not ours.
+
+The engine itself has nothing about debt collection in it. We swapped the rulebook out for a completely different industry's standard and did not change any code.
+
+### "What is the hardest part still?"
+
+Finding every violation. It is much better at being right about the ones it does flag than it is at flagging all of them, so the way to think about it is that it hands a reviewer a short list with the rules already attached, rather than replacing the reviewer.
+
+That is the part I would work on next.
