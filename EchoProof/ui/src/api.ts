@@ -4,6 +4,7 @@
 
 import type {
   Availability,
+  ConversationPack,
   Campaign,
   ClaimDetail,
   CorpusDetail,
@@ -12,7 +13,6 @@ import type {
   JobInfo,
   Measurements,
   RerunDelta,
-  RigPreset,
   RunDetail,
   RunSummary,
   Span,
@@ -77,19 +77,28 @@ export const api = {
   criteria: () => get<Criteria>("/api/criteria"),
   measurements: () => get<Measurements>("/api/measurements"),
   availability: () => get<Availability>("/api/adjudicate/availability"),
-  rigPresets: () => get<{ presets: RigPreset[] }>("/api/rig/presets"),
+  conversations: () => get<{ packs: ConversationPack[] }>("/api/conversations"),
+  conversationPack: (packId: string) =>
+    get<ConversationPack>(`/api/conversations/${encodeURIComponent(packId)}`),
   job: (jobId: string) => get<JobInfo>(`/api/adjudicate/${encodeURIComponent(jobId)}`),
 
-  submitTurn: async (
-    transcript: string,
-    expectations?: Record<string, unknown>,
+  /** Run one prepared, role-labelled conversation. The API refuses free
+   * text, so there is no client path that can submit unlabelled turns. */
+  runConversation: async (
+    packId: string,
+    conversationId: string,
+    title: string,
   ): Promise<JobInfo> => {
     let response: Response;
     try {
       response = await fetch("/api/adjudicate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript, expectations: expectations ?? {} }),
+        body: JSON.stringify({
+          pack_id: packId,
+          conversation_id: conversationId,
+          title,
+        }),
       });
     } catch {
       throw new ApiError(0, "The API server is not reachable.", true);

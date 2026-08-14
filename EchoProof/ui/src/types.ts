@@ -50,6 +50,11 @@ export interface Finding {
 
 export interface RunSummary {
   run_id: string;
+  /** The name whoever ran the assessment chose. Empty for runs made before
+   * titles existed; the bench shows the identifier for those. */
+  title: string;
+  conversation_id: string | null;
+  created_at: string | null;
   chain_ok: boolean;
   chain_error: string | null;
   seal_state: "intact" | "broken" | "unsealed" | "unverifiable";
@@ -272,14 +277,20 @@ export interface Availability {
 export interface JobInfo {
   job_id: string;
   run_id: string;
+  title?: string;
+  conversation_id?: string | null;
+  pack_id?: string | null;
   status: "queued" | "loading_stack" | "running" | "done" | "failed";
   error: string | null;
   result: {
     run_id: string;
+    title?: string;
     claims: number;
     findings: number;
+    supported?: number;
     abstentions: number;
-    claim_ids: string[];
+    agent_turns?: number;
+    customer_turns_skipped?: number;
     verdicts: { claim_id: string; verdict: Verdict; section_id: string | null; decided_by: string }[];
     cost_usd: number;
   } | null;
@@ -293,9 +304,43 @@ export interface ProgressEvent {
   detail: Record<string, unknown>;
 }
 
-export interface RigPreset {
-  source_run: string;
-  turn_id: string;
-  transcript: string;
-  recorded_verdicts: Verdict[];
+export interface ConversationTurn {
+  role: string;
+  text: string;
+  audio_ref?: string | null;
+}
+
+export interface PreparedConversation {
+  conversation_id: string;
+  title: string;
+  summary: string;
+  authored_category: string | null;
+  turns: ConversationTurn[];
+  agent_turns: number;
+  customer_turns: number;
+  has_deterministic: boolean;
+  verified: boolean;
+  observed_outcome: string | null;
+  verdict_counts: Record<string, number>;
+  findings: { claim_id: string; section_id: string | null; verdict: string }[];
+  claims: number | null;
+  verified_at: string | null;
+  run_id: string | null;
+  matches_authored: boolean | null;
+}
+
+export interface ConversationGroup {
+  category: string;
+  label: string;
+  conversations: PreparedConversation[];
+}
+
+export interface ConversationPack {
+  pack_id: string;
+  count: number;
+  verified_count: number;
+  groups: ConversationGroup[];
+  policy_label?: string;
+  policy_citation?: string | null;
+  provisions?: number | null;
 }

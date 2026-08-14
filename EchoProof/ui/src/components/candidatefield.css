@@ -1,0 +1,138 @@
+.cf {
+  margin-top: var(--gap);
+}
+
+.cf-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.cf-axislabels {
+  display: flex;
+  gap: 1rem;
+  font-size: var(--text-micro);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.cf-plot {
+  position: relative;
+  height: 250px;
+  margin-top: 1rem;
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+}
+
+.cf-axis {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 26px;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.cf-threshold {
+  position: absolute;
+  top: 0;
+  bottom: 26px;
+  width: 0;
+  border-left: 1px dashed var(--line-strong);
+}
+
+.cf-threshold span {
+  position: absolute;
+  bottom: -22px;
+  left: 5px;
+  font-size: var(--text-micro);
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.cf-ceiling {
+  border-left-style: solid;
+  border-left-color: var(--ink);
+}
+
+.cf-candidate {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0;
+}
+
+.cf-dot {
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink) 42%, transparent);
+  transition:
+    background var(--dur-small) linear,
+    outline-color var(--dur-small) linear,
+    transform var(--dur-small) var(--ease-swift);
+  outline: 0 solid transparent;
+}
+
+.cf-candidate:hover .cf-dot {
+  background: var(--sig-trace);
+  transform: scale(1.12);
+}
+
+.cf-candidate.selected .cf-dot {
+  background: var(--ink);
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.cf-tag {
+  font-size: var(--text-micro);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+.cf-readout {
+  margin-top: 1.6rem;
+  min-height: 3.4rem;
+  border-top: 1px solid var(--line);
+  padding-top: 0.9rem;
+}
+
+.cf-readout dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.2rem;
+  margin: 0;
+}
+
+.cf-readout dl div {
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-readout dt {
+  font-size: var(--text-micro);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.cf-readout dd {
+  margin: 0.15rem 0 0;
+  font-size: 1.1rem;
+}
+
+.cf-hint {
+  font-size: var(--text-body);
+  max-width: var(--measure);
+}
+
+.cf-empty {
+  margin-top: var(--gap);
+}

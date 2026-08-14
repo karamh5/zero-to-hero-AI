@@ -26,11 +26,22 @@ interface Props {
   /** word timings for the whole turn, from the agent.turn.audio span */
   wordTimings: WordTiming[] | null;
   clipRef: string | null;
+  /** Live loudness, 0..1, measured from the playing clip. Emitted only while
+   * audio is actually sounding, so anything driven by it is moving because
+   * the evidence is moving. */
+  onAmplitude?: (value: number) => void;
 }
 
 const BUCKETS = 220;
 
-export function AudioEvidence({ src, clipStart, clipEnd, wordTimings, clipRef }: Props) {
+export function AudioEvidence({
+  src,
+  clipStart,
+  clipEnd,
+  wordTimings,
+  clipRef,
+  onAmplitude,
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
@@ -139,11 +150,67 @@ export function AudioEvidence({ src, clipStart, clipEnd, wordTimings, clipRef }:
     return () => window.removeEventListener("resize", onResize);
   }, [paint]);
 
+  // Live loudness, tapped off the element itself with an analyser, so whatever
+  // consumes it is reacting to sound that is genuinely playing. Built lazily
+  // on first play: constructing an AudioContext before a gesture is refused
+  // by browsers anyway.
+  const analyserRef = useRef<{
+    ctx: AudioContext;
+    node: AnalyserNode;
+    data: Uint8Array<ArrayBuffer>;
+  } | null>(null);
+  const ampFrame = useRef(0);
+
+  const pumpAmplitude = useCallback(() => {
+    const rig = analyserRef.current;
+    if (!rig || !onAmplitude) return;
+    rig.node.getByteTimeDomainData(rig.data);
+    let peak = 0;
+    for (let index = 0; index < rig.data.length; index += 1) {
+      const deviation = Math.abs(rig.data[index] - 128) / 128;
+      if (deviation > peak) peak = deviation;
+    }
+    onAmplitude(Math.min(1, peak * 1.8));
+    ampFrame.current = requestAnimationFrame(pumpAmplitude);
+  }, [onAmplitude]);
+
+  const ensureAnalyser = useCallback(() => {
+    if (analyserRef.current || !audioRef.current || !onAmplitude) return;
+    try {
+      const ctx = new AudioContext();
+      const source = ctx.createMediaElementSource(audioRef.current);
+      const node = ctx.createAnalyser();
+      node.fftSize = 256;
+      source.connect(node);
+      node.connect(ctx.destination);
+      analyserRef.current = {
+        ctx,
+        node,
+        data: new Uint8Array(new ArrayBuffer(node.frequencyBinCount)),
+      };
+    } catch {
+      /* no analyser available; the clip still plays and nothing else moves */
+    }
+  }, [onAmplitude]);
+
+  useEffect(() => {
+    return () => {
+      cancelAnimationFrame(ampFrame.current);
+      void analyserRef.current?.ctx.close();
+      analyserRef.current = null;
+    };
+  }, []);
+
   const toggle = () => {
     const audio = audioRef.current;
     if (!audio) return;
-    if (audio.paused) void audio.play();
-    else audio.pause();
+    if (audio.paused) {
+      ensureAnalyser();
+      void analyserRef.current?.ctx.resume();
+      void audio.play();
+    } else {
+      audio.pause();
+    }
   };
 
   const seekTo = (fraction: number) => {
@@ -274,11 +341,21 @@ export function AudioEvidence({ src, clipStart, clipEnd, wordTimings, clipRef }:
           const value = event.currentTarget.duration;
           if (Number.isFinite(value) && value > 0) setDuration(value);
         }}
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
+        onPlay={() => {
+          setPlaying(true);
+          cancelAnimationFrame(ampFrame.current);
+          ampFrame.current = requestAnimationFrame(pumpAmplitude);
+        }}
+        onPause={() => {
+          setPlaying(false);
+          cancelAnimationFrame(ampFrame.current);
+          onAmplitude?.(0);
+        }}
         onEnded={() => {
           setPlaying(false);
           setTime(0);
+          cancelAnimationFrame(ampFrame.current);
+          onAmplitude?.(0);
         }}
         onTimeUpdate={(event) => setTime(event.currentTarget.currentTime)}
       />

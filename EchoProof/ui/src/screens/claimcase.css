@@ -212,3 +212,97 @@
   max-width: var(--measure);
   font-size: var(--text-body);
 }
+
+/* -- audio rig: the clip and a core that moves with it -------------------- */
+.case-audiorig {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.4rem;
+  align-items: center;
+}
+
+.case-audiocore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.case-audiocorenote {
+  color: var(--ink-faint);
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .case-audiorig {
+    grid-template-columns: 1fr;
+  }
+  .case-audiocore {
+    align-items: flex-start;
+  }
+}
+
+/* -- trace ---------------------------------------------------------------- */
+.case-tracesection {
+  border-top: 2px solid var(--ink);
+  padding-top: var(--gap-2);
+}
+
+.case-tracehead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.case-tracequote {
+  font-size: 1.02rem;
+  line-height: 1.6;
+  max-width: var(--measure);
+}
+
+.case-tracerationale {
+  font-size: var(--text-body);
+  line-height: 1.6;
+  max-width: var(--measure);
+}
+
+.case-tracerule {
+  margin: 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--line-strong);
+}
+
+.case-tracedl {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin: 0;
+}
+
+.case-tracedl dt {
+  font-size: var(--text-micro);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.case-tracedl dd {
+  margin: 0.15rem 0 0;
+  font-size: var(--text-mono);
+  word-break: break-all;
+}
+
+.case-queries {
+  list-style: none;
+  margin: 0 0 1.2rem;
+  padding: 0;
+}
+
+.case-queries li {
+  font-size: var(--text-micro);
+  color: var(--ink-muted);
+  padding: 0.25rem 0 0.25rem 0.9rem;
+  border-left: 1px solid var(--line-strong);
+  margin-bottom: 0.3rem;
+}

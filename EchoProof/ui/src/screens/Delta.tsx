@@ -25,7 +25,7 @@ export function Delta() {
   return (
     <div className="page delta">
       <header className="delta-head">
-        <RevealLines as="h1" className="delta-display" lines={["The", "delta"]} />
+        <RevealLines as="h1" className="delta-display" lines={["FIX", "DELTA"]} />
         <p className="delta-lede">
           The same scenario, the same seed, run before and after a change to
           the agent. Only the agent changed: same persona, same judge, same

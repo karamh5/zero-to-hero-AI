@@ -74,7 +74,7 @@ export function Corpus() {
   if (!packs.data || packs.data.packs.length === 0) {
     return (
       <div className="page">
-        <RevealLines as="h1" className="corpus-display" lines={["The", "corpus"]} />
+        <RevealLines as="h1" className="corpus-display" lines={["GOVERNING", "CORPUS"]} />
         <Empty
           label="no policy pack built"
           detail="Build one from the live eCFR API with: python scripts/build_policy_pack_ecfr.py"
@@ -86,7 +86,7 @@ export function Corpus() {
   return (
     <div className="page corpus">
       <header className="corpus-head">
-        <RevealLines as="h1" className="corpus-display" lines={["The", "corpus"]} />
+        <RevealLines as="h1" className="corpus-display" lines={["GOVERNING", "CORPUS"]} />
         {corpus.data && (
           <p className="corpus-lede">
             <span className="mono">{corpus.data.manifest.citation ?? activePack}</span>

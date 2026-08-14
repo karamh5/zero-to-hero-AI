@@ -156,3 +156,21 @@
     animation: none;
   }
 }
+
+.shell-nav a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.shell-navnum {
+  font-size: 9px;
+  color: var(--ink-faint);
+  letter-spacing: 0.1em;
+}
+
+.shell-navlabel {
+  position: relative;
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+}

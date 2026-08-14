@@ -11,11 +11,14 @@
  * fall back to the top retrieval candidate's text.
  */
 
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api } from "../api";
 import { AudioEvidence, NoAudio } from "../components/AudioEvidence";
+import { CandidateField } from "../components/CandidateField";
+import { ComplianceCore } from "../components/ComplianceCore";
+import { EvidenceTrace, type TraceStep } from "../components/EvidenceTrace";
 import { ErrorState, Loading } from "../components/States";
-import { ThresholdBand } from "../components/ThresholdBand";
 import { Transcript } from "../components/Transcript";
 import { VerdictMark } from "../components/VerdictMark";
 import { shortHash } from "../lib/format";
@@ -26,6 +29,9 @@ import "./claimcase.css";
 
 export function ClaimCase() {
   const { runId = "", claimId = "" } = useParams();
+  // Live loudness from the clip, so the core beside it moves with the
+  // evidence rather than on a timer.
+  const [amplitude, setAmplitude] = useState(0);
   const { data, error, loading, retry } = useFetch<ClaimDetail>(
     () => api.claim(runId, claimId),
     [runId, claimId],
@@ -83,6 +89,166 @@ export function ClaimCase() {
         ? "why it holds"
         : "why no decision";
 
+  const queries = String(retrieval?.query ?? "")
+    .split("|")
+    .map((q) => q.trim())
+    .filter(Boolean);
+
+  const traceSteps: TraceStep[] = [
+    {
+      key: "turn",
+      index: 1,
+      label: "agent turn",
+      detail: `${(finding.transcript ?? "").length} characters recorded, hashed as ${shortHash(String(data.turn?.payload?.transcript_hash ?? ""), 16)}. Only agent turns are adjudicated.`,
+      hash: data.turn?.entry_hash,
+      taken: Boolean(data.turn),
+      body: (
+        <p className="case-tracequote">{finding.transcript}</p>
+      ),
+    },
+    {
+      key: "claim",
+      index: 2,
+      label: "claim extracted",
+      detail: `Located at offsets [${finding.char_start}:${finding.char_end}) as a verbatim span. A paraphrase would have been rejected rather than stored.`,
+      hash: data.extract?.entry_hash,
+      taken: Boolean(data.extract),
+      body: (
+        <p className="case-tracequote">"{finding.claim_text}"</p>
+      ),
+    },
+    {
+      key: "deterministic",
+      index: 3,
+      label: "deterministic check",
+      detail: isDeterministic
+        ? "Settled in code after canonical normalization. No model was involved and retrieval never ran."
+        : data.deterministic.length > 0
+          ? "Value normalised in code. Nothing known-true to compare it against, so it continued to retrieval."
+          : "Not a numeric or date claim.",
+      hash: data.deterministic.at(-1)?.entry_hash,
+      taken: data.deterministic.length > 0,
+      skippedNote: "Not a numeric or date claim, so no code check applies.",
+      body:
+        data.deterministic.length > 0 ? (
+          <dl className="case-tracedl mono">
+            {data.deterministic.map((span) => {
+              const p = span.payload as Record<string, unknown>;
+              return (
+                <div key={span.span_id}>
+                  <dt>{String(p.result)}</dt>
+                  <dd>
+                    parsed {String(p.value_parsed ?? "nothing")}
+                    {p.expected_value != null &&
+                      ` against ${String(p.expected_value)}`}
+                    {p.detail ? ` (${String(p.detail)})` : ""}
+                  </dd>
+                </div>
+              );
+            })}
+          </dl>
+        ) : undefined,
+    },
+    {
+      key: "retrieval",
+      index: 4,
+      label: "retrieval",
+      detail: isDeterministic
+        ? "Skipped. The claim was already settled in code, so no rule needed to be found."
+        : `${candidates.length} candidate section(s) ranked from ${queries.length || 1} quer${queries.length === 1 ? "y" : "ies"} under different legal theories.`,
+      hash: data.retrieval?.entry_hash,
+      taken: Boolean(data.retrieval),
+      skippedNote:
+        "Skipped. The claim was settled in code before retrieval ran.",
+      body: data.retrieval ? (
+        <>
+          {queries.length > 0 && (
+            <ul className="case-queries">
+              {queries.map((query) => (
+                <li key={query} className="mono">
+                  {query}
+                </li>
+              ))}
+            </ul>
+          )}
+          <CandidateField
+            candidates={candidates}
+            floor={Number(thresholds.floor ?? 0)}
+            ceiling={Number(thresholds.ceiling ?? 1)}
+            selectedSection={selectedSection}
+            selectedScore={
+              typeof judge?.judge_selected_score === "number"
+                ? judge.judge_selected_score
+                : null
+            }
+          />
+        </>
+      ) : undefined,
+    },
+    {
+      key: "rule",
+      index: 5,
+      label: "governing rule",
+      detail: finding.rule_text
+        ? `${selectedSection} selected from ${(judge?.offered_section_ids ?? []).length} offered section(s).`
+        : "No section was selected as governing this claim.",
+      taken: Boolean(finding.rule_text),
+      skippedNote:
+        finding.verdict === "no_governing_rule"
+          ? "Nothing in the corpus cleared the retrieval floor, so no rule was ever offered."
+          : "No governing section was selected.",
+      body: finding.rule_text ? (
+        <blockquote className="law case-tracerule">
+          {finding.rule_text}
+        </blockquote>
+      ) : undefined,
+    },
+    {
+      key: "judge",
+      index: 6,
+      label: "judge",
+      detail: isDeterministic
+        ? "Not consulted. Code decided this claim."
+        : `Ruled from the selected text alone, at retrieval score ${judge?.judge_selected_score?.toFixed?.(3) ?? "-"}.`,
+      hash: data.judge?.entry_hash,
+      taken: Boolean(data.judge) && !isDeterministic,
+      skippedNote: "Not consulted. The claim was decided in code.",
+      body: (
+        <p className="case-tracerationale">{finding.rationale}</p>
+      ),
+    },
+    {
+      key: "verdict",
+      index: 7,
+      label: "verdict",
+      detail: `${finding.verdict.replace(/_/g, " ")}${finding.section_id ? ` at ${finding.section_id}` : ""}, severity ${finding.severity} from the client's criteria pack.`,
+      taken: true,
+    },
+    {
+      key: "seal",
+      index: 8,
+      label: "evidence seal",
+      detail:
+        "Written into the append-only chain. Entry N covers entry N minus one, so altering anything earlier invalidates every hash after it.",
+      hash: finding.entry_hash,
+      taken: true,
+      body: (
+        <dl className="case-tracedl mono">
+          <div>
+            <dt>entry hash</dt>
+            <dd>{finding.entry_hash}</dd>
+          </div>
+          {data.emit && (
+            <div>
+              <dt>previous</dt>
+              <dd>{data.emit.prev_hash}</dd>
+            </div>
+          )}
+        </dl>
+      ),
+    },
+  ];
+
   return (
     <article className="page case">
       <nav className="case-crumb mono">
@@ -122,13 +288,35 @@ export function ClaimCase() {
         </p>
         <div className="case-audio">
           {finding.has_clip && finding.audio_clip_ref && emit ? (
-            <AudioEvidence
-              src={api.clipUrl(runId, finding.audio_clip_ref)}
-              clipStart={emit.clip_start_s ?? 0}
-              clipEnd={emit.clip_end_s ?? 0}
-              wordTimings={wordTimings}
-              clipRef={finding.audio_clip_ref}
-            />
+            <div className="case-audiorig">
+              <AudioEvidence
+                src={api.clipUrl(runId, finding.audio_clip_ref)}
+                clipStart={emit.clip_start_s ?? 0}
+                clipEnd={emit.clip_end_s ?? 0}
+                wordTimings={wordTimings}
+                clipRef={finding.audio_clip_ref}
+                onAmplitude={setAmplitude}
+              />
+              <div className="case-audiocore">
+                <ComplianceCore
+                  scale="mini"
+                  state="verdict"
+                  tone={
+                    finding.verdict === "contradicted"
+                      ? "contradicted"
+                      : finding.verdict === "supported"
+                        ? "supported"
+                        : "abstain"
+                  }
+                  amplitude={amplitude}
+                  sections={120}
+                  claims={5}
+                />
+                <span className="syslabel case-audiocorenote">
+                  moves with the clip
+                </span>
+              </div>
+            </div>
           ) : (
             <NoAudio />
           )}
@@ -213,148 +401,20 @@ export function ClaimCase() {
       </section>
 
       {/* TRACE */}
-      <section className="case-section">
-        <details className="case-trace" open={finding.verdict === "contradicted"}>
-          <summary>
-            <span className="syslabel">trace: how this verdict was reached</span>
-            {selectionDiffersFromRank1 && (
-              <span className="case-rankflag mono">
-                judge selected {selectedSection}, not the top-ranked candidate
-              </span>
-            )}
-          </summary>
-
-          <ol className="trace-chain">
-            <TraceNode
-              label="agent.turn"
-              hash={data.turn?.entry_hash}
-              body={`${(finding.transcript ?? "").length} characters recorded, transcript hash ${shortHash(String(data.turn?.payload?.transcript_hash ?? ""), 16)}`}
-            />
-            <TraceNode
-              label="extract.claims"
-              hash={data.extract?.entry_hash}
-              body={`claim located at [${finding.char_start}:${finding.char_end}) as a verbatim span; a paraphrase would have been rejected`}
-            />
-            {isDeterministic ? (
-              <TraceNode
-                label="check.deterministic"
-                hash={data.deterministic.at(-1)?.entry_hash}
-                body="value compared in code after canonical normalization. Retrieval and judge never ran for this claim; the path ends here."
-                terminal
-              />
-            ) : (
-              <>
-                <TraceNode
-                  label="retrieve.rule"
-                  hash={data.retrieval?.entry_hash}
-                  body={
-                    retrieval?.query
-                      ? `queries: ${retrieval.query}`
-                      : "no retrieval span recorded for this claim"
-                  }
-                />
-                <TraceNode
-                  label="judge.rule"
-                  hash={data.judge?.entry_hash}
-                  body={`${(judge?.offered_section_ids ?? []).length} section(s) offered; selected ${selectedSection ?? "none"} at score ${judge?.judge_selected_score?.toFixed?.(3) ?? "-"}`}
-                />
-              </>
-            )}
-            {data.emit && (
-              <TraceNode
-                label="finding.emit"
-                hash={data.emit.entry_hash}
-                body="finding written to the chain with its audio reference"
-                terminal
-              />
-            )}
-          </ol>
-
-          {!isDeterministic && candidates.length > 0 && (
-            <>
-              <h3 className="syslabel trace-sub">
-                the shortlist, and where the thresholds fell
-              </h3>
-              <ThresholdBand
-                candidates={candidates}
-                floor={Number(thresholds.floor ?? 0)}
-                ceiling={Number(thresholds.ceiling ?? 1)}
-                conflictMargin={Number(thresholds.conflict_margin ?? 0)}
-                selectedSection={selectedSection}
-                selectedScore={
-                  typeof judge?.judge_selected_score === "number"
-                    ? judge.judge_selected_score
-                    : null
-                }
-              />
-
-              <table className="plain trace-candidates">
-                <thead>
-                  <tr>
-                    <th>candidate section</th>
-                    <th>score</th>
-                    <th>bm25 rank</th>
-                    <th>dense rank</th>
-                    <th>outcome</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {candidates.map((candidate, index) => {
-                    const isSelected = candidate.section_id === selectedSection;
-                    return (
-                      <tr key={candidate.chunk_id} className={isSelected ? "selected" : ""}>
-                        <td className="mono">{candidate.section_id}</td>
-                        <td className="num">{candidate.score.toFixed(3)}</td>
-                        <td className="num">{candidate.bm25_rank ?? "-"}</td>
-                        <td className="num">{candidate.dense_rank ?? "-"}</td>
-                        <td className="mono">
-                          {isSelected
-                            ? index === 0
-                              ? "selected by the judge"
-                              : `selected by the judge over ${index} higher-ranked`
-                            : index === 0
-                              ? "top ranked, not selected"
-                              : ""}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-              <p className="muted trace-note">
-                Rank 1 is unreliable while the shortlist is not: the governing
-                section is nearly always retrieved and rarely ranked first,
-                which is why selection exists. When the selected row is not the
-                top row, that is the system working as measured, not a glitch.
-              </p>
-            </>
+      <section className="case-section case-tracesection">
+        <div className="case-tracehead">
+          <h2 className="syslabel">evidence trace</h2>
+          {selectionDiffersFromRank1 && (
+            <span className="case-rankflag mono">
+              judge selected {selectedSection}, not the top ranked candidate
+            </span>
           )}
-        </details>
+        </div>
+        <EvidenceTrace
+          initiallyOpen={finding.verdict === "contradicted" ? "retrieval" : undefined}
+          steps={traceSteps}
+        />
       </section>
     </article>
-  );
-}
-
-function TraceNode({
-  label,
-  hash,
-  body,
-  terminal = false,
-}: {
-  label: string;
-  hash?: string;
-  body: string;
-  terminal?: boolean;
-}) {
-  return (
-    <li className={`trace-node ${terminal ? "terminal" : ""}`}>
-      <span className="trace-nodelabel mono">{label}</span>
-      {hash && (
-        <span className="trace-nodehash mono faint" title={hash}>
-          {shortHash(hash, 16)}
-        </span>
-      )}
-      <p className="trace-nodebody muted">{body}</p>
-    </li>
   );
 }

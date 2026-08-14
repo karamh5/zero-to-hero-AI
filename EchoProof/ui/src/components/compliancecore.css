@@ -1,0 +1,28 @@
+.core {
+  position: relative;
+  pointer-events: none;
+}
+
+.core canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.core-hero {
+  width: 100%;
+  height: 100%;
+  opacity: 0.72;
+}
+
+.core-panel {
+  width: 100%;
+  height: 320px;
+  opacity: 0.9;
+}
+
+.core-mini {
+  width: 116px;
+  height: 116px;
+  opacity: 0.85;
+}

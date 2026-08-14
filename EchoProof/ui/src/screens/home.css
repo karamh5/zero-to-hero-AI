@@ -1,7 +1,7 @@
 /* ==========================================================================
-   The landing. Oversized type with line-height under 1, a single living
-   object, and long editorial descent. Sections are numbered in the machine
-   face so the page reads as an instrument's front panel.
+   The landing. Editorial scale, one living object, atmospheric depth.
+   Warm paper ground with soft translucent geometry behind the type. No neon,
+   no grid, no particles, nothing that competes with reading.
    ========================================================================== */
 
 .home {
@@ -12,85 +12,129 @@
 
 .home-hero {
   position: relative;
-  min-height: calc(100vh - 66px);
+  min-height: calc(100vh - 62px);
   display: grid;
   grid-template-rows: 1fr auto;
   padding: 0 var(--home-pad) 2.5rem;
   overflow: hidden;
 }
 
-/* Settled state is the default. The entrance is expressed as a departure
-   FROM it, applied only once JS confirms motion is armed, so any context
-   that cannot run the animation still shows the object rather than a void. */
 .home-hero-object {
   position: absolute;
   inset: 0;
-  z-index: 0;
-  opacity: 0.9;
+  z-index: 1;
+  opacity: 1;
   transform: none;
   transition:
-    opacity 1.8s var(--ease-settle),
-    transform 2.4s var(--ease-settle);
+    opacity 1.6s var(--ease-settle),
+    transform 2.2s var(--ease-settle);
 }
 
 .js-motion .home-hero-object.arming {
   opacity: 0;
-  transform: scale(1.06);
+  transform: scale(1.05);
   transition: none;
+}
+
+/* Atmosphere: two very soft translucent fields and one faint structural
+   rule. Depth without a gradient wash and without obscuring anything. */
+.home-atmos {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.home-atmos-a,
+.home-atmos-b {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+}
+
+.home-atmos-a {
+  width: 46vw;
+  height: 46vw;
+  right: -8vw;
+  top: -10vw;
+  background: color-mix(in srgb, var(--sig-trace) 9%, transparent);
+}
+
+.home-atmos-b {
+  width: 38vw;
+  height: 38vw;
+  left: -10vw;
+  bottom: -12vw;
+  background: color-mix(in srgb, var(--sig-deterministic) 8%, transparent);
+}
+
+/* A single faint horizon line: structure, not a grid. */
+.home-atmos-grid {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 62%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--line) 22%,
+    var(--line) 78%,
+    transparent
+  );
+  opacity: 0.7;
 }
 
 .home-hero-type {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   align-self: center;
   padding-top: 3rem;
-  pointer-events: none;
+  max-width: min(100%, 62rem);
 }
 
-.home-hero-type > * {
-  pointer-events: auto;
+.home-headline {
+  font-size: clamp(2.6rem, 9.6vw, 8.5rem);
+  line-height: 0.84;
+  letter-spacing: -0.055em;
+  font-weight: 780;
+  margin-left: -0.05em;
 }
 
-.home-wordmark {
-  font-size: var(--text-colossal);
-  line-height: var(--lh-display);
-  letter-spacing: var(--track-display);
-  font-weight: 760;
-  margin-left: -0.06em;
-  /* The object shows through the counters of the letterforms without the
-     type ever losing contrast: the fill is the ink, the object sits behind. */
-  mix-blend-mode: normal;
+.home-hero-sub {
+  margin-top: 1.1rem;
+  font-family: var(--font-machine);
+  font-size: clamp(0.8rem, 1.5vw, 1.05rem);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
 }
 
 .home-hero-lede {
-  max-width: 34ch;
-  margin-top: 1.6rem;
-  font-size: clamp(1rem, 1.5vw, 1.2rem);
-  line-height: 1.5;
+  max-width: 44ch;
+  margin-top: 1.9rem;
+  font-size: clamp(1rem, 1.45vw, 1.16rem);
+  line-height: 1.55;
   color: var(--ink-muted);
-  background: linear-gradient(
-    to right,
-    var(--ground) 0%,
-    var(--ground) 82%,
-    transparent 100%
-  );
 }
 
 .home-hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.9rem;
-  margin-top: 2rem;
+  gap: 0.8rem;
+  margin-top: 2.1rem;
 }
 
 .home-cta {
   font-family: var(--font-machine);
   font-size: var(--text-mono);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   text-decoration: none;
   border: 1px solid var(--ink);
   border-radius: var(--radius);
-  padding: 0.7rem 1.6rem;
+  padding: 0.75rem 1.7rem;
   background: var(--ink);
   color: var(--ground);
   transition:
@@ -104,7 +148,7 @@
 }
 
 .home-cta.ghost {
-  background: transparent;
+  background: color-mix(in srgb, var(--ground) 70%, transparent);
   color: var(--ink);
 }
 
@@ -115,7 +159,7 @@
 
 .home-hero-meta {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   align-self: end;
 }
 
@@ -141,8 +185,8 @@
 
 .home-heromeasures dd {
   margin: 0;
-  font-size: 1.5rem;
-  letter-spacing: -0.02em;
+  font-size: 1.55rem;
+  letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
 }
 
@@ -150,22 +194,41 @@
   position: absolute;
   right: var(--home-pad);
   bottom: 2.5rem;
-  z-index: 1;
+  z-index: 2;
   writing-mode: vertical-rl;
-  letter-spacing: 0.3em;
-  animation: home-scrollhint 2.6s var(--ease-settle) infinite;
+  letter-spacing: 0.34em;
+  color: var(--ink-faint);
 }
 
-@keyframes home-scrollhint {
-  0%,
-  100% {
-    opacity: 0.25;
-    transform: translateY(0);
-  }
-  50% {
-    opacity: 0.75;
-    transform: translateY(7px);
-  }
+/* -- statements ----------------------------------------------------------- */
+
+.home-statements {
+  border-top: 1px solid var(--line);
+}
+
+.home-statement {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 13vh, 9rem) var(--home-pad);
+  border-bottom: 1px solid var(--line);
+}
+
+.home-statement-type {
+  font-size: clamp(2.6rem, 8.5vw, 7.5rem);
+  line-height: 0.84;
+  letter-spacing: -0.055em;
+  font-weight: 760;
+  max-width: 12ch;
+  margin-left: -0.045em;
+}
+
+.home-statement-note {
+  margin-top: 1.6rem;
+  font-size: var(--text-micro);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  max-width: 58ch;
 }
 
 /* -- shared section furniture --------------------------------------------- */
@@ -173,97 +236,79 @@
 .home-section {
   max-width: var(--page-max);
   margin: 0 auto;
-  padding: clamp(5rem, 12vh, 9rem) var(--home-pad);
+  padding: clamp(4.5rem, 12vh, 8rem) var(--home-pad);
 }
 
 .home-sectionnum {
   display: block;
-  margin-bottom: 1.6rem;
+  margin-bottom: 1.5rem;
   color: var(--ink-faint);
+  letter-spacing: 0.2em;
 }
 
 .home-h2 {
   font-size: var(--text-display);
   line-height: var(--lh-display);
   letter-spacing: var(--track-display);
-  font-weight: 700;
-  max-width: 18ch;
+  font-weight: 740;
+  max-width: 16ch;
+  margin-left: -0.04em;
 }
 
 .home-body {
   max-width: var(--measure);
-  margin-top: 1.8rem;
-  font-size: 1.05rem;
+  margin-top: 1.7rem;
+  font-size: 1.04rem;
   line-height: 1.6;
   color: var(--ink-muted);
 }
 
-.home-inlinelink {
-  color: var(--ink);
-  text-decoration: none;
-  border-bottom: 1px solid var(--sig-trace);
-  padding-bottom: 1px;
-  transition: color var(--dur-small) linear;
-}
-
-.home-inlinelink:hover {
-  color: var(--sig-trace);
-}
-
-/* -- 01 what it does ------------------------------------------------------ */
+/* -- pipeline ------------------------------------------------------------- */
 
 .home-steps {
   list-style: none;
-  margin: 3.5rem 0 0;
+  margin: 2rem 0 0;
   padding: 0;
-  display: grid;
-  gap: 0;
 }
 
 .home-step {
-  display: grid;
-  grid-template-columns: 4rem minmax(0, 12rem) minmax(0, 1fr);
-  gap: 1.5rem;
-  align-items: baseline;
-  padding: 1.5rem 0;
   border-top: 1px solid var(--line);
+  padding: 2rem 0 2.2rem;
+  display: block;
 }
 
 .home-steps li:last-child {
   border-bottom: 1px solid var(--line);
 }
 
-@media (max-width: 720px) {
-  .home-step {
-    grid-template-columns: 3rem 1fr;
-  }
-  .home-stepbody {
-    grid-column: 2;
-  }
-}
-
-.home-stepnum {
+.home-stepkey {
+  display: block;
+  font-size: var(--text-micro);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: var(--ink-faint);
-  font-size: var(--text-mono);
 }
 
 .home-steptitle {
-  font-size: 1.35rem;
-  font-weight: 640;
-  letter-spacing: -0.02em;
+  margin-top: 0.7rem;
+  font-size: clamp(1.5rem, 3vw, 2.35rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
 }
 
 .home-stepbody {
+  margin-top: 0.9rem;
   color: var(--ink-muted);
   font-size: var(--text-body);
-  max-width: 52ch;
+  max-width: 62ch;
 }
 
-/* -- 02 verdicts ---------------------------------------------------------- */
+/* -- verdicts ------------------------------------------------------------- */
 
 .home-verdictlist {
   list-style: none;
-  margin: 3.5rem 0 0;
+  margin: 3rem 0 0;
   padding: 0;
 }
 
@@ -283,7 +328,7 @@
 @media (max-width: 780px) {
   .home-verdictrow {
     grid-template-columns: 1fr;
-    gap: 0.5rem;
+    gap: 0.45rem;
   }
 }
 
@@ -294,87 +339,16 @@
 .home-verdictmeaning {
   color: var(--ink-muted);
   font-size: var(--text-body);
-  max-width: 56ch;
+  max-width: 58ch;
 }
 
-/* -- 03 numbers ----------------------------------------------------------- */
-
-.home-bignumbers {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 2.5rem;
-  margin-top: 3.5rem;
-}
-
-.home-bignumber {
-  border-top: 2px solid var(--ink);
-  padding-top: 1rem;
-}
-
-.home-bigvalue {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  font-size: clamp(2.4rem, 5vw, 3.6rem);
-  letter-spacing: -0.045em;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-
-.home-bigvalue.fails {
-  color: var(--sig-contradicted);
-}
-
-.home-bigto {
-  font-size: 0.9rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
-
-.home-biglabel {
-  display: block;
-  margin-top: 0.9rem;
-  max-width: 30ch;
-}
-
-.home-bignote {
-  margin-top: 0.7rem;
-  font-size: var(--text-body);
-  color: var(--ink-muted);
-  max-width: 44ch;
-}
-
-.home-position {
-  margin: 4rem 0 0;
-  padding: 2.2rem 0 0;
-  border-top: 1px solid var(--line);
-}
-
-.home-position p {
-  font-size: clamp(1.4rem, 3.2vw, 2.4rem);
-  line-height: 1.15;
-  letter-spacing: -0.025em;
-  font-weight: 640;
-  max-width: 24ch;
-}
-
-.home-position footer {
-  margin-top: 1rem;
-  font-size: var(--text-micro);
-  text-transform: uppercase;
-  letter-spacing: var(--track-caps);
-  color: var(--ink-faint);
-}
-
-/* -- 04 ways in ----------------------------------------------------------- */
+/* -- ways in -------------------------------------------------------------- */
 
 .home-doors {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));
   gap: 1px;
-  margin-top: 3rem;
+  margin-top: 2.5rem;
   background: var(--line);
   border: 1px solid var(--line);
 }
@@ -383,7 +357,7 @@
   position: relative;
   display: block;
   background: var(--ground);
-  padding: 1.8rem 1.6rem 3.2rem;
+  padding: 1.7rem 1.5rem 3.2rem;
   text-decoration: none;
   color: inherit;
   min-height: 15rem;
@@ -397,29 +371,30 @@
 .home-doorkey {
   font-size: var(--text-micro);
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.22em;
   color: var(--ink-faint);
 }
 
 .home-doortitle {
-  margin-top: 0.9rem;
-  font-size: 1.45rem;
-  font-weight: 640;
-  letter-spacing: -0.02em;
-  max-width: 14ch;
+  margin-top: 0.85rem;
+  font-size: 1.32rem;
+  font-weight: 660;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  max-width: 15ch;
 }
 
 .home-doorbody {
-  margin-top: 0.7rem;
+  margin-top: 0.65rem;
   font-size: var(--text-body);
   color: var(--ink-muted);
 }
 
 .home-doorarrow {
   position: absolute;
-  left: 1.6rem;
-  bottom: 1.5rem;
-  font-size: 1.3rem;
+  left: 1.5rem;
+  bottom: 1.4rem;
+  font-size: 1.25rem;
   transition: transform var(--dur-move) var(--ease-settle);
 }
 
@@ -427,9 +402,10 @@
   transform: translateX(9px);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .home-hero-object,
-  .home-scrollhint {
-    animation: none;
-  }
+.home-chainline {
+  margin-top: 1.6rem;
+  font-size: var(--text-micro);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
 }

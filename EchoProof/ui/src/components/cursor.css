@@ -1,4 +1,12 @@
-.reticle {
+/* The native cursor is hidden only once the custom one has taken over. The
+   class is applied by Cursor.tsx, never by a stylesheet, so a page without
+   the component still has a working pointer. */
+.cursor-hidden,
+.cursor-hidden * {
+  cursor: none !important;
+}
+
+.cur {
   position: fixed;
   top: 0;
   left: 0;
@@ -6,105 +14,185 @@
   pointer-events: none;
   width: 0;
   height: 0;
-  opacity: 1;
-  transition: opacity var(--dur-move) var(--ease-settle);
+  will-change: transform;
+  transition: opacity 200ms var(--ease-settle);
 }
 
-.reticle.gone {
+.cur.away {
   opacity: 0;
 }
 
-.reticle-ring,
-.reticle-hair,
-.reticle-readout {
+.cur-ring,
+.cur-notch,
+.cur-dot {
   position: absolute;
   transform: translate(-50%, -50%);
+  transition:
+    width 220ms var(--ease-settle),
+    height 220ms var(--ease-settle),
+    opacity 220ms var(--ease-settle),
+    border-width 220ms var(--ease-settle),
+    border-radius 220ms var(--ease-settle);
 }
 
-.reticle-ring {
-  width: 26px;
-  height: 26px;
-  border: 1px solid var(--sig-trace);
+.cur-ring {
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+}
+
+/* The single offset notch: what stops it reading as a generic circle. */
+.cur-notch {
+  width: 5px;
+  height: 1px;
+  background: var(--ink);
+  left: 9px;
+  opacity: 0.9;
+}
+
+.cur-dot {
+  width: 2px;
+  height: 2px;
+  background: var(--ink);
   border-radius: 50%;
   opacity: 0;
-  transition:
-    width var(--dur-move) var(--ease-settle),
-    height var(--dur-move) var(--ease-settle),
-    opacity var(--dur-move) var(--ease-settle);
 }
 
-.reticle-hair {
-  background: var(--sig-trace);
-  transition:
-    width var(--dur-move) var(--ease-settle),
-    height var(--dur-move) var(--ease-settle),
-    opacity var(--dur-move) var(--ease-settle);
-}
-
-.reticle-hair-h {
-  width: 15px;
-  height: 1px;
-}
-
-.reticle-hair-v {
-  width: 1px;
-  height: 15px;
-}
-
-/* over an interactive element: the crosshair opens into a ring */
-.reticle.mode-interactive .reticle-ring {
-  opacity: 1;
-  width: 40px;
-  height: 40px;
-}
-
-.reticle.mode-interactive .reticle-hair-h,
-.reticle.mode-interactive .reticle-hair-v {
-  opacity: 0.35;
-}
-
-/* over running text: the crosshair narrows to a caret bar */
-.reticle.mode-text .reticle-hair-h {
-  width: 3px;
-}
-
-.reticle.mode-text .reticle-hair-v {
+/* -- interactive: the ring opens ------------------------------------------ */
+.cur-interactive .cur-ring {
+  width: 22px;
   height: 22px;
+  border-color: var(--sig-trace);
 }
 
-.reticle.down .reticle-ring {
+.cur-interactive .cur-notch {
+  left: 15px;
+  background: var(--sig-trace);
+}
+
+.cur-interactive .cur-dot {
+  opacity: 1;
+  background: var(--sig-trace);
+}
+
+/* -- claim: a precision reticle ------------------------------------------- */
+.cur-claim .cur-ring {
   width: 26px;
   height: 26px;
+  border-radius: 0;
+  border-color: var(--sig-contradicted);
 }
 
-.reticle-readout {
-  left: 18px;
-  top: 20px;
-  transform: none;
-  display: flex;
-  gap: 0.5rem;
-  align-items: baseline;
+.cur-claim .cur-notch {
+  width: 13px;
+  left: 0;
+  background: var(--sig-contradicted);
+}
+
+.cur-claim .cur-dot {
+  opacity: 1;
+  background: var(--sig-contradicted);
+}
+
+/* -- policy: a section locator, a tall bracket ---------------------------- */
+.cur-policy .cur-ring {
+  width: 8px;
+  height: 24px;
+  border-radius: 1px;
+  border-left-width: 2px;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.cur-policy .cur-notch {
+  width: 10px;
+  left: 4px;
+}
+
+/* -- audio: a playhead ---------------------------------------------------- */
+.cur-audio .cur-ring {
+  width: 2px;
+  height: 26px;
+  border-radius: 0;
+  border-width: 0;
+  background: var(--sig-trace);
+}
+
+.cur-audio .cur-notch {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  left: 0;
+  top: -13px;
+  background: var(--sig-trace);
+}
+
+/* -- trace: concentric --------------------------------------------------- */
+.cur-trace .cur-ring {
+  width: 24px;
+  height: 24px;
+}
+
+.cur-trace .cur-notch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--ink);
+  background: transparent;
+  left: 0;
+}
+
+.cur-trace .cur-dot {
+  opacity: 1;
+}
+
+/* -- text: a slim caret --------------------------------------------------- */
+.cur-text .cur-ring {
+  width: 1px;
+  height: 20px;
+  border-radius: 0;
+  border-width: 0;
+  background: var(--ink);
+  opacity: 0.75;
+}
+
+.cur-text .cur-notch {
+  opacity: 0;
+}
+
+/* -- pressed -------------------------------------------------------------- */
+.cur-down .cur-ring {
+  width: 9px;
+  height: 9px;
+}
+
+/* -- label ---------------------------------------------------------------- */
+.cur-label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9000;
+  pointer-events: none;
+  font-family: var(--font-machine);
   font-size: 9.5px;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: var(--sig-trace);
   white-space: nowrap;
   opacity: 0;
-  transition: opacity var(--dur-move) var(--ease-settle);
+  transition: opacity 180ms var(--ease-settle);
+  will-change: transform;
 }
 
-.reticle.mode-interactive .reticle-readout {
+.cur-label.on {
   opacity: 1;
-  left: 26px;
-  top: 26px;
-}
-
-.reticle-label {
-  color: var(--sig-trace);
 }
 
 @media (pointer: coarse) {
-  .reticle {
+  .cur,
+  .cur-label {
     display: none;
   }
 }
