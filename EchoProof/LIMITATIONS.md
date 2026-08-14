@@ -92,6 +92,23 @@ questions. Measured on 56 pairs, 41 percent introduced rule vocabulary absent
 from the claim. Part of retrieval performance is the model recognising
 Regulation F, and that part will not transfer to a client's private corpus.
 
+**The retrieval floor sits below the reranker's practical output range, so
+`no_governing_rule` is effectively unreachable.** Measured across the prepared
+conversation library, 71 retrieval calls, the lowest top-1 score observed was
+0.5009 against a floor of 0.4937. Nothing fell below it. A conversation
+written to be maximally off-corpus, describing a clock tower's bronze bells
+and stained glass restored in Bruges, still scored 0.5012 to 0.5059 and
+cleared the floor on every claim.
+
+The consequence is that the policy gap list is empty on every run to date, and
+that emptiness means the floor is never crossed rather than that the corpus is
+complete. The cross-encoder's sigmoid output does not approach zero for
+unrelated text, so a floor calibrated in that range cannot separate "nothing
+governs this" from "something weakly resembles this". Recalibrating the floor
+against genuinely off-corpus text is open work; it is not done here because
+changing it would invalidate comparison against every scored run, per
+CLAUDE.md decision 9.
+
 **Thresholds do not transfer between distributions.** Thresholds calibrated on
 retrieval pairs produced a ceiling of 0.740, which exceeds every score observed
 in a fixture run and would abstain on everything. The operating point used

@@ -550,5 +550,153 @@
     "run_id": "prepared-reg_f-rf-09-dispute",
     "cost_usd": 0.037358,
     "verified_at": "2026-08-14T00:35:57+00:00"
+  },
+  "rf-10-callhours": {
+    "conversation_id": "rf-10-callhours",
+    "title": "Call placed inside permitted hours",
+    "authored_category": "supported",
+    "observed_headline": "supported",
+    "matches_authored": true,
+    "verdict_counts": {
+      "retrieval_below_confidence": 4,
+      "supported": 2
+    },
+    "claims": 6,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [],
+    "verdicts": [
+      {
+        "claim_id": "rf-10-callhours-t00-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-10-callhours-t00-c01",
+        "verdict": "supported",
+        "section_id": "1006.6(b)(1)(i)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-10-callhours-t00-c02",
+        "verdict": "supported",
+        "section_id": "1006.6(b)(1)(i)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-10-callhours-t01-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-10-callhours-t01-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.6(b)(4)(i)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-10-callhours-t01-c02",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.6(b)(1)(i)",
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-reg_f-rf-10-callhours",
+    "cost_usd": 0.028878,
+    "verified_at": "2026-08-14T00:49:25+00:00"
+  },
+  "rf-11-validation": {
+    "conversation_id": "rf-11-validation",
+    "title": "Validation notice contents described",
+    "authored_category": "supported",
+    "observed_headline": "supported",
+    "matches_authored": true,
+    "verdict_counts": {
+      "supported": 4
+    },
+    "claims": 4,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [],
+    "verdicts": [
+      {
+        "claim_id": "rf-11-validation-t00-c00",
+        "verdict": "supported",
+        "section_id": "1006.34(c)(2)(v)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-11-validation-t00-c01",
+        "verdict": "supported",
+        "section_id": "1006.34(c)(2)(viii)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-11-validation-t00-c02",
+        "verdict": "supported",
+        "section_id": "1006.34(c)(2)(viii)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-11-validation-t01-c00",
+        "verdict": "supported",
+        "section_id": "1006.38(d)(2)",
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-reg_f-rf-11-validation",
+    "cost_usd": 0.020174,
+    "verified_at": "2026-08-14T00:52:11+00:00"
+  },
+  "rf-12-offcorpus": {
+    "conversation_id": "rf-12-offcorpus",
+    "title": "Statement outside the rulebook entirely",
+    "authored_category": "no_governing_rule",
+    "observed_headline": "retrieval_below_confidence",
+    "matches_authored": false,
+    "verdict_counts": {
+      "retrieval_below_confidence": 5
+    },
+    "claims": 5,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [],
+    "verdicts": [
+      {
+        "claim_id": "rf-12-offcorpus-t00-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-12-offcorpus-t00-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-12-offcorpus-t00-c02",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-12-offcorpus-t01-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-12-offcorpus-t01-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-reg_f-rf-12-offcorpus",
+    "cost_usd": 0.024838,
+    "verified_at": "2026-08-14T00:55:36+00:00"
   }
 }

@@ -46,39 +46,66 @@ was offered, placed by its retrieval score, with the selected rule largest.
 
 ## Which conversations to run
 
-Run these. They have been verified against the real pipeline.
+Every conversation below has been run through the real pipeline and produces
+the outcome shown. The rig groups them by that recorded outcome, so what you
+see in the list is what you will get.
 
-| Conversation | Produces | Cites |
-|---|---|---|
-| Suit threatened on a time-barred debt | **contradicted** | `1006.26(b)` |
-| Furnished to a credit bureau before contact | **contradicted** | `1006.30(a)(1)` |
-| Debt disclosed to a third party | **contradicted** | `1006.6(d)(1)` |
-| Required initial disclosure | **supported** | |
-| Written contact by postcard | **supported** | |
+**Contradicted, cites the right paragraph:**
 
-The third party one is the strongest single demonstration: the violation is
-immediately understandable to a non specialist without explaining a statute,
-and it cites the section the scenario is about.
+| Conversation | Cites |
+|---|---|
+| Debt disclosed to a third party | `1006.6(d)(1)` |
+| Suit threatened on a time-barred debt | `1006.26(b)` |
+| Furnished to a credit bureau before contact | `1006.30(a)(1)` |
+
+**Supported:**
+
+| Conversation |
+|---|
+| Required initial disclosure |
+| Written contact by postcard |
+| Call placed inside permitted hours |
+| Validation notice contents described |
+
+The third party conversation is the strongest single demonstration: the
+violation is immediately understandable to a non specialist without
+explaining a statute, and it cites the section the scenario is about.
 
 Pair one contradicted conversation with one supported conversation. A tool
 that only ever finds problems is not obviously better than a tool that flags
 everything, and the supported case is what shows it stays quiet when the
 agent is doing its job.
 
-## Conversations that do not currently produce their intended outcome
+## The abstention examples
 
-These are in the library, grouped under what they actually produce, and
-should not be run as demonstrations of the outcome they were written for:
+Five conversations produce `retrieval_below_confidence`: cease contact
+continued, attorney representation ignored, payment pressed during an open
+dispute, and two written to be outside the rulebook entirely. They sit in the
+library under that heading and are worth running deliberately if the room
+asks what happens when the system is unsure.
 
-- Contact continued after a written cease request
-- Contact continued after attorney representation
-- Payment pressed while a dispute is open
+The line to use: retrieval did not surface a governing provision with enough
+confidence to adjudicate, so the system declined rather than guessed, and the
+claim routes to human review. Declining is a designed outcome, not a failure
+to produce one.
 
-All three abstain rather than flag. That is consistent with the campaign
-results, where the same three scenario types were the ones missed. If someone
-asks, the answer is that retrieval did not surface the governing provision
-with enough confidence to adjudicate, so the system declined rather than
-guessed, and the claim routes to human review.
+Do not present them as demonstrations of a caught violation. The three
+collections ones were written to be violations and are not detected as such,
+which matches the campaign, where those same scenario types were the misses.
+
+## Two verdict states have no demonstration
+
+**`no_governing_rule` cannot currently be produced.** Measured across the
+whole prepared library, 71 retrieval calls, the lowest top-1 score was 0.5009
+against a floor of 0.4937, so nothing ever falls below the floor. A
+conversation deliberately written about clock towers and stained glass still
+scored 0.50. This is why the policy gap list is empty on every run. Do not
+promise this state in a demo, and if asked, say the floor is calibrated below
+the reranker's practical output range and recalibrating it is open work.
+
+**`conflicting_sections` is not demonstrated on purpose.** It is the least
+reliable of the five states and there is no conversation that produces it
+dependably.
 
 ## If something goes wrong
 
