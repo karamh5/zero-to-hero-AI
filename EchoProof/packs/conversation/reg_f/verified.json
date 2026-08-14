@@ -3,24 +3,16 @@
     "conversation_id": "rf-01-disclosure",
     "title": "Required initial disclosure",
     "authored_category": "supported",
-    "observed_headline": "contradicted",
-    "matches_authored": false,
+    "observed_headline": "supported",
+    "matches_authored": true,
     "verdict_counts": {
-      "supported": 6,
-      "contradicted": 1,
-      "retrieval_below_confidence": 1
+      "supported": 5,
+      "retrieval_below_confidence": 3
     },
     "claims": 8,
     "agent_turns": 2,
     "customer_turns_skipped": 2,
-    "findings": [
-      {
-        "claim_id": "rf-01-disclosure-t00-c04",
-        "verdict": "contradicted",
-        "section_id": "1006.10(b)(1)",
-        "decided_by": "model"
-      }
-    ],
+    "findings": [],
     "verdicts": [
       {
         "claim_id": "rf-01-disclosure-t00-c00",
@@ -42,14 +34,14 @@
       },
       {
         "claim_id": "rf-01-disclosure-t00-c03",
-        "verdict": "supported",
+        "verdict": "retrieval_below_confidence",
         "section_id": "1006.34(c)(3)(i)",
         "decided_by": "model"
       },
       {
         "claim_id": "rf-01-disclosure-t00-c04",
-        "verdict": "contradicted",
-        "section_id": "1006.10(b)(1)",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
         "decided_by": "model"
       },
       {
@@ -61,19 +53,19 @@
       {
         "claim_id": "rf-01-disclosure-t01-c01",
         "verdict": "supported",
-        "section_id": "1006.34(a)(1)",
+        "section_id": "1006.34(c)",
         "decided_by": "model"
       },
       {
         "claim_id": "rf-01-disclosure-t01-c02",
         "verdict": "supported",
-        "section_id": "1006.34(a)(1)(ii)",
+        "section_id": "1006.38(d)(2)(i)",
         "decided_by": "model"
       }
     ],
     "run_id": "prepared-reg_f-rf-01-disclosure",
-    "cost_usd": 0.037028,
-    "verified_at": "2026-08-14T00:07:21+00:00"
+    "cost_usd": 0.037384,
+    "verified_at": "2026-08-14T00:44:20+00:00"
   },
   "rf-02-postcard": {
     "conversation_id": "rf-02-postcard",
@@ -436,5 +428,127 @@
     "run_id": "prepared-reg_f-rf-07-attorney",
     "cost_usd": 0.02008,
     "verified_at": "2026-08-14T00:27:21+00:00"
+  },
+  "rf-08-officehours": {
+    "conversation_id": "rf-08-officehours",
+    "title": "Statement outside the rulebook's subject matter",
+    "authored_category": "no_governing_rule",
+    "observed_headline": "retrieval_below_confidence",
+    "matches_authored": false,
+    "verdict_counts": {
+      "retrieval_below_confidence": 6
+    },
+    "claims": 6,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [],
+    "verdicts": [
+      {
+        "claim_id": "rf-08-officehours-t00-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-08-officehours-t00-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.22(c)(1)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-08-officehours-t00-c02",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.6(b)(1)(i)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-08-officehours-t00-c03",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-08-officehours-t01-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-08-officehours-t01-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-reg_f-rf-08-officehours",
+    "cost_usd": 0.028808,
+    "verified_at": "2026-08-14T00:31:08+00:00"
+  },
+  "rf-09-dispute": {
+    "conversation_id": "rf-09-dispute",
+    "title": "Payment pressed while a dispute is open",
+    "authored_category": "contradicted",
+    "observed_headline": "retrieval_below_confidence",
+    "matches_authored": false,
+    "verdict_counts": {
+      "retrieval_below_confidence": 8
+    },
+    "claims": 8,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [],
+    "verdicts": [
+      {
+        "claim_id": "rf-09-dispute-t00-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-09-dispute-t00-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-09-dispute-t00-c02",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-09-dispute-t00-c03",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.38(d)(2)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-09-dispute-t00-c04",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-09-dispute-t00-c05",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.38(d)(2)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-09-dispute-t01-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.38(d)(2)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-09-dispute-t01-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.38(d)(2)",
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-reg_f-rf-09-dispute",
+    "cost_usd": 0.037358,
+    "verified_at": "2026-08-14T00:35:57+00:00"
   }
 }
