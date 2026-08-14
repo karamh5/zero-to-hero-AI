@@ -127,8 +127,13 @@ reduced-motion preference or a failed mount leaves the system cursor intact.
 
 Three kinds of authority, three faces: verbatim regulatory text in Source
 Serif 4 and nothing else; identifiers, hashes, scores, offsets and verdict
-strings in IBM Plex Mono; headings and navigation in Archivo. Two grounds:
-warm paper for evidence and reading, graphite for the rig. Signal color
+strings in IBM Plex Mono; headings and navigation in Archivo. One ground,
+deep graphite, so the instrument reads as an instrument and verbatim rule
+text sits on it like paper under a lamp. The only paper surface left is the
+filed report artifact, which is a document and is rendered as one. Every
+text token was checked against every surface it lands on: a sweep of the
+rendered pages across five routes found one failure, a marquee separator
+glyph at 1.7:1, now fixed. Signal color
 encodes state only, and area is inversely proportional to salience: a
 contradicted finding earns a 4 px rule under the flagged words and a mono
 label, never a red card. The three abstention tints are quiet grey-blues;

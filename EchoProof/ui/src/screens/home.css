@@ -58,7 +58,7 @@
   height: 46vw;
   right: -8vw;
   top: -10vw;
-  background: color-mix(in srgb, var(--sig-trace) 9%, transparent);
+  background: color-mix(in srgb, var(--sig-trace) 13%, transparent);
 }
 
 .home-atmos-b {
@@ -66,7 +66,7 @@
   height: 38vw;
   left: -10vw;
   bottom: -12vw;
-  background: color-mix(in srgb, var(--sig-deterministic) 8%, transparent);
+  background: color-mix(in srgb, var(--sig-abstain-ngr) 10%, transparent);
 }
 
 /* A single faint horizon line: structure, not a grid. */

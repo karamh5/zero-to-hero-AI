@@ -1,10 +1,9 @@
 /** The Compliance Core: one object, many meaningful states.
  *
  * Built from EchoProof's own parts rather than from a generic shape. A ring
- * of policy sections encloses a smaller cluster of claim nodes; retrieval
- * links draw between them when retrieval is happening; a chain of evidence
- * segments runs beneath. It is deliberately not an orb, a microphone, a
- * waveform or a reactor.
+ * of policy sections encloses a smaller cluster of claim nodes, and retrieval
+ * links draw between them while retrieval is happening. It is deliberately
+ * not an orb, a microphone, a waveform or a reactor.
  *
  * The state machine is the point:
  *
@@ -14,7 +13,7 @@
  *   retrieving  links reach from the claim toward the policy ring
  *   judging     one section separates from the ring
  *   verdict     the selected section locks, tinted by the verdict
- *   sealed      the evidence chain closes beneath it
+ *   sealed      the selected section locks and the field settles
  *
  * The critical rule from the rest of this product holds here: a state change
  * only ever happens because a real backend event arrived. Nothing in this
@@ -56,11 +55,14 @@ interface Props {
   className?: string;
 }
 
+/* Matched to the signal tokens on the graphite ground. Kept as literals
+   because a WebGL material needs a number, and read once at construction
+   would be the only alternative. */
 const TONE_HEX: Record<CoreTone, number> = {
-  neutral: 0x2a2822,
-  supported: 0x2f6f5c,
-  contradicted: 0xa83226,
-  abstain: 0x52657e,
+  neutral: 0x868c97,
+  supported: 0x5bb295,
+  contradicted: 0xe4705f,
+  abstain: 0x8aa0bd,
 };
 
 /** Deterministic pseudo-random so the object is identical on every render. */
@@ -114,9 +116,9 @@ export function ComplianceCore({
 
     const readVar = (name: string, fallback: string) =>
       getComputedStyle(mount).getPropertyValue(name).trim() || fallback;
-    const inkHex = new THREE.Color(readVar("--ink", "#201e19")).getHex();
-    const faintHex = new THREE.Color(readVar("--ink-faint", "#716b59")).getHex();
-    const traceHex = new THREE.Color(readVar("--sig-trace", "#166c78")).getHex();
+    const inkHex = new THREE.Color(readVar("--ink", "#e9e7e1")).getHex();
+    const faintHex = new THREE.Color(readVar("--ink-faint", "#868c97")).getHex();
+    const traceHex = new THREE.Color(readVar("--sig-trace", "#45c8da")).getHex();
 
     // ---- the policy ring: one mark per provision, capped for frame budget
     const ringCount = Math.min(sections, 320);
@@ -208,23 +210,6 @@ export function ComplianceCore({
     });
     const links = new THREE.LineSegments(linkGeometry, linkMaterial);
     group.add(links);
-
-    // ---- the evidence chain: segments beneath, closing when sealed
-    const chainGroup = new THREE.Group();
-    const chainCount = 9;
-    for (let index = 0; index < chainCount; index += 1) {
-      const segment = new THREE.Mesh(
-        new THREE.BoxGeometry(0.24, 0.02, 0.02),
-        new THREE.MeshBasicMaterial({
-          color: faintHex,
-          transparent: true,
-          opacity: 0.35,
-        }),
-      );
-      segment.position.set((index - (chainCount - 1) / 2) * 0.34, -1.9, 0);
-      chainGroup.add(segment);
-    }
-    group.add(chainGroup);
 
     // ---- state, driven only from outside
     let currentState: CoreState = state;
@@ -330,18 +315,6 @@ export function ComplianceCore({
       selected.position.y += (
         (decided ? 1.75 : 1.55) - selected.position.y
       ) * 0.06;
-
-      // The evidence chain closes when the run is sealed.
-      chainGroup.children.forEach((child, index) => {
-        const segment = child as THREE.Mesh;
-        const material = segment.material as THREE.MeshBasicMaterial;
-        const sealedNow = currentState === "sealed";
-        const want = sealedNow ? 0.95 : 0.28;
-        material.opacity += (want - material.opacity) * 0.09;
-        const gap = sealedNow ? 0.26 : 0.34;
-        const targetX = (index - (chainCount - 1) / 2) * gap;
-        segment.position.x += (targetX - segment.position.x) * 0.08;
-      });
 
       renderer.render(scene, camera);
       frame = requestAnimationFrame(render);

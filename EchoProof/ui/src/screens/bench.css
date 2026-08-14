@@ -23,10 +23,17 @@
   padding: 0;
 }
 
+/* Three real columns. The number occupies its own track and the body starts
+   after it, so the large numeral and the title never sit on top of one
+   another at any width. Every entry uses the same track sizes, so the titles
+   line up down the page whether or not an entry is being hovered. */
 .bench-entry {
   display: grid;
-  grid-template-columns: clamp(5rem, 11vw, 9.5rem) minmax(0, 1fr) auto;
-  gap: clamp(1.2rem, 3vw, 2.6rem);
+  grid-template-columns:
+    clamp(4.5rem, 9vw, 8rem)
+    minmax(0, 1fr)
+    clamp(7rem, 11vw, 10rem);
+  column-gap: clamp(1.5rem, 3.5vw, 3rem);
   align-items: start;
   padding: 2rem 0.4rem 2.2rem;
   border-top: 1px solid var(--line);
@@ -43,18 +50,23 @@
 
 .bench-number {
   font-family: var(--font-interface);
-  font-size: clamp(3.2rem, 7.5vw, 7rem);
-  line-height: 0.82;
-  letter-spacing: -0.07em;
+  font-size: clamp(2.6rem, 5.6vw, 5rem);
+  line-height: 0.86;
+  letter-spacing: -0.06em;
   font-weight: 740;
   color: var(--ink);
-  opacity: 0.16;
-  transition: opacity var(--dur-move) var(--ease-settle);
+  opacity: 0.28;
+  transition:
+    opacity var(--dur-move) var(--ease-settle),
+    color var(--dur-move) var(--ease-settle);
   font-variant-numeric: tabular-nums;
+  /* Its own track, never behind the title. */
+  align-self: start;
 }
 
 .bench-entry.open .bench-number {
-  opacity: 0.85;
+  opacity: 1;
+  color: var(--sig-trace);
 }
 
 .bench-title {
@@ -136,11 +148,15 @@
   color: var(--ink-faint);
 }
 
+/* Reserved height so a row does not change size on hover and shift the rows
+   below it. The core fades in inside the space it already occupies. */
 .bench-core {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  justify-content: flex-start;
   gap: 0.6rem;
+  min-height: 8.5rem;
   opacity: 0;
   transform: translateY(6px);
   transition:
@@ -158,17 +174,23 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   text-decoration: none;
-  color: var(--ink);
+  color: var(--sig-trace);
   border-bottom: 1px solid var(--line-strong);
+  white-space: nowrap;
 }
 
-@media (max-width: 860px) {
+@media (max-width: 900px) {
   .bench-entry {
-    grid-template-columns: 4.5rem minmax(0, 1fr);
+    grid-template-columns: 3.6rem minmax(0, 1fr);
+    row-gap: 1rem;
+  }
+  .bench-number {
+    font-size: 2.1rem;
   }
   .bench-core {
     grid-column: 2;
     align-items: flex-start;
+    min-height: 0;
     opacity: 1;
     transform: none;
   }

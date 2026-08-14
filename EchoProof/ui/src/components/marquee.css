@@ -28,8 +28,10 @@
   align-items: center;
 }
 
+/* Legible rather than hairline: it is a text glyph, so it is held to text
+   contrast even though it reads as punctuation. */
 .marquee-sep {
-  color: var(--line-strong);
+  color: var(--ink-faint);
   margin: 0 1.6rem;
 }
 

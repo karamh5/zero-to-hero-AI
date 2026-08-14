@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, Route, Routes, useLocation } from "react-router-dom";
 
+import { Boot } from "./components/Boot";
 import { Cursor } from "./components/Cursor";
 import { Bench } from "./screens/Bench";
 import { ClaimCase } from "./screens/ClaimCase";
@@ -66,6 +67,10 @@ function ScrambleLabel({ text }: { text: string }) {
 
 export function App() {
   const location = useLocation();
+  // The boot screen shows once per page load, and again when the wordmark is
+  // clicked from somewhere else, which is the one place a visitor asks to
+  // start over.
+  const [booting, setBooting] = useState(true);
   const onRig = RIG_PATHS.some((p) => p.test(location.pathname));
   const onHome = location.pathname === "/";
 
@@ -82,28 +87,33 @@ export function App() {
 
   return (
     <div className={`shell ${onHome ? "on-home" : ""}`}>
+      {booting && <Boot onDone={() => setBooting(false)} />}
       <Cursor />
       <a className="skiplink" href="#main">
         skip to content
       </a>
       <header className="shell-head">
-        <NavLink to="/" className="wordmark" data-cursor="home">
+        <NavLink
+          to="/"
+          className="wordmark"
+          data-cursor="home"
+          onClick={() => {
+            if (location.pathname !== "/") setBooting(true);
+          }}
+        >
           <span className="wordmark-mark" aria-hidden="true" />
           EchoProof
         </NavLink>
         <nav className="shell-nav" aria-label="primary">
-          {NAV.map((item, index) => (
+          {NAV.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               data-cursor={item.label.toLowerCase()}
-              // The link carries the name; everything inside is decoration,
-              // so the index and the resolving letters are not announced.
+              // The link carries the name; the resolving letters inside are
+              // decoration and are not announced.
               aria-label={item.label}
             >
-              <span className="shell-navnum" aria-hidden="true">
-                {String(index + 1).padStart(2, "0")}
-              </span>
               <ScrambleLabel text={item.label} />
             </NavLink>
           ))}

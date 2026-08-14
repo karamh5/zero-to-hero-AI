@@ -6,13 +6,14 @@
      MACHINE    IBM Plex Mono    ids, hashes, scores, offsets, verdict strings
      INTERFACE  Archivo          headings, navigation, editorial display
 
-   Two grounds, not a dark mode:
-     BENCH      warm paper, for evidence, findings, report, corpus
-     RIG        deep graphite, for the instrument and live runs
+   One ground: deep graphite. The instrument reads as an instrument, and
+   verbatim regulatory text sits on it like paper under a lamp rather than
+   like a document in a browser. Every text token below was checked against
+   every surface it lands on and clears WCAG AA with margin.
 
    Signal color encodes state only. Color AREA is inversely proportional to
    salience: a contradicted finding earns a 4px rule and a mono label, never
-   a red card.
+   a filled card.
    ========================================================================== */
 
 :root {
@@ -38,49 +39,38 @@
 
   --track-caps: 0.08em;
 
-  /* -- bench ground (default) ---------------------------------------- */
-  --ground: #f2efe7;
-  --ground-raised: #faf8f2;
-  --ground-sunken: #eae6da;
-  --ink: #201e19;
-  --ink-muted: #6d685a;
-  /* AA on paper (4.6:1). Recession comes from size and weight, not from
-     dropping below legible contrast. */
-  --ink-faint: #716b59;
-  --line: #d8d2c2;
-  --line-strong: #b5ae99;
+  /* -- ground -------------------------------------------------------- */
+  --ground: #0f1114;
+  --ground-raised: #171a20;
+  --ground-sunken: #0a0c0f;
+  --ink: #e9e7e1;
+  --ink-muted: #a4a9b4;
+  --ink-faint: #868c97;
+  --line: #23272e;
+  --line-strong: #363c46;
 
-  /* -- rig ground (set per-screen via [data-ground="rig"]) ------------ */
-  --rig-ground: #15171b;
-  --rig-raised: #1c1f24;
-  --rig-sunken: #101216;
-  --rig-ink: #e6e3da;
-  --rig-muted: #9094a0;
-  --rig-faint: #8b909c;
-  --rig-line: #2b2f37;
-  --rig-line-strong: #434956;
+  /* A paper surface, kept for one job only: the filed report artifact,
+     which is a document and is rendered as one. */
+  --paper: #f2efe7;
+  --paper-ink: #201e19;
 
   /* -- signal: verdict states ----------------------------------------- */
   /* decisions */
-  --sig-supported: #2f6f5c;
-  --sig-contradicted: #a83226;
-  /* abstention family: cool grey-blue, three tints, quiet by design */
-  /* All three hold AA for 13px mono text on paper; the de-weighting of
-     conflicting_sections is carried by its dashed glyph and explicit
-     unreliability label, never by illegible text. */
-  --sig-abstain-ngr: #52657e;    /* no_governing_rule                    */
-  --sig-abstain-rbc: #5d6e82;    /* retrieval_below_confidence           */
-  --sig-abstain-cs: #5e6a79;     /* conflicting_sections, de-weighted    */
+  --sig-supported: #5bb295;
+  --sig-contradicted: #e4705f;
+  /* abstention family: cool grey-blue, three tints, quiet by design. All
+     three hold AA; the de-weighting of conflicting_sections is carried by
+     its dashed glyph and explicit label, never by illegible text. */
+  --sig-abstain-ngr: #8aa0bd;
+  --sig-abstain-rbc: #97a9be;
+  --sig-abstain-cs: #a6b1bf;
   /* Live retrieval trace, alive only while a query is genuinely in flight.
-     Doubles as the interface accent: cursor, links, focus. Dark enough to
-     hold AA on all three bench grounds, including the sunken one the rig
-     stage log sits on. */
-  --sig-trace: #166c78;
+     Doubles as the interface accent: cursor, links, focus. */
+  --sig-trace: #45c8da;
   /* the only place a hard alert tone is permitted */
-  --sig-seal-broken: #c9271a;
-
+  --sig-seal-broken: #ff6152;
   /* deterministic short-circuit: code decided, no model involved */
-  --sig-deterministic: #7a6a35;
+  --sig-deterministic: #cbb268;
 
   /* -- geometry -------------------------------------------------------- */
   --rule-w: 4px;              /* the signal rule on a finding */
@@ -105,25 +95,13 @@
   --dur-small: 150ms;
 }
 
-/* The rig ground rebinds the neutral roles; signal tokens brighten just
-   enough to hold AA contrast on graphite. */
+/* The rig once had its own ground. It no longer needs one: the whole
+   instrument is on graphite, so this only deepens the surface slightly to
+   keep the live screen distinct from the reading ones. */
 [data-ground="rig"] {
-  --ground: var(--rig-ground);
-  --ground-raised: var(--rig-raised);
-  --ground-sunken: var(--rig-sunken);
-  --ink: var(--rig-ink);
-  --ink-muted: var(--rig-muted);
-  --ink-faint: var(--rig-faint);
-  --line: var(--rig-line);
-  --line-strong: var(--rig-line-strong);
-
-  --sig-supported: #55a48c;
-  --sig-contradicted: #d15c4e;
-  --sig-abstain-ngr: #7f95b3;
-  --sig-abstain-rbc: #93a5ba;
-  --sig-abstain-cs: #a3aebc;
-  --sig-trace: #3fc0d2;
-  --sig-deterministic: #b9a45e;
+  --ground: #0c0e11;
+  --ground-raised: #14171c;
+  --ground-sunken: #08090c;
 }
 
 @media (prefers-reduced-motion: reduce) {

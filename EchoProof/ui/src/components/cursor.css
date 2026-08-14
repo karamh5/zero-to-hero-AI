@@ -23,52 +23,41 @@
 }
 
 .cur-ring,
-.cur-notch,
 .cur-dot {
   position: absolute;
   transform: translate(-50%, -50%);
   transition:
-    width 220ms var(--ease-settle),
-    height 220ms var(--ease-settle),
-    opacity 220ms var(--ease-settle),
-    border-width 220ms var(--ease-settle),
-    border-radius 220ms var(--ease-settle);
+    width 240ms var(--ease-settle),
+    height 240ms var(--ease-settle),
+    opacity 240ms var(--ease-settle),
+    border-color 240ms var(--ease-settle),
+    border-radius 240ms var(--ease-settle),
+    background 240ms var(--ease-settle);
 }
 
+/* Default: a small hollow ring. Nothing else. The ring is the cursor. */
 .cur-ring {
-  width: 11px;
-  height: 11px;
-  border: 1px solid var(--ink);
+  width: 15px;
+  height: 15px;
+  border: 1.25px solid var(--ink);
   border-radius: 50%;
-}
-
-/* The single offset notch: what stops it reading as a generic circle. */
-.cur-notch {
-  width: 5px;
-  height: 1px;
-  background: var(--ink);
-  left: 9px;
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 .cur-dot {
-  width: 2px;
-  height: 2px;
+  width: 3px;
+  height: 3px;
   background: var(--ink);
   border-radius: 50%;
   opacity: 0;
 }
 
-/* -- interactive: the ring opens ------------------------------------------ */
+/* -- interactive: the ring opens and picks up the accent ------------------ */
 .cur-interactive .cur-ring {
-  width: 22px;
-  height: 22px;
+  width: 40px;
+  height: 40px;
   border-color: var(--sig-trace);
-}
-
-.cur-interactive .cur-notch {
-  left: 15px;
-  background: var(--sig-trace);
+  opacity: 1;
 }
 
 .cur-interactive .cur-dot {
@@ -76,18 +65,13 @@
   background: var(--sig-trace);
 }
 
-/* -- claim: a precision reticle ------------------------------------------- */
+/* -- claim: the ring squares off over an adjudicated span ----------------- */
 .cur-claim .cur-ring {
-  width: 26px;
-  height: 26px;
-  border-radius: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 2px;
   border-color: var(--sig-contradicted);
-}
-
-.cur-claim .cur-notch {
-  width: 13px;
-  left: 0;
-  background: var(--sig-contradicted);
+  opacity: 1;
 }
 
 .cur-claim .cur-dot {
@@ -95,77 +79,62 @@
   background: var(--sig-contradicted);
 }
 
-/* -- policy: a section locator, a tall bracket ---------------------------- */
+/* -- policy: a tall marker beside verbatim rule text ---------------------- */
 .cur-policy .cur-ring {
-  width: 8px;
-  height: 24px;
+  width: 12px;
+  height: 30px;
   border-radius: 1px;
-  border-left-width: 2px;
-  border-right-color: transparent;
-  border-top-color: transparent;
-  border-bottom-color: transparent;
-}
-
-.cur-policy .cur-notch {
-  width: 10px;
-  left: 4px;
+  opacity: 1;
 }
 
 /* -- audio: a playhead ---------------------------------------------------- */
 .cur-audio .cur-ring {
   width: 2px;
-  height: 26px;
+  height: 30px;
   border-radius: 0;
   border-width: 0;
   background: var(--sig-trace);
+  opacity: 1;
 }
 
-.cur-audio .cur-notch {
+.cur-audio .cur-dot {
+  opacity: 1;
+  background: var(--sig-trace);
   width: 9px;
   height: 9px;
-  border-radius: 50%;
-  left: 0;
-  top: -13px;
-  background: var(--sig-trace);
+  transform: translate(-50%, -50%) translateY(-19px);
 }
 
-/* -- trace: concentric --------------------------------------------------- */
+/* -- trace: concentric ---------------------------------------------------- */
 .cur-trace .cur-ring {
-  width: 24px;
-  height: 24px;
-}
-
-.cur-trace .cur-notch {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: 1px solid var(--ink);
-  background: transparent;
-  left: 0;
+  width: 30px;
+  height: 30px;
+  border-color: var(--sig-trace);
+  opacity: 1;
 }
 
 .cur-trace .cur-dot {
   opacity: 1;
+  width: 11px;
+  height: 11px;
+  background: transparent;
+  border: 1.25px solid var(--sig-trace);
 }
 
 /* -- text: a slim caret --------------------------------------------------- */
 .cur-text .cur-ring {
-  width: 1px;
-  height: 20px;
+  width: 1.5px;
+  height: 22px;
   border-radius: 0;
   border-width: 0;
   background: var(--ink);
-  opacity: 0.75;
-}
-
-.cur-text .cur-notch {
-  opacity: 0;
+  opacity: 0.8;
 }
 
 /* -- pressed -------------------------------------------------------------- */
 .cur-down .cur-ring {
-  width: 9px;
-  height: 9px;
+  width: 11px;
+  height: 11px;
 }
 
 /* -- label ---------------------------------------------------------------- */
@@ -177,7 +146,7 @@
   pointer-events: none;
   font-family: var(--font-machine);
   font-size: 9.5px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--sig-trace);
   white-space: nowrap;

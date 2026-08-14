@@ -8,8 +8,8 @@
  * by this component after it decides it is taking over, and removed on
  * teardown.
  *
- * The mark is a hollow ring with a single offset notch, small and precise. It
- * changes shape by context rather than by decoration:
+ * The mark is a single hollow ring, small and precise. It changes shape by
+ * context rather than by decoration:
  *
  *   default      a small ring
  *   interactive  the ring opens and takes a label
@@ -155,7 +155,6 @@ export function Cursor() {
         aria-hidden="true"
       >
         <span className="cur-ring" />
-        <span className="cur-notch" />
         <span className="cur-dot" />
       </div>
       <span

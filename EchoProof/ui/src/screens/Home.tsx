@@ -128,11 +128,13 @@ export function Home() {
           <RevealLines
             as="h1"
             className="home-headline"
-            lines={["PRE-DEPLOYMENT", "COMPLIANCE", "ASSURANCE"]}
+            lines={["ECHOPROOF"]}
             stagger={90}
           />
-          <Reveal delay={380}>
-            <p className="home-hero-sub">FOR VOICE AI AGENTS</p>
+          <Reveal delay={300}>
+            <p className="home-hero-sub">
+              PRE-DEPLOYMENT COMPLIANCE ASSURANCE FOR VOICE AI AGENTS
+            </p>
           </Reveal>
           <Reveal delay={480}>
             <p className="home-hero-lede">
@@ -175,34 +177,6 @@ export function Home() {
       </section>
 
       <Marquee items={ticker} />
-
-      {/* ----------------------------------------------------- statements */}
-      <section className="home-statements">
-        {[
-          ["EVERY CLAIM", "HAS A SOURCE."],
-          ["EVERY VERDICT", "HAS A RULE."],
-          ["EVERY FINDING", "HAS EVIDENCE."],
-        ].map((lines, index) => (
-          <div className="home-statement" key={lines[0]}>
-            <RevealLines
-              as="h2"
-              className="home-statement-type"
-              lines={lines}
-              stagger={80}
-            />
-            <Reveal delay={140}>
-              <p className="home-statement-note mono">
-                {index === 0 &&
-                  "stored as character offsets into the exact transcript, never as restated text"}
-                {index === 1 &&
-                  "the section the judge selected, quoted verbatim beside the verdict"}
-                {index === 2 &&
-                  "an append-only hash chain that verifies on every read"}
-              </p>
-            </Reveal>
-          </div>
-        ))}
-      </section>
 
       {/* --------------------------------------------------------- stages */}
       <section className="home-section home-pipeline">
