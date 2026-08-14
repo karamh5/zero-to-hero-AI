@@ -56,6 +56,9 @@ class LoadedRun:
     agent_version: str
     stored_seal: str | None
     computed_seal: str | None
+    title: str = ""
+    conversation_id: str | None = None
+    created_at: str | None = None
     clip_index: dict[str, Path] = field(default_factory=dict)
 
     @property
@@ -181,6 +184,23 @@ class RunService:
                 agent_version = str(span.payload["agent_version"])
                 break
 
+        # A run's own title, written by whoever started it. Runs made before
+        # titles existed have none, and the bench shows their identifier
+        # instead rather than inventing a name for them.
+        title = ""
+        conversation_id = None
+        created_at = None
+        for span in log.of_type("run.meta"):
+            title = str(span.payload.get("title") or "")
+            conversation_id = span.payload.get("conversation_id")
+            created_at = span.payload.get("created_at")
+            break
+        if not title:
+            for span in log.of_type("conversation.start"):
+                title = str(span.payload.get("title") or "")
+                conversation_id = span.payload.get("conversation_id")
+                break
+
         data = extract_report_data(
             log=log,
             agent_version=agent_version,
@@ -200,6 +220,9 @@ class RunService:
             agent_version=agent_version,
             stored_seal=stored_seal,
             computed_seal=data.seal() if pack else None,
+            title=title,
+            conversation_id=str(conversation_id) if conversation_id else None,
+            created_at=str(created_at) if created_at else None,
         )
 
     # -- clips ------------------------------------------------------------
@@ -284,6 +307,9 @@ def run_summary(loaded: LoadedRun) -> dict[str, Any]:
     """The BENCH listing entry for one run."""
     base: dict[str, Any] = {
         "run_id": loaded.run_id,
+        "title": loaded.title,
+        "conversation_id": loaded.conversation_id,
+        "created_at": loaded.created_at,
         "chain_ok": loaded.chain_ok,
         "chain_error": loaded.chain_error,
         "seal_state": loaded.seal_state,

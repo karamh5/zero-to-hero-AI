@@ -1,0 +1,440 @@
+{
+  "rf-01-disclosure": {
+    "conversation_id": "rf-01-disclosure",
+    "title": "Required initial disclosure",
+    "authored_category": "supported",
+    "observed_headline": "contradicted",
+    "matches_authored": false,
+    "verdict_counts": {
+      "supported": 6,
+      "contradicted": 1,
+      "retrieval_below_confidence": 1
+    },
+    "claims": 8,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [
+      {
+        "claim_id": "rf-01-disclosure-t00-c04",
+        "verdict": "contradicted",
+        "section_id": "1006.10(b)(1)",
+        "decided_by": "model"
+      }
+    ],
+    "verdicts": [
+      {
+        "claim_id": "rf-01-disclosure-t00-c00",
+        "verdict": "supported",
+        "section_id": "1006.18(e)(1)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-01-disclosure-t00-c01",
+        "verdict": "supported",
+        "section_id": "1006.18(e)(1)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-01-disclosure-t00-c02",
+        "verdict": "supported",
+        "section_id": "1006.34(c)(3)(i)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-01-disclosure-t00-c03",
+        "verdict": "supported",
+        "section_id": "1006.34(c)(3)(i)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-01-disclosure-t00-c04",
+        "verdict": "contradicted",
+        "section_id": "1006.10(b)(1)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-01-disclosure-t01-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-01-disclosure-t01-c01",
+        "verdict": "supported",
+        "section_id": "1006.34(a)(1)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-01-disclosure-t01-c02",
+        "verdict": "supported",
+        "section_id": "1006.34(a)(1)(ii)",
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-reg_f-rf-01-disclosure",
+    "cost_usd": 0.037028,
+    "verified_at": "2026-08-14T00:07:21+00:00"
+  },
+  "rf-02-postcard": {
+    "conversation_id": "rf-02-postcard",
+    "title": "Written contact by postcard",
+    "authored_category": "supported",
+    "observed_headline": "supported",
+    "matches_authored": true,
+    "verdict_counts": {
+      "retrieval_below_confidence": 4,
+      "supported": 1
+    },
+    "claims": 5,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [],
+    "verdicts": [
+      {
+        "claim_id": "rf-02-postcard-t00-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-02-postcard-t00-c01",
+        "verdict": "supported",
+        "section_id": null,
+        "decided_by": "deterministic"
+      },
+      {
+        "claim_id": "rf-02-postcard-t00-c02",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.22(f)(1)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-02-postcard-t01-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-02-postcard-t01-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.38(c)(1)",
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-reg_f-rf-02-postcard",
+    "cost_usd": 0.02136,
+    "verified_at": "2026-08-14T00:09:01+00:00"
+  },
+  "rf-03-timebarred": {
+    "conversation_id": "rf-03-timebarred",
+    "title": "Suit threatened on a time-barred debt",
+    "authored_category": "contradicted",
+    "observed_headline": "contradicted",
+    "matches_authored": true,
+    "verdict_counts": {
+      "retrieval_below_confidence": 5,
+      "contradicted": 1,
+      "supported": 1
+    },
+    "claims": 7,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [
+      {
+        "claim_id": "rf-03-timebarred-t00-c01",
+        "verdict": "contradicted",
+        "section_id": "1006.26(b)",
+        "decided_by": "model"
+      }
+    ],
+    "verdicts": [
+      {
+        "claim_id": "rf-03-timebarred-t00-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.26(a)(1)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-03-timebarred-t00-c01",
+        "verdict": "contradicted",
+        "section_id": "1006.26(b)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-03-timebarred-t00-c02",
+        "verdict": "supported",
+        "section_id": "1006.26(a)(2)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-03-timebarred-t01-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.26(b)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-03-timebarred-t01-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.18(b)(3)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-03-timebarred-t01-c02",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.26(b)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-03-timebarred-t01-c03",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-reg_f-rf-03-timebarred",
+    "cost_usd": 0.032918,
+    "verified_at": "2026-08-14T00:13:11+00:00"
+  },
+  "rf-04-creditreport": {
+    "conversation_id": "rf-04-creditreport",
+    "title": "Furnished to a credit bureau before contact",
+    "authored_category": "contradicted",
+    "observed_headline": "contradicted",
+    "matches_authored": true,
+    "verdict_counts": {
+      "contradicted": 2,
+      "retrieval_below_confidence": 3
+    },
+    "claims": 5,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [
+      {
+        "claim_id": "rf-04-creditreport-t00-c00",
+        "verdict": "contradicted",
+        "section_id": "1006.30(a)(1)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-04-creditreport-t01-c00",
+        "verdict": "contradicted",
+        "section_id": "1006.30(a)(1)",
+        "decided_by": "model"
+      }
+    ],
+    "verdicts": [
+      {
+        "claim_id": "rf-04-creditreport-t00-c00",
+        "verdict": "contradicted",
+        "section_id": "1006.30(a)(1)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-04-creditreport-t00-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-04-creditreport-t01-c00",
+        "verdict": "contradicted",
+        "section_id": "1006.30(a)(1)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-04-creditreport-t01-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-04-creditreport-t01-c02",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-reg_f-rf-04-creditreport",
+    "cost_usd": 0.025892,
+    "verified_at": "2026-08-14T00:16:22+00:00"
+  },
+  "rf-05-cease": {
+    "conversation_id": "rf-05-cease",
+    "title": "Contact continued after a written cease request",
+    "authored_category": "contradicted",
+    "observed_headline": "retrieval_below_confidence",
+    "matches_authored": false,
+    "verdict_counts": {
+      "retrieval_below_confidence": 6
+    },
+    "claims": 6,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [],
+    "verdicts": [
+      {
+        "claim_id": "rf-05-cease-t00-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.6(c)(1)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-05-cease-t00-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-05-cease-t00-c02",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.6(e)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-05-cease-t00-c03",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-05-cease-t01-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.14(h)(1)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-05-cease-t01-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.6(c)(2)(i)",
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-reg_f-rf-05-cease",
+    "cost_usd": 0.028708,
+    "verified_at": "2026-08-14T00:19:50+00:00"
+  },
+  "rf-06-thirdparty": {
+    "conversation_id": "rf-06-thirdparty",
+    "title": "Debt disclosed to a third party",
+    "authored_category": "contradicted",
+    "observed_headline": "contradicted",
+    "matches_authored": true,
+    "verdict_counts": {
+      "retrieval_below_confidence": 6,
+      "contradicted": 2
+    },
+    "claims": 8,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [
+      {
+        "claim_id": "rf-06-thirdparty-t00-c02",
+        "verdict": "contradicted",
+        "section_id": "1006.6(d)(1)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-06-thirdparty-t01-c01",
+        "verdict": "contradicted",
+        "section_id": "1006.6(d)(1)",
+        "decided_by": "model"
+      }
+    ],
+    "verdicts": [
+      {
+        "claim_id": "rf-06-thirdparty-t00-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-06-thirdparty-t00-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-06-thirdparty-t00-c02",
+        "verdict": "contradicted",
+        "section_id": "1006.6(d)(1)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-06-thirdparty-t00-c03",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-06-thirdparty-t00-c04",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-06-thirdparty-t00-c05",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-06-thirdparty-t01-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-06-thirdparty-t01-c01",
+        "verdict": "contradicted",
+        "section_id": "1006.6(d)(1)",
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-reg_f-rf-06-thirdparty",
+    "cost_usd": 0.036096,
+    "verified_at": "2026-08-14T00:24:56+00:00"
+  },
+  "rf-07-attorney": {
+    "conversation_id": "rf-07-attorney",
+    "title": "Contact continued after attorney representation",
+    "authored_category": "contradicted",
+    "observed_headline": "retrieval_below_confidence",
+    "matches_authored": false,
+    "verdict_counts": {
+      "retrieval_below_confidence": 4
+    },
+    "claims": 4,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [],
+    "verdicts": [
+      {
+        "claim_id": "rf-07-attorney-t00-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.6(b)(4)(i)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-07-attorney-t00-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-07-attorney-t01-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.6(b)(2)",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "rf-07-attorney-t01-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "1006.6(d)(5)(ii)(A)",
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-reg_f-rf-07-attorney",
+    "cost_usd": 0.02008,
+    "verified_at": "2026-08-14T00:27:21+00:00"
+  }
+}

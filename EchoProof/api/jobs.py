@@ -49,6 +49,13 @@ class Job:
     transcript: str
     expectations: dict[str, Any]
     call_date: date
+    # A prepared conversation, when the job runs one. The rig only ever
+    # submits these: free text carries no speaker labels, and without labels
+    # there is no way to guarantee that a consumer utterance is not scored.
+    conversation_id: str | None = None
+    pack_id: str | None = None
+    title: str = ""
+    turns: list[dict[str, Any]] = field(default_factory=list)
     status: str = QUEUED
     error: str | None = None
     result: dict[str, Any] | None = None
@@ -78,6 +85,9 @@ class Job:
         return {
             "job_id": self.job_id,
             "run_id": self.run_id,
+            "title": self.title,
+            "conversation_id": self.conversation_id,
+            "pack_id": self.pack_id,
             "status": self.status,
             "error": self.error,
             "result": self.result,
@@ -207,31 +217,54 @@ class JobManager:
 
     # -- submission -------------------------------------------------------
 
-    def submit(
+    def next_run_number(self) -> int:
+        """Sequential assessment numbers, so a run has an identity a person
+        can say out loud. Derived from what is already on disk rather than
+        from a counter that resets when the process does."""
+        highest = 0
+        if RUNS_DIR.exists():
+            for path in RUNS_DIR.iterdir():
+                name = path.name
+                if name.startswith("assessment-"):
+                    head = name.split("-")[1] if "-" in name else ""
+                    if head.isdigit():
+                        highest = max(highest, int(head))
+        return highest + 1
+
+    def submit_conversation(
         self,
-        transcript: str,
-        expectations: dict[str, Any] | None = None,
+        pack_id: str,
+        conversation: dict[str, Any],
+        title: str,
         call_date: date | None = None,
     ) -> Job:
-        transcript = transcript.strip()
-        if not transcript:
-            raise ValueError("transcript is required")
-        if len(transcript) > MAX_TRANSCRIPT_CHARS:
-            raise ValueError(
-                f"transcript exceeds {MAX_TRANSCRIPT_CHARS} characters"
-            )
+        """Queue a prepared, role-labelled conversation.
+
+        This is the only way the rig starts a run. Free text is refused
+        because it has no speaker labels, and the agent-only guarantee cannot
+        be enforced on text where nobody knows who was speaking.
+        """
         availability = self.availability()
         if not availability["available"]:
             raise PermissionError(availability["reason"])
 
+        turns = conversation.get("turns") or []
+        if not turns:
+            raise ValueError("conversation has no turns")
+
         job_id = uuid.uuid4().hex[:12]
-        stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+        number = self.next_run_number()
+        clean_title = (title or conversation.get("title") or "Untitled assessment").strip()
         job = Job(
             job_id=job_id,
-            run_id=f"rig-{stamp}-{job_id[:4]}",
-            transcript=transcript,
-            expectations=dict(expectations or {}),
+            run_id=f"assessment-{number:04d}",
+            transcript="",
+            expectations=dict(conversation.get("deterministic") or {}),
             call_date=call_date or date.today(),
+            conversation_id=str(conversation.get("conversation_id")),
+            pack_id=pack_id,
+            title=clean_title,
+            turns=list(turns),
         )
         with self._lock:
             self.jobs[job_id] = job
@@ -260,8 +293,8 @@ class JobManager:
                 self._queue.task_done()
 
     def _process(self, job: Job) -> None:
+        from engine.conversation import adjudicate_conversation, parse_turns
         from engine.evidence import EvidenceLog
-        from engine.pipeline import adjudicate_turn
 
         if self.operating_ceiling is None and self.ceiling_provider is not None:
             self.operating_ceiling = self.ceiling_provider()
@@ -279,26 +312,50 @@ class JobManager:
             self.stack.ensure(self.operating_ceiling)
             job.emit("job.stack", {"state": "ready"})
 
+        turns = parse_turns(job.turns)
+        agent_turns = sum(1 for turn in turns if turn.is_agent)
+
         job.status = RUNNING
         job.emit(
             "job.config",
             {
                 "run_id": job.run_id,
+                "title": job.title,
+                "conversation_id": job.conversation_id,
                 "pack_id": self.stack.pack_id,
                 "corpus_size": self.stack.corpus_size,
                 "thresholds": self.stack.config.to_dict(),
                 "expectations": job.expectations,
                 "call_date": job.call_date.isoformat(),
+                "agent_turns": agent_turns,
+                "customer_turns": len(turns) - agent_turns,
+                "scope": "agent turns only; consumer turns are context and are "
+                "never extracted from or given a verdict",
             },
         )
 
         log = EvidenceLog(run_id=job.run_id)
-        result = adjudicate_turn(
+        # The run's own identity, written into the chain so the bench can show
+        # a title the operator chose instead of a generated name.
+        log.append(
+            "run.meta",
+            {
+                "run_id": job.run_id,
+                "title": job.title,
+                "conversation_id": job.conversation_id,
+                "conversation_pack": job.pack_id,
+                "policy_pack": self.stack.pack_id,
+                "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            },
+        )
+
+        result = adjudicate_conversation(
             client=self.stack.client,
             retriever=self.stack.retriever,
             config=self.stack.config,
-            transcript=job.transcript,
-            turn_id="t0000",
+            turns=turns,
+            conversation_id=job.conversation_id or job.run_id,
+            title=job.title,
             call_date=job.call_date,
             log=log,
             criteria=self.stack.criteria,
@@ -311,10 +368,13 @@ class JobManager:
 
         job.result = {
             "run_id": job.run_id,
-            "claims": len(result.claims),
+            "title": job.title,
+            "claims": result.claim_count,
             "findings": len(result.findings),
             "abstentions": len(result.abstentions),
-            "claim_ids": [c.claim_id for c in result.claims],
+            "supported": len(result.supported),
+            "agent_turns": result.agent_turn_count,
+            "customer_turns_skipped": result.customer_turn_count,
             "verdicts": [
                 {
                     "claim_id": j.adjudication.claim_id,
@@ -322,9 +382,10 @@ class JobManager:
                     "section_id": j.adjudication.section_id,
                     "decided_by": j.adjudication.decided_by,
                 }
-                for j in result.judgements
+                for turn_result in result.turn_results
+                for j in turn_result.judgements
             ],
-            "cost_usd": result.cost_usd,
+            "cost_usd": round(result.cost_usd, 6),
             "evidence_path": str(out_path),
         }
         job.emit("job.done", job.result)

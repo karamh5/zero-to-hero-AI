@@ -20,6 +20,7 @@ from core.config import PROJECT_ROOT
 from core.packs import PackError, load_criteria
 from engine.report import gate_decision
 
+from api import conversations as conversations_mod
 from api import measurements as measurements_mod
 from api.jobs import JobManager
 from api.runsvc import RunService, claim_detail, finding_to_dict, run_summary
@@ -243,48 +244,74 @@ def adjudicate_availability() -> Any:
     return jobs.availability()
 
 
-@router.get("/rig/presets")
-def rig_presets() -> Any:
-    """Real recorded agent turns to replay on the rig. Nothing invented."""
-    presets: list[dict[str, Any]] = []
-    for source_run in ("demo-campaign",):
-        loaded = service.load(source_run)
-        if loaded is None or loaded.log is None or loaded.data is None:
-            continue
-        verdicts_by_turn: dict[str, list[str]] = {}
-        for finding in loaded.data.findings:
-            verdicts_by_turn.setdefault(finding.turn_id, []).append(finding.verdict)
-        for span in loaded.log.of_type("agent.turn"):
-            turn_id = str(span.payload.get("turn_id"))
-            presets.append(
-                {
-                    "source_run": source_run,
-                    "turn_id": turn_id,
-                    "transcript": span.payload.get("transcript", ""),
-                    "recorded_verdicts": verdicts_by_turn.get(turn_id, []),
-                }
-            )
-    return {"presets": presets}
+@router.get("/conversations")
+def conversation_packs() -> Any:
+    """The prepared library, one entry per conversation pack."""
+    packs = []
+    for pack_id in conversations_mod.available_packs():
+        policy = service.pack(pack_id)
+        described = conversations_mod.describe(pack_id)
+        described["policy_label"] = (
+            policy.manifest.get("label", pack_id) if policy else pack_id
+        )
+        described["policy_citation"] = policy.citation if policy else None
+        described["provisions"] = len(policy.sections) if policy else None
+        packs.append(described)
+    return {"packs": packs}
+
+
+@router.get("/conversations/{pack_id}")
+def conversation_pack(pack_id: str) -> Any:
+    if pack_id not in conversations_mod.available_packs():
+        return _err(404, f"no conversation pack {pack_id}")
+    return conversations_mod.describe(pack_id)
 
 
 @router.post("/adjudicate")
 async def adjudicate(request: Request) -> Any:
+    """Run one prepared conversation.
+
+    Free text is deliberately not accepted. A conversation without speaker
+    labels cannot be adjudicated safely, because the guarantee that only
+    agent turns are scored depends on knowing who said what.
+    """
     try:
         body = await request.json()
     except json.JSONDecodeError:
         return _err(400, "body must be JSON")
-    transcript = str(body.get("transcript") or "")
-    expectations = body.get("expectations") or {}
-    if not isinstance(expectations, dict):
-        return _err(400, "expectations must be an object")
+
+    pack_id = str(body.get("pack_id") or "")
+    conversation_id = str(body.get("conversation_id") or "")
+    title = str(body.get("title") or "")
+
+    if body.get("transcript") and not conversation_id:
+        return _err(
+            400,
+            "free text is not accepted. Submit a prepared conversation by "
+            "pack_id and conversation_id: unlabelled text cannot guarantee "
+            "that only agent turns are adjudicated.",
+        )
+    if not pack_id or not conversation_id:
+        return _err(400, "pack_id and conversation_id are required")
+
+    conversation = conversations_mod.get(pack_id, conversation_id)
+    if conversation is None:
+        return _err(404, f"no conversation {conversation_id} in pack {pack_id}")
+
     call_date = None
     if body.get("call_date"):
         try:
             call_date = date.fromisoformat(str(body["call_date"]))
         except ValueError:
             return _err(400, "call_date must be ISO format")
+
     try:
-        job = jobs.submit(transcript, expectations=expectations, call_date=call_date)
+        job = jobs.submit_conversation(
+            pack_id=pack_id,
+            conversation=conversation,
+            title=title,
+            call_date=call_date,
+        )
     except ValueError as exc:
         return _err(400, str(exc))
     except PermissionError as exc:

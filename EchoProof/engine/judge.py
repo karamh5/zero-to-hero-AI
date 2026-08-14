@@ -184,8 +184,16 @@ def judge_claim(
     call_date: date | None = None,
     shortlist_size: int = 10,
     ceiling: float = 0.0,
+    context: str | None = None,
 ) -> Judgement:
-    """Adjudicate one claim. The only entry point."""
+    """Adjudicate one claim. The only entry point.
+
+    `context` is the conversation before this turn, labelled by speaker. It
+    exists so the judge can tell whether the agent responded correctly to
+    something the consumer said, which is most of what a collections agent is
+    actually obliged to get right. The claim under adjudication is always the
+    agent's; context is never adjudicated and the prompt says so explicitly.
+    """
     claim_text = claim.text(transcript)
 
     inputs = JudgementInputs(
@@ -243,8 +251,23 @@ def judge_claim(
     shortlist = retrieval.shortlist(shortlist_size)
     offered = {c.section_id for c in shortlist}
 
+    context_block = ""
+    if context:
+        context_block = (
+            "Conversation so far, for context only. Nothing in this block is "
+            "under adjudication and no verdict may be issued about anything the "
+            "consumer said. Use it only to judge whether the agent's claim was "
+            "correct given what had already happened on the call, for instance "
+            "whether the consumer had disputed the debt, asked for contact to "
+            "stop, said they were represented, or said this is the wrong "
+            "person.\n"
+            f"{context}\n\n"
+        )
+
     user = (
-        f"Claim made by the agent:\n{claim_text}\n\n"
+        f"{context_block}"
+        f"Claim made by the agent, and the only thing you are adjudicating:\n"
+        f"{claim_text}\n\n"
         f"Candidate rules ({len(shortlist)}):\n\n" + _format_candidates(shortlist)
     )
     call = client.complete(

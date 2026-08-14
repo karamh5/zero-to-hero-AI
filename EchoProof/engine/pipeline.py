@@ -275,8 +275,19 @@ def adjudicate_turn(
     audio_ref: str | None = None,
     expectations: dict[str, Any] | None = None,
     on_progress: Callable[[str, dict[str, Any]], None] | None = None,
+    context: str | None = None,
 ) -> TurnResult:
     """Run one agent turn through the full pipeline.
+
+    `transcript` is ALWAYS a single agent turn. `context` is what was said
+    before it, both sides, labelled by speaker. Context is passed to the judge
+    so it can tell whether the agent responded correctly to a dispute, a
+    cease-contact request or a wrong-party statement. Claims are never
+    extracted from context: the extractor only ever sees `transcript`, so no
+    consumer utterance can become a claim or receive a verdict.
+
+    Context is opt-in and defaults to None. Every run scored before it existed
+    passed nothing, so their numbers remain comparable (CLAUDE.md decision 9).
 
     `expectations` carries the known-true values for this call, supplied by the
     scenario or fixture rather than by engine code:
@@ -427,6 +438,7 @@ def adjudicate_turn(
             call_date=call_date,
             shortlist_size=config.judge_candidates,
             ceiling=config.ceiling,
+            context=context,
         )
         progress(
             "judge.done",

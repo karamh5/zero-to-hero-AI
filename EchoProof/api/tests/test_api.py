@@ -144,12 +144,37 @@ def test_adjudicate_without_key_is_labelled_disabled(client: TestClient) -> None
         assert response.status_code == 503
 
 
-def test_adjudicate_validates_input(client: TestClient) -> None:
-    availability = client.get("/api/adjudicate/availability").json()
-    if not availability["available"]:
-        pytest.skip("no model key in this environment")
-    assert client.post("/api/adjudicate", json={"transcript": ""}).status_code == 400
-    assert (
-        client.post("/api/adjudicate", json={"transcript": "x" * 5000}).status_code
-        == 400
+def test_free_text_is_refused(client: TestClient) -> None:
+    """The rig must not accept unlabelled text.
+
+    Without speaker labels there is no way to guarantee that a consumer
+    utterance is not extracted from and given a verdict, which is the whole
+    point of the prepared library.
+    """
+    response = client.post(
+        "/api/adjudicate",
+        json={"transcript": "Customer: I disputed this. Agent: Pay today."},
     )
+    assert response.status_code == 400
+    assert "free text is not accepted" in response.json()["error"]
+
+
+def test_adjudicate_requires_a_known_conversation(client: TestClient) -> None:
+    assert client.post("/api/adjudicate", json={}).status_code == 400
+    response = client.post(
+        "/api/adjudicate",
+        json={"pack_id": "reg_f", "conversation_id": "does-not-exist"},
+    )
+    assert response.status_code == 404
+
+
+def test_conversation_library_is_role_labelled(client: TestClient) -> None:
+    body = client.get("/api/conversations").json()
+    if not body["packs"]:
+        pytest.skip("no conversation packs built")
+    for pack in body["packs"]:
+        for group in pack["groups"]:
+            for conversation in group["conversations"]:
+                assert conversation["agent_turns"] >= 1
+                roles = {t["role"].lower() for t in conversation["turns"]}
+                assert roles <= {"agent", "assistant", "bot", "customer", "consumer", "user", "caller"}
