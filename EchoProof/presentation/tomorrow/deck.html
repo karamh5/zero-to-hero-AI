@@ -399,11 +399,81 @@ svg{display:block;overflow:visible}
   <p class="mono trace" data-step="4" style="font-size:19px;margin-top:34px">every claim has a source. every verdict has a rule. every finding has evidence.</p>
 </section>
 
+<!-- 07 THE LANDSCAPE ====================================================== -->
+<section class="slide" data-eyebrow="THE LANDSCAPE" data-glow="1150,660" data-notes="
+<p class='say'>Is anybody else doing this. The closest thing is OpenAI's Presence, and it is end to end. The same vendor supplies the voice, the model and the readiness answer, so what you get back is a self check rather than an independent one. It also does not cover cascaded setups, where the speech layer and the model come from different vendors.</p>
+<p class='say'>EchoProof is designed to be neutral to that, and a cascaded stack is actually easier to instrument. Same for the new DeepSeek harness.</p>
+<p class='say'>And the engine has nothing about debt collection in it. We swapped the rulebook out for a completely different industry's standard and did not change a single line of code.</p>">
+  <div class="eyebrow rise">06 / The landscape</div>
+  <h2 class="rise">The closest thing checks its own homework.</h2>
+  <div style="margin-top:30px">
+    <svg width="1380" height="380" viewBox="0 0 1380 380" aria-label="On the left, an end to end vendor stack where the same vendor supplies voice, model and the readiness answer, shown as a loop back on itself and labelled a self check. On the right, a cascaded stack whose speech layer and model come from different vendors, with EchoProof attached alongside as an independent third party.">
+      <defs><marker id="lA" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-trace)"/></marker>
+        <marker id="lB" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-contradicted)"/></marker></defs>
+
+      <!-- end to end -->
+      <g data-step="1">
+        <text class="sl r" x="0" y="18">END TO END, ONE VENDOR</text>
+        <rect x="0" y="34" width="560" height="230" rx="2" fill="var(--ground-raised)"
+              stroke="var(--sig-contradicted)" stroke-width="1.5" stroke-dasharray="6 4"/>
+        <g transform="translate(34,66)">
+          <circle cx="17" cy="17" r="16" fill="none" stroke="var(--ink-muted)" stroke-width="1.5"/>
+          <path d="M6,17 h22 M17,6 v22" stroke="var(--ink-muted)" stroke-width="1.5"/>
+          <text class="sb" x="46" y="22" style="font-size:17px">OpenAI Presence</text>
+        </g>
+        <rect class="node" x="34" y="126" width="150" height="46"/>
+        <text class="sbm" x="50" y="154">voice</text>
+        <rect class="node" x="204" y="126" width="150" height="46"/>
+        <text class="sbm" x="220" y="154">model</text>
+        <rect class="node" x="374" y="126" width="152" height="46"/>
+        <text class="sbm" x="390" y="154">readiness answer</text>
+        <path d="M450,172 L450,206 L110,206 L110,174" stroke="var(--sig-contradicted)"
+              stroke-width="1.5" fill="none" marker-end="url(#lB)"/>
+        <text class="sl r" x="196" y="228">MARKING ITS OWN WORK</text>
+        <text class="sbm" x="34" y="256" fill="var(--sig-contradicted)">A self check, not an independent one.</text>
+      </g>
+
+      <!-- cascaded -->
+      <g data-step="2">
+        <text class="sl t" x="700" y="18">CASCADED, DIFFERENT VENDORS</text>
+        <rect x="700" y="34" width="680" height="230" rx="2" fill="var(--ground-raised)"
+              stroke="var(--line-strong)" stroke-width="1.5"/>
+        <rect class="node" x="730" y="66" width="140" height="46"/>
+        <text class="sbm" x="746" y="94">speech layer</text>
+        <rect class="node" x="906" y="66" width="140" height="46"/>
+        <text class="sbm" x="922" y="94">model</text>
+        <rect class="node" x="1082" y="66" width="150" height="46"/>
+        <text class="sbm" x="1098" y="94">voice out</text>
+        <text class="sl" x="730" y="130">VENDOR A</text>
+        <text class="sl" x="906" y="130">VENDOR B</text>
+        <text class="sl" x="1082" y="130">VENDOR C</text>
+        <path class="fl" d="M870,89 L904,89" marker-end="url(#lA)"/>
+        <path class="fl" d="M1046,89 L1080,89" marker-end="url(#lA)"/>
+        <rect class="node key" x="880" y="176" width="230" height="60"/>
+        <text class="sl t" x="898" y="200">ECHOPROOF</text>
+        <text class="sbm" x="898" y="222">Independent of all three</text>
+        <path class="fl" d="M976,112 L976,174" marker-end="url(#lA)"/>
+        <text class="sbm" x="730" y="256" fill="var(--sig-trace)">Neutral by design, and easier to instrument.</text>
+      </g>
+
+      <!-- modularity -->
+      <g data-step="3">
+        <line x1="0" y1="300" x2="1380" y2="300" stroke="var(--line)" stroke-width="1"/>
+        <text class="sl t" x="0" y="332">SAME ENGINE, DIFFERENT RULEBOOK</text>
+        <text class="sb" x="0" y="362" style="font-size:17px">We swapped the rulebook out for a completely different industry's standard and did not change any code.</text>
+        <text class="sl" x="1140" y="332">DEEPSEEK HARNESS: SAME ANSWER</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
   <div id="rail"><div id="railfill"></div></div>
   <div id="chrome">
     <span>ECHOPROOF / AI LAUNCHPAD</span>
     <span id="eyeb">THE IDEA</span>
-    <span><span id="idx">1</span> / 6</span>
+    <span><span id="idx">1</span> / 7</span>
   </div>
   <div id="notes"></div>
   <div class="ov" id="over"><h3>Overview</h3><div id="ogrid"></div></div>
@@ -416,7 +486,7 @@ svg{display:block;overflow:visible}
     <dt>B</dt><dd>Blackout</dd>
     <dt>?</dt><dd>This key map</dd>
     <dt>Home End</dt><dd>First and last slide</dd>
-    <dt>1 to 6</dt><dd>Jump to slide</dd>
+    <dt>1 to 7</dt><dd>Jump to slide</dd>
   </dl></div>
   <div id="black"></div>
 </div>
