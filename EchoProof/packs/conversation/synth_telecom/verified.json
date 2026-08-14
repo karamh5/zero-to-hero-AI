@@ -1,0 +1,430 @@
+{
+  "st-01-identify": {
+    "conversation_id": "st-01-identify",
+    "title": "Correct call opening",
+    "authored_category": "supported",
+    "observed_headline": "contradicted",
+    "matches_authored": false,
+    "verdict_counts": {
+      "contradicted": 2,
+      "retrieval_below_confidence": 1,
+      "supported": 2
+    },
+    "claims": 5,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [
+      {
+        "claim_id": "st-01-identify-t00-c00",
+        "verdict": "contradicted",
+        "section_id": "CC-5.1",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-01-identify-t00-c01",
+        "verdict": "contradicted",
+        "section_id": "CC-5.1",
+        "decided_by": "model"
+      }
+    ],
+    "verdicts": [
+      {
+        "claim_id": "st-01-identify-t00-c00",
+        "verdict": "contradicted",
+        "section_id": "CC-5.1",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-01-identify-t00-c01",
+        "verdict": "contradicted",
+        "section_id": "CC-5.1",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-01-identify-t01-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-01-identify-t01-c01",
+        "verdict": "supported",
+        "section_id": "CC-5.3",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-01-identify-t01-c02",
+        "verdict": "supported",
+        "section_id": "CC-5.3",
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-synth_telecom-st-01-identify",
+    "cost_usd": 0.021014,
+    "verified_at": "2026-08-14T00:59:11+00:00"
+  },
+  "st-02-arrangement": {
+    "conversation_id": "st-02-arrangement",
+    "title": "Payment arrangement within authority",
+    "authored_category": "supported",
+    "observed_headline": "supported",
+    "matches_authored": true,
+    "verdict_counts": {
+      "supported": 3,
+      "retrieval_below_confidence": 6
+    },
+    "claims": 9,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [],
+    "verdicts": [
+      {
+        "claim_id": "st-02-arrangement-t00-c00",
+        "verdict": "supported",
+        "section_id": "CC-4.3",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-02-arrangement-t00-c01",
+        "verdict": "supported",
+        "section_id": "CC-4.3",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-02-arrangement-t00-c02",
+        "verdict": "supported",
+        "section_id": "CC-4.3",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-02-arrangement-t01-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-02-arrangement-t01-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-02-arrangement-t01-c02",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-02-arrangement-t01-c03",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-02-arrangement-t01-c04",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-02-arrangement-t01-c05",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-synth_telecom-st-02-arrangement",
+    "cost_usd": 0.034722,
+    "verified_at": "2026-08-14T01:02:07+00:00"
+  },
+  "st-03-disconnect": {
+    "conversation_id": "st-03-disconnect",
+    "title": "Disconnection threatened without a notice",
+    "authored_category": "contradicted",
+    "observed_headline": "contradicted",
+    "matches_authored": true,
+    "verdict_counts": {
+      "retrieval_below_confidence": 3,
+      "contradicted": 3
+    },
+    "claims": 6,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [
+      {
+        "claim_id": "st-03-disconnect-t00-c01",
+        "verdict": "contradicted",
+        "section_id": "CC-4.2",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-03-disconnect-t01-c00",
+        "verdict": "contradicted",
+        "section_id": "CC-4.2",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-03-disconnect-t01-c01",
+        "verdict": "contradicted",
+        "section_id": "CC-4.2",
+        "decided_by": "model"
+      }
+    ],
+    "verdicts": [
+      {
+        "claim_id": "st-03-disconnect-t00-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-03-disconnect-t00-c01",
+        "verdict": "contradicted",
+        "section_id": "CC-4.2",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-03-disconnect-t00-c03",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-03-disconnect-t01-c00",
+        "verdict": "contradicted",
+        "section_id": "CC-4.2",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-03-disconnect-t01-c01",
+        "verdict": "contradicted",
+        "section_id": "CC-4.2",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-03-disconnect-t01-c02",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "CC-4.2",
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-synth_telecom-st-03-disconnect",
+    "cost_usd": 0.02525,
+    "verified_at": "2026-08-14T01:04:03+00:00"
+  },
+  "st-04-refund": {
+    "conversation_id": "st-04-refund",
+    "title": "Unauthorised credit promised",
+    "authored_category": "contradicted",
+    "observed_headline": "contradicted",
+    "matches_authored": true,
+    "verdict_counts": {
+      "contradicted": 3,
+      "retrieval_below_confidence": 2,
+      "supported": 1
+    },
+    "claims": 6,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [
+      {
+        "claim_id": "st-04-refund-t00-c00",
+        "verdict": "contradicted",
+        "section_id": "CC-4.1",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-04-refund-t00-c01",
+        "verdict": "contradicted",
+        "section_id": "CC-4.1",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-04-refund-t01-c03",
+        "verdict": "contradicted",
+        "section_id": "CC-4.1",
+        "decided_by": "model"
+      }
+    ],
+    "verdicts": [
+      {
+        "claim_id": "st-04-refund-t00-c00",
+        "verdict": "contradicted",
+        "section_id": "CC-4.1",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-04-refund-t00-c01",
+        "verdict": "contradicted",
+        "section_id": "CC-4.1",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-04-refund-t01-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "CC-4.1",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-04-refund-t01-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "CC-4.1",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-04-refund-t01-c02",
+        "verdict": "supported",
+        "section_id": "CC-4.1",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-04-refund-t01-c03",
+        "verdict": "contradicted",
+        "section_id": "CC-4.1",
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-synth_telecom-st-04-refund",
+    "cost_usd": 0.02488,
+    "verified_at": "2026-08-14T01:06:03+00:00"
+  },
+  "st-05-dispute": {
+    "conversation_id": "st-05-dispute",
+    "title": "Collection continued on a disputed charge",
+    "authored_category": "contradicted",
+    "observed_headline": "contradicted",
+    "matches_authored": true,
+    "verdict_counts": {
+      "supported": 1,
+      "contradicted": 3,
+      "retrieval_below_confidence": 1
+    },
+    "claims": 5,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [
+      {
+        "claim_id": "st-05-dispute-t00-c01",
+        "verdict": "contradicted",
+        "section_id": "CC-3.2",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-05-dispute-t00-c03",
+        "verdict": "contradicted",
+        "section_id": "CC-3.2",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-05-dispute-t01-c00",
+        "verdict": "contradicted",
+        "section_id": "CC-3.2",
+        "decided_by": "model"
+      }
+    ],
+    "verdicts": [
+      {
+        "claim_id": "st-05-dispute-t00-c00",
+        "verdict": "supported",
+        "section_id": "CC-3.2",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-05-dispute-t00-c01",
+        "verdict": "contradicted",
+        "section_id": "CC-3.2",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-05-dispute-t00-c02",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-05-dispute-t00-c03",
+        "verdict": "contradicted",
+        "section_id": "CC-3.2",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-05-dispute-t01-c00",
+        "verdict": "contradicted",
+        "section_id": "CC-3.2",
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-synth_telecom-st-05-dispute",
+    "cost_usd": 0.021358,
+    "verified_at": "2026-08-14T01:07:16+00:00"
+  },
+  "st-06-thirdparty": {
+    "conversation_id": "st-06-thirdparty",
+    "title": "Account discussed with a third party",
+    "authored_category": "contradicted",
+    "observed_headline": "contradicted",
+    "matches_authored": true,
+    "verdict_counts": {
+      "retrieval_below_confidence": 4,
+      "contradicted": 2
+    },
+    "claims": 6,
+    "agent_turns": 2,
+    "customer_turns_skipped": 2,
+    "findings": [
+      {
+        "claim_id": "st-06-thirdparty-t00-c02",
+        "verdict": "contradicted",
+        "section_id": "CC-5.2",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-06-thirdparty-t01-c02",
+        "verdict": "contradicted",
+        "section_id": "CC-5.2",
+        "decided_by": "model"
+      }
+    ],
+    "verdicts": [
+      {
+        "claim_id": "st-06-thirdparty-t00-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-06-thirdparty-t00-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": null,
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-06-thirdparty-t00-c02",
+        "verdict": "contradicted",
+        "section_id": "CC-5.2",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-06-thirdparty-t01-c00",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "CC-5.2",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-06-thirdparty-t01-c01",
+        "verdict": "retrieval_below_confidence",
+        "section_id": "CC-5.2",
+        "decided_by": "model"
+      },
+      {
+        "claim_id": "st-06-thirdparty-t01-c02",
+        "verdict": "contradicted",
+        "section_id": "CC-5.2",
+        "decided_by": "model"
+      }
+    ],
+    "run_id": "prepared-synth_telecom-st-06-thirdparty",
+    "cost_usd": 0.024814,
+    "verified_at": "2026-08-14T01:10:05+00:00"
+  }
+}

@@ -92,6 +92,24 @@ questions. Measured on 56 pairs, 41 percent introduced rule vocabulary absent
 from the claim. Part of retrieval performance is the model recognising
 Regulation F, and that part will not transfer to a client's private corpus.
 
+**A compound obligation can be failed by a compliant sentence, because claim
+extraction splits it.** The telecom standard's CC-5.1 requires an agent to
+identify the company AND state the purpose of the call. An agent turn saying
+"this is Priya calling from Northbay Communications. I am calling about the
+outstanding balance on your mobile account" satisfies both. The extractor
+returned it as two claims, and the judge evaluated each against the whole
+rule: the first was contradicted for stating no purpose, the second for
+naming no company. Both halves were marked violations of a rule the sentence
+as a whole meets.
+
+This is structural rather than a tuning problem. Claims are the unit of
+adjudication and obligations are not always claim-shaped, so a rule with two
+required elements can be failed twice by text that complies. It would be
+caught by evaluating multi-element obligations at turn level rather than
+claim level, which is not built. Observed once, in the prepared library; the
+same shape exists in Regulation F wherever a provision lists several required
+disclosures.
+
 **The retrieval floor sits below the reranker's practical output range, so
 `no_governing_rule` is effectively unreachable.** Measured across the prepared
 conversation library, 71 retrieval calls, the lowest top-1 score observed was

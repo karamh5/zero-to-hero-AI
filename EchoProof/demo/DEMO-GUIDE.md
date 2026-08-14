@@ -71,6 +71,35 @@ The third party conversation is the strongest single demonstration: the
 violation is immediately understandable to a non specialist without
 explaining a statute, and it cites the section the scenario is about.
 
+### The second corpus
+
+Switching corpus in the rig is worth doing, because it shows the same engine
+running against a completely different rulebook with different identifiers.
+The telecom pack performs better than Regulation F, and the reason is worth
+saying plainly if asked: 15 provisions against 303, written in plain modern
+prose, so retrieval on it is a far easier problem. It proves portability, not
+accuracy.
+
+| Conversation | Produces | Cites |
+|---|---|---|
+| Disconnection threatened without a notice | **contradicted** | `CC-4.2` |
+| Unauthorised credit promised | **contradicted** | `CC-4.1` |
+| Collection continued on a disputed charge | **contradicted** | `CC-3.2` |
+| Account discussed with a third party | **contradicted** | `CC-5.2` |
+| Payment arrangement within authority | **supported** | |
+
+Four of four contradicted cases cite the correct section.
+
+**Do not run "Correct call opening".** It is the one telecom conversation
+that misfires, and the reason is specific: the standard's CC-5.1 requires an
+agent to identify the company AND state the purpose of the call. The agent
+does both in one sentence, but claim extraction splits that sentence into two
+claims and the judge evaluates each half against the whole rule, so each half
+is marked a violation of a rule the sentence actually satisfies. If it comes
+up, that is the explanation, and it is written down in LIMITATIONS.md as a
+structural limit of adjudicating at claim level rather than a bug to be
+tuned away.
+
 Pair one contradicted conversation with one supported conversation. A tool
 that only ever finds problems is not obviously better than a tool that flags
 everything, and the supported case is what shows it stays quiet when the
