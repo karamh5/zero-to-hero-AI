@@ -2,7 +2,7 @@
 
 This is a corpus ingester, not engine code. It knows about eCFR XML and about
 12 CFR 1006 specifically. That is fine and intended: the engine/pack boundary in
-CLAUDE.md says a new vertical means new pack files, and a new corpus format
+ARCHITECTURE.md says a new vertical means new pack files, and a new corpus format
 means a new ingester next to this one. Nothing under engine/ imports this.
 
 Output, written to packs/policy/reg_f/:

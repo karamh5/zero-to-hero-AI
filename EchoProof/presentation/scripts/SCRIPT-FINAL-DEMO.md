@@ -276,7 +276,7 @@ I took it to an applied engineer at Deepgram, and the feedback was direct. If yo
 
 [CLICK 1X]
 
-And I took it to Roger on the Hexaware CX side. The feedback there was that a finding a reviewer cannot act on is just noise, and that the buyer is the person signing off, not the engineer. So the gate decision became client configured rather than ours, and the case file got rebuilt around the rule text instead of around a score.
+And I took it to the CX delivery side at Hexaware. The feedback there was that a finding a reviewer cannot act on is just noise, and that the buyer is the person signing off, not the engineer. So the gate decision became client configured rather than ours, and the case file got rebuilt around the rule text instead of around a score.
 
 Both of those changed the product, not the pitch. And the second one is what you are about to look at.
 

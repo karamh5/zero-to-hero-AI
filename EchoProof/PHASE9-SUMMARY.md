@@ -53,7 +53,7 @@ Phase 9 names exactly two deliverables and neither is a deck, so building one
 would be scope expansion past the phase. `demo/RUN-SHEET.md` already carries the
 narrative a deck would present, with measured timings and a failure table.
 
-## Secret scan, the CLAUDE.md pre-push gate
+## Secret scan, the ARCHITECTURE.md pre-push gate
 
 gitleaks 8.30.1 installed via winget on request. Three scans were run.
 

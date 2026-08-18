@@ -19,7 +19,7 @@ the obligations a collections agent is judged on. Customer turns now travel to
 the judge as context, clearly labelled as context, with the instruction that
 only the agent's claim is under adjudication.
 
-CLAUDE.md decision 9 note: passing context changes what the judge sees, so it
+ARCHITECTURE.md decision 9 note: passing context changes what the judge sees, so it
 would invalidate comparison against previously scored runs. It is therefore
 opt-in. `context_turns` defaults to empty and every existing caller keeps its
 exact prior behaviour; only conversations built through this module supply it.

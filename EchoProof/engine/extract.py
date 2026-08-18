@@ -10,7 +10,7 @@ restated text. Two reasons, both load-bearing:
    slice the exact sentence out of the call recording. A paraphrase has no
    position, so there is nothing to slice.
 
-DEVIATION FROM CLAUDE.md DECISION 4, FLAGGED RATHER THAN MADE SILENTLY.
+DEVIATION FROM ARCHITECTURE.md DECISION 4, FLAGGED RATHER THAN MADE SILENTLY.
 
 Decision 4 says the tool call returns character offsets. It was implemented that
 way first and it does not work. Asked to return integer offsets directly,

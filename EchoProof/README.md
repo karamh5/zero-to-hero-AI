@@ -145,7 +145,7 @@ and `EvidenceLog.read` verifies the chain on load rather than on request.
 
 | File | What it covers |
 |---|---|
-| [CLAUDE.md](CLAUDE.md) | The project constitution and its non-negotiable decisions |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | The project constitution and its non-negotiable decisions |
 | [SPEC.md](SPEC.md) | Component-level engineering detail |
 | [PHASES.md](PHASES.md) | The build sequence |
 | [LIMITATIONS.md](LIMITATIONS.md) | Every measured limitation, consolidated |

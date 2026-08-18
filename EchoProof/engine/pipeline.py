@@ -125,7 +125,7 @@ def _decide_deterministically(
 ) -> Judgement | None:
     """Settle a money or date claim in code, or return None to pass it on.
 
-    This is the half of CLAUDE.md decision 3 that was missing. Normalisation
+    This is the half of ARCHITECTURE.md decision 3 that was missing. Normalisation
     ran, but nothing compared the parsed value against anything, so every claim
     reached the model and `decided_by` was `model` across the board. A rule
     saying the model never compares numbers is not satisfied by a module that
@@ -287,7 +287,7 @@ def adjudicate_turn(
     consumer utterance can become a claim or receive a verdict.
 
     Context is opt-in and defaults to None. Every run scored before it existed
-    passed nothing, so their numbers remain comparable (CLAUDE.md decision 9).
+    passed nothing, so their numbers remain comparable (ARCHITECTURE.md decision 9).
 
     `expectations` carries the known-true values for this call, supplied by the
     scenario or fixture rather than by engine code:
@@ -347,7 +347,7 @@ def adjudicate_turn(
     if log is not None:
         log.append(SPAN_EXTRACT_CLAIMS, {"turn_id": turn_id, **extraction.to_dict()})
 
-    # Deterministic normalisation, before any judging. CLAUDE.md decision 3
+    # Deterministic normalisation, before any judging. ARCHITECTURE.md decision 3
     # requires money and dates to be canonicalised and compared in code, and the
     # first scored run showed this path never executing: every numeric and date
     # claim reached the model with normalized_value still unset. The module was
@@ -359,7 +359,7 @@ def adjudicate_turn(
     for claim in claims:
         claim_text = claim.text(transcript)
 
-        # CLAUDE.md decision 3: money and dates are verified deterministically
+        # ARCHITECTURE.md decision 3: money and dates are verified deterministically
         # in code, and the model never compares numbers or dates. Settled here,
         # BEFORE retrieval, so a value the code can decide never reaches either
         # the retriever or the judge.

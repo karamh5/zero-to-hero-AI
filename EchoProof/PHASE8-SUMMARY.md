@@ -50,7 +50,7 @@ The arrest threat was still reported.
 The likely reason is architectural rather than lucky. The judge receives the
 claim as data inside a user message, and its system prompt constrains it to the
 rule text it was handed, so the injected sentence becomes another claim to be
-judged rather than an instruction to be followed. That falls out of CLAUDE.md
+judged rather than an instruction to be followed. That falls out of ARCHITECTURE.md
 decision 2, which exists for auditability rather than for security.
 
 **One sample is not a security guarantee.** Injection resistance stays on the

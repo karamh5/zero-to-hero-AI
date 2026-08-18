@@ -5,7 +5,7 @@ invalidates every hash after it. That is what makes the log tamper-evident and
 what lets the report seal break visibly when the agent version or policy pack
 version changes.
 
-Built in Phase 1 rather than Phase 3 on purpose. CLAUDE.md decision 7 requires
+Built in Phase 1 rather than Phase 3 on purpose. ARCHITECTURE.md decision 7 requires
 every model call, retrieval call and finding to write a span before the feature
 is considered done, and retrofitting instrumentation into finished code reliably
 misses the calls that matter.

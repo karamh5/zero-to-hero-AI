@@ -1,4 +1,4 @@
-"""The deterministic decision path (CLAUDE.md decision 3).
+"""The deterministic decision path (ARCHITECTURE.md decision 3).
 
 Normalisation alone does not satisfy "money and dates are verified
 deterministically in code, the model never compares numbers or dates". These

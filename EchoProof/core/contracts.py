@@ -21,7 +21,7 @@ class Verdict(str, Enum):
     """The five adjudication states. There is no sixth, and no pass/fail.
 
     Inherits from `str` so it serialises straight to JSON and compares cleanly
-    against the exact strings written in CLAUDE.md.
+    against the exact strings written in ARCHITECTURE.md.
 
     SUPPORTED                   -- the retrieved rule supports the claim.
     CONTRADICTED                -- the retrieved rule contradicts the claim.
@@ -163,7 +163,7 @@ class Chunk:
 class Claim:
     """One factual assertion located in a transcript by character offset.
 
-    The extractor returns offsets, never restated text (CLAUDE.md decision 4).
+    The extractor returns offsets, never restated text (ARCHITECTURE.md decision 4).
     Two reasons: restated text cannot be verified against the transcript, and
     SPEC section 8's audio citation maps these offsets onto word tokens to slice
     the source audio. A paraphrase breaks both.
@@ -190,7 +190,7 @@ class Claim:
     # furnishing provisions and missed the prohibition on threatening action
     # that cannot be taken, which is the rule the claim actually engages.
     #
-    # The cost is that retrieval stops being model-independent. CLAUDE.md
+    # The cost is that retrieval stops being model-independent. ARCHITECTURE.md
     # decision 2 is still honoured, because the judge sees only retrieved text,
     # but which rules get retrieved is now influenced by the extractor. That
     # belongs in the report's limitations rather than being left implicit.

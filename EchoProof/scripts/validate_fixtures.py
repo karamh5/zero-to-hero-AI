@@ -7,7 +7,7 @@ unscoreable, and finding that out during a scoring run wastes the run.
 
 This reads the held-out file's IDENTIFIERS AND SECTIONS ONLY. It never prints
 held-out turn text and never scores anything, so the split stays sealed per
-CLAUDE.md decision 10.
+ARCHITECTURE.md decision 10.
 
 Run:
     python scripts/validate_fixtures.py

@@ -4,7 +4,7 @@
 # Versions are pinned exactly, not floored. A scored evaluation run has to be
 # reproducible, and a floor like ">=3.0" lets a future install silently pick up
 # a different embedding or reranking implementation and change the numbers with
-# no change on our side. That is the same failure mode CLAUDE.md decision 9
+# no change on our side. That is the same failure mode ARCHITECTURE.md decision 9
 # forbids for the model backend, and it applies just as much to the libraries
 # that produce retrieval scores.
 #

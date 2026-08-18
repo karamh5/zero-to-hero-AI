@@ -215,7 +215,7 @@ There is a discipline rule around that swap. Whichever backend produced a scored
 
 [click 2x]
 
-Two conversations changed the build. An applied engineer at Deepgram made the point that approximate timings are not evidence, which is why the offset to timestamp mapping is deterministic rather than nearest match. And Roger on the Hexaware CX side made the point that a finding a reviewer cannot act on is noise, which is why the gate is client configured and the case file is built around rule text rather than a score.
+Two conversations changed the build. An applied engineer at Deepgram made the point that approximate timings are not evidence, which is why the offset to timestamp mapping is deterministic rather than nearest match. And the CX delivery side at Hexaware made the point that a finding a reviewer cannot act on is noise, which is why the gate is client configured and the case file is built around rule text rather than a score.
 
 ## The walkthrough
 

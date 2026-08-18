@@ -3,7 +3,7 @@
 Routing, in order, and the order is the design:
 
 1. A numeric or date claim already settled by engine/deterministic.py is decided
-   there. The model is never asked to re-judge it. CLAUDE.md decision 3.
+   there. The model is never asked to re-judge it. ARCHITECTURE.md decision 3.
 2. Retrieval floor uncleared    -> no_governing_rule
 3. Retrieval ceiling uncleared  -> retrieval_below_confidence
 4. Two close candidates from different sections -> conflicting_sections

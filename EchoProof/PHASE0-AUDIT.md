@@ -19,7 +19,7 @@ depending on them.
 | 5 | Normalization + unit tests | §4 | missing | No `tests/`, no `conftest.py` | Spoken and written numbers and relative dates canonicalize deterministically, anchored to call date, with an independent pytest suite that does not import the judge |
 | 6 | 50-fixture file + held-out split | §11 | missing | No `fixtures/` directory | 50 seeded-violation items with `ground_truth {verdict, section_id}`, hard negatives labelled separately from greetings, and a held-out split sealed at creation |
 | 7 | Span schema + evidence log | §7 | missing | No `.py` files exist | All seven span types emit, the chain hash of entry N includes the hash of entry N-1, and a stored run replays to a byte-identical recomputed chain hash |
-| 8 | Model interface | CLAUDE.md #8 | **partial** | Credential verified live and real model IDs confirmed (section 2 below), but no client code exists | One OpenAI-SDK client with configurable `base_url`, `temperature=0`, a pinned dated model string, and tool-calling wired for §3 claim extraction |
+| 8 | Model interface | ARCHITECTURE.md #8 | **partial** | Credential verified live and real model IDs confirmed (section 2 below), but no client code exists | One OpenAI-SDK client with configurable `base_url`, `temperature=0`, a pinned dated model string, and tool-calling wired for §3 claim extraction |
 
 Item 8 is the one row that is not `missing`. The credential and the model
 identity are established facts as of today, verified against the live API rather
@@ -49,7 +49,7 @@ mistral-large-2512
 **Pin a dated ID, never a `-latest` alias.** `mistral-small-latest` currently
 also aliases `magistral-small-latest`, which is a reasoning model. A `-latest`
 string can therefore change model *class* underneath a scored run without any
-change on our side, which would breach CLAUDE.md decision #9 (whichever backend
+change on our side, which would breach ARCHITECTURE.md decision #9 (whichever backend
 produced a scored run's numbers stays the backend for that run). The specific
 pin is a Phase 1 decision and is not made here.
 
@@ -65,17 +65,17 @@ reviewed by the project owner before anything is scored. This is recorded here
 as a **named limitation**, not a footnote: the same agent authoring both the
 fixtures and the judge is a self-grading bias, and a detection rate measured
 that way is weaker evidence than one measured against independently authored
-ground truth. Per CLAUDE.md decision #12 this gets a one-line disclosure in the
+ground truth. Per ARCHITECTURE.md decision #12 this gets a one-line disclosure in the
 final Deployment Readiness Report rather than being quietly dropped.
 
 **Held-out split.** Proposed at 15 of the 50 items, leaving 35 for Phase 1
 scoring. Sealed at creation in Phase 1 and not read, logged, or optimized
-against until Phase 4, per CLAUDE.md decision #10. Phase 0 does not create it.
+against until Phase 4, per ARCHITECTURE.md decision #10. Phase 0 does not create it.
 
 **Deepgram credential.** Deliberately not requested. It is a Phase 2 gate and
 asking early would invite it being used early.
 
-**Supabase.** URL and key are in `.env`. No schema exists. Per CLAUDE.md
+**Supabase.** URL and key are in `.env`. No schema exists. Per ARCHITECTURE.md
 decision #11 Supabase holds run and findings metadata only, never evidence
 content, so the schema is a Phase 3 concern at the earliest.
 
@@ -100,7 +100,7 @@ EchoProof/
   conftest.py  requirements.txt
 ```
 
-The `engine/` versus `packs/` split is the physical enforcement of CLAUDE.md's
+The `engine/` versus `packs/` split is the physical enforcement of ARCHITECTURE.md's
 fixed-engine rule: adding a vertical must touch only `packs/`. If a Phase 6 pack
 swap requires editing anything under `engine/`, that is a defect in the boundary
 and gets reported as one. `wildsense/core/registry.py` already demonstrates this
@@ -132,7 +132,7 @@ Real console output from this session.
 === recursive listing of EchoProof/ ===
 EchoProof\.env
 EchoProof\.gitignore
-EchoProof\CLAUDE.md
+EchoProof\ARCHITECTURE.md
 EchoProof\PHASES.md
 EchoProof\SPEC.md
 

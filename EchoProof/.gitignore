@@ -16,3 +16,7 @@ ui/.vite/
 .DS_Store
 *.tsbuildinfo
 packs/policy/*/.cache/
+
+# Local tooling notes, not part of the shared repository.
+# The shareable design record is ARCHITECTURE.md.
+CLAUDE.md

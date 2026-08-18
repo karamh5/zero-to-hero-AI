@@ -15,7 +15,7 @@ a normalised embedding model is calibrated and interpretable, so it supplies the
 `score` used for confidence. Order from fusion, confidence from cosine.
 
 **Embeddings run locally.** An API-side embedding model can change underneath a
-scored evaluation run with no change on our side, which is what CLAUDE.md
+scored evaluation run with no change on our side, which is what ARCHITECTURE.md
 decision 9 forbids. A pinned local model makes precision@1 exactly reproducible
 and makes re-indexing during threshold calibration free.
 """

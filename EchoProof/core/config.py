@@ -9,7 +9,7 @@ than `-latest` aliases. This is not stylistic. As of 2026-08-12 the Mistral API
 reports `mistral-small-latest` as an alias of both `mistral-small-2603` and
 `magistral-small-latest`, which is a reasoning model. A `-latest` string can
 therefore change model class underneath a scored evaluation run with no change
-on our side, which is exactly what CLAUDE.md decision 9 forbids.
+on our side, which is exactly what ARCHITECTURE.md decision 9 forbids.
 """
 
 from __future__ import annotations

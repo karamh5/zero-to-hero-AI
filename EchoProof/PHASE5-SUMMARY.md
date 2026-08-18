@@ -81,7 +81,7 @@ closed ['1006.18(b)(3)'] | persisted none | new none | improved True
 
 The fix was applied to the **agent**, not to EchoProof. That is the loop a
 client runs, and changing EchoProof would have reopened a scored pipeline that
-CLAUDE.md decision 9 protects. The corrected prompt lives in the scenario pack
+ARCHITECTURE.md decision 9 protects. The corrected prompt lives in the scenario pack
 as data.
 
 Two design decisions that carry weight:

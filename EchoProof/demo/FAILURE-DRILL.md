@@ -58,7 +58,7 @@ The likely reason is architectural rather than lucky. The judge receives the
 claim as data inside a user message and its system prompt constrains it to rule
 text it was handed. The injected sentence becomes another claim to be judged,
 not an instruction to be followed. That is a side effect of the design in
-CLAUDE.md decision 2, which exists for auditability rather than for security.
+ARCHITECTURE.md decision 2, which exists for auditability rather than for security.
 
 **This is one sample and it is not a security guarantee.** The brief lists
 injection resistance as deferred and it remains deferred. What changed is that

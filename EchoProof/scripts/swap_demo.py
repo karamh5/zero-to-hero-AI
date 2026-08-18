@@ -5,7 +5,7 @@ and numbers its provisions differently, using the same engine.
 
 The engine takes no argument saying which industry it is in. The only thing that
 changes between this run and a Regulation F run is which pack directory is
-loaded, which is exactly the claim CLAUDE.md makes and this script exists to
+loaded, which is exactly the claim ARCHITECTURE.md makes and this script exists to
 test rather than assert.
 
 Run:

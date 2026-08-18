@@ -58,7 +58,7 @@ def test_is_within_rejects_unrelated_identifiers() -> None:
 def test_defaults_preserve_regulation_f_behaviour() -> None:
     """Scored Regulation F results must not move because of this change.
 
-    CLAUDE.md decision 9 fixes the backend for a run whose numbers are reported,
+    ARCHITECTURE.md decision 9 fixes the backend for a run whose numbers are reported,
     and a boundary fix that silently altered them would be a regression dressed
     as a refactor.
     """

@@ -111,7 +111,7 @@ than its absence.
 Audio inlined as base64 put 15 clips into a 1.44 MB file. A 100 call campaign
 would be roughly 25 MB and unusable as an email attachment. Acceptable at PoC
 scale and stated in the report itself. Production references clips in object
-storage by digest, which is already the Production row of CLAUDE.md's stack
+storage by digest, which is already the Production row of ARCHITECTURE.md's stack
 table.
 
 ## 7. Artifacts

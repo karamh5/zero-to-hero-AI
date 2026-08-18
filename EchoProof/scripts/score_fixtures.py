@@ -1,7 +1,7 @@
 """Score the development fixtures and produce the headline numbers (SPEC 11).
 
 Never reads fixtures/heldout.jsonl. That split is sealed until Phase 4 and is
-scored exactly once, per CLAUDE.md decision 10.
+scored exactly once, per ARCHITECTURE.md decision 10.
 
 Method note that matters for reading the output. The run executes with the
 retrieval ceiling effectively disabled, and every claim's model verdict is
@@ -69,7 +69,7 @@ def main() -> int:
         default="dev",
         help=(
             "which split to score. heldout is sealed and is scored exactly once, "
-            "at the end of Phase 4, per CLAUDE.md decision 10."
+            "at the end of Phase 4, per ARCHITECTURE.md decision 10."
         ),
     )
     args = parser.parse_args()

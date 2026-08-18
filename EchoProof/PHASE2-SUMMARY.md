@@ -111,7 +111,7 @@ Phase 1: this is the credit report deletion claim, the same case that abstains
 as fixture fx-027, where the governing rule is a general prohibition rather than
 a provision naming the conduct. The audio path is not the cause and the
 adjudication behaviour is unchanged from Phase 1, which is correct, because
-CLAUDE.md decision 9 fixes the backend for a scored run.
+ARCHITECTURE.md decision 9 fixes the backend for a scored run.
 
 ## 7. Artifacts
 

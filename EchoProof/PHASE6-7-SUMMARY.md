@@ -4,7 +4,7 @@ Pack swap and limitations, then demo prep. SPEC sections 1, 9 and 10.
 
 ## Phase 6: the engine/pack boundary held, after two real defects were fixed
 
-CLAUDE.md's central architectural claim is that the engine contains no field,
+ARCHITECTURE.md's central architectural claim is that the engine contains no field,
 constant or branch that knows which industry it is running in. Nothing had
 tested it, because every run until now used one corpus.
 

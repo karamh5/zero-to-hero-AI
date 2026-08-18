@@ -56,7 +56,7 @@ one.
 ## 3. Held-out split, scored once
 
 Scored after the campaign was complete, with nothing left to tune, per
-CLAUDE.md decision 10.
+ARCHITECTURE.md decision 10.
 
 **The headline the scorer prints is not trustworthy, and the reason is a defect
 in the held-out set itself.**
@@ -80,7 +80,7 @@ an artifact of an unmeasurable denominator, not a finding.
 This is the same defect found and fixed in the development split, where hard
 negatives were expanded from 10 to 50 so one false positive costs exactly 0.020.
 The held-out split was sealed **before** that defect was discovered, and
-CLAUDE.md decision 10 forbids touching it, so the defect is baked in. Fixing it
+ARCHITECTURE.md decision 10 forbids touching it, so the defect is baked in. Fixing it
 would have meant editing a sealed split, which is worse.
 
 **The comparison that is valid is at a matched ceiling.**
@@ -119,7 +119,7 @@ clock was 87.9 minutes rather than the roughly 30 projected.
 ## 5. Also delivered
 
 **Supabase run and findings metadata**, closing brief audit gap 2. Metadata
-only, never evidence content, per CLAUDE.md decision 11. The projection is
+only, never evidence content, per ARCHITECTURE.md decision 11. The projection is
 written as an allowlist rather than a denylist, because a denylist begins
 leaking the moment a field is added to a finding, and the field most likely to
 be added to a compliance finding is more content. Degrades to a warning when

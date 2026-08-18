@@ -88,7 +88,7 @@ def load_jsonl_pack(kind: str, pack_id: str, filename: str) -> list[dict[str, An
 
     Generic on purpose. Adding a vertical means adding pack files under a new
     directory, never editing this function, which is the engine/pack boundary
-    CLAUDE.md requires.
+    ARCHITECTURE.md requires.
     """
     path = PACKS_DIR / kind / pack_id / filename
     if not path.exists():

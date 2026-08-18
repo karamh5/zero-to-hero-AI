@@ -24,6 +24,7 @@
   --paper-cite:#5a544a; --blackout:#000; --print-ground:#fff;
   --mask-on:#000; --vignette:rgba(0,0,0,.55);
   --iso-top:#1b1f26; --iso-left:#12151a; --iso-right:#0d1014;
+  --grid-print:#15181c;
 
   --font-ui:"Archivo","Archivo Variable","Helvetica Neue",Helvetica,Arial,sans-serif;
   --font-mono:"IBM Plex Mono","Cascadia Mono",Consolas,ui-monospace,"Courier New",monospace;
@@ -166,11 +167,45 @@ svg{display:block;overflow:visible}
   .rise,[data-step]{opacity:1!important;transform:none!important}
   .draw{stroke-dashoffset:0!important}
 }
+
+/* ==========================================================================
+   PRINT VARIANT. Generated from deck.html, do not edit by hand.
+   Everything above is byte for byte the interactive deck. Only the rules
+   below differ, and they exist to turn a stepped presentation into a
+   sixteen page document where every slide is already in its final state.
+   ========================================================================== */
+html,body{overflow:visible;height:auto;background:var(--ground)}
+#stage{position:static;top:auto;left:auto;width:1600px;height:auto;
+  transform:none;overflow:visible;margin:0 auto;counter-reset:slidenum}
+.slide{position:relative;inset:auto;display:flex!important;
+  width:1600px;height:900px;overflow:hidden;counter-increment:slidenum;
+  page-break-after:always;break-after:page;
+  background:
+    radial-gradient(130% 100% at 50% 50%,transparent 52%,var(--vignette) 100%),
+    radial-gradient(circle at 72% 22%,var(--glow) 0%,transparent 60%),
+    linear-gradient(var(--grid-print) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid-print) 1px,transparent 1px),
+    var(--ground);
+  background-size:100% 100%,100% 100%,40px 40px,40px 40px,100% 100%}
+.slide:last-of-type{page-break-after:auto;break-after:auto}
+.slide::after{content:"ECHOPROOF" "\00a0\00a0\00a0\00a0" counter(slidenum) " / 16";
+  position:absolute;left:0;right:0;bottom:0;height:44px;z-index:2;
+  display:flex;align-items:center;padding:0 100px;
+  font-family:var(--font-mono);font-size:12px;
+  letter-spacing:var(--track-caps);color:var(--ink-faint);
+  border-top:1px solid var(--line);background:var(--ground)}
+/* every reveal and every build step sits in its finished state */
+.rise,[data-step]{opacity:1!important;transform:none!important}
+.draw{stroke-dasharray:none!important;stroke-dashoffset:0!important}
+@page{size:1600px 900px;margin:0}
+@media print{
+  html,body{background:var(--ground)}
+  .slide{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 </style>
 </head>
 <body>
 <div id="stage">
-  <div id="bg"><div id="grid"></div><div id="glow"></div><div id="vig"></div></div>
 
 <!-- 01 TITLE ============================================================== -->
 <section class="slide on" data-eyebrow="TITLE" data-glow="1080,120">
@@ -1004,122 +1039,6 @@ svg{display:block;overflow:visible}
     <span data-step="2">Every finding has evidence.</span>
   </h1>
 </section>
-
-  <div id="rail"><div id="railfill"></div></div>
-  <div id="chrome">
-    <span>ECHOPROOF</span>
-    <span id="eyeb">TITLE</span>
-    <span><span id="idx">1</span> / 16</span>
-  </div>
-  <div class="ov" id="over"><h3>Overview</h3><div id="ogrid"></div></div>
-  <div class="ov" id="keys"><h3>Key map</h3><dl>
-    <dt>&rarr; space</dt><dd>Next build step, then next slide</dd>
-    <dt>&larr;</dt><dd>Back one step, then previous slide</dd>
-    <dt>O</dt><dd>Overview grid</dd>
-    <dt>F</dt><dd>Fullscreen</dd>
-    <dt>B</dt><dd>Blackout</dd>
-    <dt>?</dt><dd>This key map</dd>
-    <dt>Home End</dt><dd>First and last slide</dd>
-    <dt>Number, Enter</dt><dd>Jump to that slide</dd>
-  </dl></div>
-  <div id="black"></div>
 </div>
-
-<script>
-(function(){
-  var stage=document.getElementById('stage'),
-      slides=[].slice.call(document.querySelectorAll('.slide')),
-      idx=document.getElementById('idx'), eyeb=document.getElementById('eyeb'),
-      over=document.getElementById('over'), keys=document.getElementById('keys'),
-      black=document.getElementById('black'), glow=document.getElementById('glow'),
-      fill=document.getElementById('railfill'), ogrid=document.getElementById('ogrid');
-  var i=0, step=0, jump='';
-
-  function fit(){
-    var s=Math.min(window.innerWidth/1600, window.innerHeight/900);
-    // A zero or non finite viewport would scale the stage to nothing and leave
-    // a blank screen in front of a room. Fall back to unscaled instead.
-    if(!isFinite(s) || s<=0) s=1;
-    stage.style.transform='translate(-50%,-50%) scale('+s+')';
-  }
-  window.addEventListener('resize',fit);
-  window.addEventListener('orientationchange',fit);
-  document.addEventListener('visibilitychange',fit);
-  window.addEventListener('load',fit);
-  fit();
-
-  function maxStep(n){
-    var v=0;
-    slides[n].querySelectorAll('[data-step]').forEach(function(el){
-      v=Math.max(v, parseInt(el.getAttribute('data-step'),10)||0);
-    });
-    return v;
-  }
-  document.body.classList.add('armed');
-
-  document.querySelectorAll('.draw').forEach(function(p){
-    try{ var L=p.getTotalLength();
-      p.style.strokeDasharray=L; p.style.strokeDashoffset=L;
-    }catch(e){}
-  });
-
-  function paint(){
-    slides.forEach(function(s,n){ s.classList.toggle('on', n===i); });
-    var cur=slides[i];
-    cur.querySelectorAll('[data-step]').forEach(function(el){
-      var n=parseInt(el.getAttribute('data-step'),10)||0;
-      var show=n<=step;
-      el.classList.toggle('shown',show);
-      if(show) el.querySelectorAll('.draw').forEach(function(p){ p.style.strokeDashoffset=0; });
-    });
-    idx.textContent=i+1;
-    eyeb.textContent=cur.getAttribute('data-eyebrow')||'';
-    fill.style.width=((i+1)/slides.length*100)+'%';
-    var g=(cur.getAttribute('data-glow')||'800,450').split(',');
-    glow.style.transform='translate('+(parseInt(g[0],10)-750)+'px,'+(parseInt(g[1],10)-550)+'px)';
-    [].forEach.call(ogrid.children,function(c,n){ c.classList.toggle('cur',n===i); });
-  }
-  function fwd(){ if(step<maxStep(i)){ step++; paint(); } else if(i<slides.length-1){ i++; step=0; paint(); } }
-  function back(){ if(step>0){ step--; paint(); } else if(i>0){ i--; step=maxStep(i); paint(); } }
-  function goTo(n){ if(n>=0&&n<slides.length){ i=n; step=0; paint(); } }
-
-  slides.forEach(function(s,n){
-    var c=document.createElement('div'); c.className='ocard';
-    c.innerHTML='<div class="n">'+String(n+1).padStart(2,'0')+'</div><div class="t">'+
-      (s.getAttribute('data-eyebrow')||'')+'</div>';
-    c.onclick=function(){ over.classList.remove('on'); goTo(n); };
-    ogrid.appendChild(c);
-  });
-
-  document.addEventListener('keydown',function(e){
-    var k=e.key;
-    if(/^[0-9]$/.test(k)){ jump+=k; return; }
-    if(k==='Enter'){ if(jump){ goTo(parseInt(jump,10)-1); jump=''; } return; }
-    jump='';
-    if(k==='ArrowRight'||k===' '||k==='PageDown'){e.preventDefault();fwd();}
-    else if(k==='ArrowLeft'||k==='PageUp'){e.preventDefault();back();}
-    else if(k==='o'||k==='O'){over.classList.toggle('on');keys.classList.remove('on');}
-    else if(k==='b'||k==='B'){black.classList.toggle('on');}
-    else if(k==='?'){keys.classList.toggle('on');over.classList.remove('on');}
-    else if(k==='f'||k==='F'){ if(!document.fullscreenElement){document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();} else {document.exitFullscreen&&document.exitFullscreen();} }
-    else if(k==='Home'){goTo(0);}
-    else if(k==='End'){goTo(slides.length-1);}
-    else if(k==='Escape'){over.classList.remove('on');keys.classList.remove('on');black.classList.remove('on');}
-  });
-  document.addEventListener('click',function(e){
-    if(over.classList.contains('on')||keys.classList.contains('on'))return;
-    if(e.clientY>window.innerHeight-70)return;
-    fwd();
-  });
-  var tx=0;
-  document.addEventListener('touchstart',function(e){tx=e.changedTouches[0].clientX;},{passive:true});
-  document.addEventListener('touchend',function(e){
-    var d=e.changedTouches[0].clientX-tx;
-    if(d<-45)fwd(); else if(d>45)back();
-  },{passive:true});
-
-  paint();
-})();
-</script>
 </body>
 </html>

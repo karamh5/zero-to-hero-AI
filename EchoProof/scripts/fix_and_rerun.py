@@ -6,7 +6,7 @@ seed, and record which findings closed, persisted, or are new.
 The fix is applied to the AGENT, not to EchoProof. That is the loop a client
 actually runs: EchoProof flags an issue, the agent vendor changes the agent, and
 the rerun shows whether the change worked. Changing EchoProof instead would also
-reopen a scored pipeline, which CLAUDE.md decision 9 forbids for a run whose
+reopen a scored pipeline, which ARCHITECTURE.md decision 9 forbids for a run whose
 numbers are already reported.
 
 The corrected prompt lives in the scenario pack as `fixed_agent_system_prompt`,

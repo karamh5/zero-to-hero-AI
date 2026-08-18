@@ -1,7 +1,7 @@
 # EchoProof - Known Limitations
 
 Assembled from what each phase measured, not written fresh. Every entry points
-at a number produced by a run in this repository. CLAUDE.md decision 12:
+at a number produced by a run in this repository. ARCHITECTURE.md decision 12:
 disclosed limitations beat hidden ones.
 
 ## 1. The headline metrics, and what they mean
@@ -44,7 +44,7 @@ result was 48 percent.
 negatives, so its false positive rate can only take the values 0.00, 0.20, 0.40
 and so on, and can never express the 2 percent threshold the decision bands are
 stated against. The development split was expanded to 50 hard negatives to fix
-exactly this, but the held-out split had already been sealed, and CLAUDE.md
+exactly this, but the held-out split had already been sealed, and ARCHITECTURE.md
 decision 10 forbids editing it. At a matched ceiling of 0.548, held-out detection
 was 0.444 against development's 0.348, which suggests the single-authored labels
 did not inflate the development number.
@@ -70,7 +70,7 @@ No weight should be placed on that verdict state.
 
 **Deterministic verification is wired. FIXED.** Previously numeric and date
 claims were canonicalised in code but never compared against anything, so
-`decided_by` was `model` for every claim and CLAUDE.md decision 3 was only half
+`decided_by` was `model` for every claim and ARCHITECTURE.md decision 3 was only half
 met. Comparison now runs in `engine/pipeline._decide_deterministically`, ahead
 of retrieval, so a value code can settle never reaches the retriever or the
 judge. Decisions are recorded with `decided_by: deterministic` and both sides of
@@ -125,7 +125,7 @@ unrelated text, so a floor calibrated in that range cannot separate "nothing
 governs this" from "something weakly resembles this". Recalibrating the floor
 against genuinely off-corpus text is open work; it is not done here because
 changing it would invalidate comparison against every scored run, per
-CLAUDE.md decision 9.
+ARCHITECTURE.md decision 9.
 
 **Thresholds do not transfer between distributions.** Thresholds calibrated on
 retrieval pairs produced a ceiling of 0.740, which exceeds every score observed
@@ -176,7 +176,7 @@ attacks.
 
 ## 5. Deviations from the specification, with reasons
 
-**CLAUDE.md decision 4, claim offsets.** The decision specifies tool calling
+**ARCHITECTURE.md decision 4, claim offsets.** The decision specifies tool calling
 that returns character offsets. Implemented literally, the model returned spans
 reading 'overy' and 'lance' on a 184 character turn; models do not count
 characters. The extractor now returns a verbatim quote and offsets are computed

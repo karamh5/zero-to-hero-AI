@@ -45,7 +45,7 @@ class CrossEncoderReranker(Reranker):
     """Cross-encoder reranking with a locally pinned model.
 
     Local for the same reason the embeddings are local: an API-side model can
-    change underneath a scored run, and CLAUDE.md decision 9 requires the
+    change underneath a scored run, and ARCHITECTURE.md decision 9 requires the
     backend that produced a run's numbers to stay fixed for that run.
     """
 

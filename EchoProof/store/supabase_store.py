@@ -1,7 +1,7 @@
 """Run and findings metadata in Supabase (brief audit gap 2).
 
 **Metadata only. Evidence content never leaves the local content-addressed
-store.** CLAUDE.md decision 11 is explicit: Supabase holds run and findings
+store.** ARCHITECTURE.md decision 11 is explicit: Supabase holds run and findings
 metadata, never evidence content. So this module writes identifiers, verdicts,
 section numbers, severities and hashes. It does not write transcripts, rule
 text, rationales, audio, or prompts.

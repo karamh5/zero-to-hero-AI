@@ -51,7 +51,7 @@ def test_projection_keeps_metadata() -> None:
 
 
 def test_projection_drops_every_content_field() -> None:
-    """CLAUDE.md decision 11: evidence content never reaches Supabase."""
+    """ARCHITECTURE.md decision 11: evidence content never reaches Supabase."""
     row = _metadata_only(FINDING, "run-1")
     for field in CONTENT_FIELDS:
         assert field not in row, f"{field} leaked into the metadata row"

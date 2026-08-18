@@ -24,7 +24,7 @@ matched settings more than halved, from 0.240 to 0.100.
 the claim level approach.**
 
 Detection of 0.348 at a 2% false positive rate is not a release gate. The honest
-positioning is the one the band prescribes and CLAUDE.md decision 12 requires
+positioning is the one the band prescribes and ARCHITECTURE.md decision 12 requires
 stating: EchoProof is a triage layer that routes to human review. The
 Deployment Readiness Report must say so on its front page rather than in a
 footnote.
@@ -96,7 +96,7 @@ implicit 28, commitment 24, date 14, numeric 9.
 now canonicalised in code and every one emits a check.deterministic span, which
 run 1 did not do at all. But `decided_by` is still model for all 147 claims: the
 comparison against an expected value never runs, because no expected value is
-plumbed per claim. CLAUDE.md decision 3 says money and dates are verified
+plumbed per claim. ARCHITECTURE.md decision 3 says money and dates are verified
 deterministically in code. Normalisation happens in code. Comparison does not
 yet. That is a real gap and it is not closed.
 
@@ -136,7 +136,7 @@ with 10 hard negatives the false positive rate can only take values 0.0, 0.1,
 0.2 and so on, so a 2% threshold is unmeasurable. Hard negatives were expanded
 to 50 so that one false positive costs exactly 0.020.
 
-**Deviation from CLAUDE.md decision 4 on claim offsets.** The decision specifies
+**Deviation from ARCHITECTURE.md decision 4 on claim offsets.** The decision specifies
 tool calling that returns character offsets. Implemented literally, the model
 returned spans reading 'overy' and 'lance' on a 184 character turn; models do
 not count characters. The extractor now returns a verbatim quote and the offsets

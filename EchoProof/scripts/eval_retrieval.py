@@ -1,6 +1,6 @@
 """Measure retrieval and calibrate the two confidence thresholds.
 
-This runs before the judge exists, on purpose. CLAUDE.md decision 1 requires
+This runs before the judge exists, on purpose. ARCHITECTURE.md decision 1 requires
 retrieval to be built and measured first, because a judge tuned on top of unknown
 retrieval quality cannot be debugged: every wrong verdict has two possible
 causes and no way to separate them.
