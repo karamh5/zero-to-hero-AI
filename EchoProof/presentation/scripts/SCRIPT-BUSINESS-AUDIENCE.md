@@ -1,8 +1,9 @@
-# Ten minutes, business audience
+# Business and partnership, 10 minutes
+
+Uses the demo deck, slides 1, 2, 3, 4, 11, 12, 13, 14 and 17. Lead with the
+commercial problem. The architecture is evidence, not subject matter.
 
 ## Before you start
-
-[open a terminal in the EchoProof folder]
 
 [run .venv/Scripts/python scripts/run_ui.py]
 
@@ -14,191 +15,147 @@
 
 [open presentation/demo-day/deck.html in tab two, press f for fullscreen]
 
-[open http://127.0.0.1:8077/bench in tab three and check the top card reads third party disclosure - demo baseline]
+[open http://127.0.0.1:8077/bench in tab three, check the top card reads third party disclosure - demo baseline]
 
-## The exposure
+## Opening
 
-[deck on slide one]
+[slide 1: click 2x]
 
-Every enterprise putting a voice agent into a regulated conversation is carrying the same unpriced risk. They do not know which of the things it says are going to cost them.
+Before this was a product it was my job. I worked in compliance at TELUS, and what you learn quickly is that compliance is not about knowing the rules. It is about proof. You can be entirely right and still lose, because you could not show your work.
 
-And the way they find out is a regulator, or a plaintiff.
+That matters commercially more than it sounds, and here is why.
 
-[click twice, the claim marks and the chain draw]
+## What is actually stalling deployments
 
-EchoProof answers that question before the agent is ever pointed at a customer.
+[slide 2: click 1x]
 
-## What the risk actually looks like
+[click 2x]
 
-[click to the next slide]
+Every enterprise putting a voice agent into a regulated conversation has the same problem. The model is ready. The integration is ready. The business case is signed. And then it sits.
 
-Here is a real agent turn from a collections call. It sounds like the agent is being helpful.
+Because somebody has to put their name on a document saying this agent is safe to talk to customers, and they cannot see what it says at scale.
 
-[click, the rule appears on the paper card]
+[click 1x]
 
-It is a federal violation. You may not discuss a person's debt with somebody who is not them, and the agent was speaking to her brother.
+So the deployment does not fail. It just never quite starts. The pilot runs another quarter. The rollout that was six weeks becomes nine months, and the cost is the value of the deployment you did not get, every month you did not get it.
 
-That is statutory damages per violation, and these agents do not make a mistake once. They make it consistently, on every call that hits the same conversational pattern, until somebody notices.
+## Why the current answer does not unblock it
 
-[click, the line underneath appears]
+[slide 3: click 1x]
 
-Which is the part that makes it expensive. It is not a bug and not a wrong answer, so every test the engineering team runs says the agent is working correctly. There is nothing to notice.
+[click 2x]
 
-## What actually stalls the deployment
+Because what exists today is a person listening to recordings with a rulebook next to them, covering somewhere between one and five percent of calls. And that is arithmetic, not effort, because a trained analyst gets through ten to fifteen a day.
 
-[stay on this slide and stop clicking]
+You cannot sign off on a sample. If your general counsel is asked to put their name on a deployment and the evidence is that a handful of calls looked fine to an analyst, they will not sign, and they are right not to.
 
-I want to name the commercial problem underneath this, because it is not really the fine.
+[click 1x]
 
-It is that legal will not sign off. Somebody has to put their name on the statement that this agent is safe to talk to customers, and right now nobody can, because nobody can see what it says at scale.
+This is a manual process, and we automate it. Every turn, before launch, with the governing rule attached to every flag, and a sealed record at the end.
 
-So the deployment sits in review. The pilot runs for another quarter. The rollout that was supposed to take six weeks takes nine months, and the cost is the value of the deployment you did not get, every month you did not get it.
+## What that changes
 
-And what does exist today does not solve it. A person listening to recordings with a rulebook next to them, sampling a fraction of calls, weeks after launch, producing a spreadsheet of opinions with no rule attached to any of them.
+[slide 4: click 1x]
 
-You cannot sign off on a sample. If your general counsel is asked to put their name on a deployment and the evidence is that a handful of calls looked acceptable to an analyst, they will not sign, and they are right not to.
+[click 4x]
 
-So the deployment does not fail. It never quite starts, and the thing missing is not effort. It is coverage and evidence.
+Four steps, and the one that matters commercially is the last two. It finds the actual provision in your rulebook that governs a sentence, and it rules using only that provision, then prints it next to the verdict.
 
-## What it does about it
+Which means your compliance officer is reviewing a citation instead of forming an opinion. That is the difference between a tool they resent and one they use.
 
-[click to the next slide]
+And it means when somebody asks in eighteen months how you knew the agent was safe, there is an answer that does not depend on anybody's memory.
 
-[click, the read box appears]
+## Where it sits
 
-So here is what it does instead. It reads every turn the agent produced, and only the agent's turns.
+[slide 11: press 1 1 and enter]
 
-[click, the claim box appears]
+[click 1x]
 
-It pulls out the specific things the agent claimed, word for word.
+The client brings the regulation, their policy, and their own threshold for what is serious enough to stop a release.
 
-[click, the retrieve box appears]
+[click 1x]
 
-It finds the rule in your rulebook that governs each one.
+Hexaware brings the agent build, the CX operations, the delivery centres.
 
-[click, the rule and seal box appears]
+[click 1x]
 
-And it rules on it and seals the record. So every flag arrives with the exact rule it broke, quoted, which means your compliance officer is reviewing a citation instead of forming an opinion.
+EchoProof sits in exactly one place. Between the build and the sign off. It is a configuration change, not a re architecture, and nothing else in the stack moves.
 
-And the sealed part matters just as much. When somebody asks in eighteen months how you knew the agent was safe, there is an answer that does not depend on anybody's memory.
+[click 1x]
 
-That last one changes the conversation with legal. The question they are actually being asked is not whether the agent is perfect. It is whether the company exercised diligence, and whether that can be demonstrated afterwards.
+And what comes out is the handover artifact. Not an assurance that the agent was tested. An evidence file showing what was tested and against which rule, that the client can hand to their own regulator.
 
-A sampled spreadsheet demonstrates nothing. A record of every turn, each flagged item carrying the provision it engaged, provably unedited since it was written, is a different kind of object entirely.
+## Go to market
 
-## What it changes about the review
+[slide 12: click 1x]
 
-[no slide change, keep talking over the same slide]
+[click 1x]
 
-Which changes what your compliance team spends its time on.
+Three routes, and all of them are motions Hexaware already runs. First, it attaches to CX engagements already being won, as the assurance line item. Shortest path, no new buyer.
 
-Today they are searching. They listen to calls hunting for something worth flagging, and most of what they listen to is fine, so most of that time produces nothing.
+[click 1x]
 
-With this they are adjudicating. The list is already assembled and every item on it arrives with the governing rule attached, so the question in front of them is a judgement call rather than a search. That is the work you actually hired them for.
+Second, it opens a new motion, which is auditing agents somebody else built. Being vendor neutral means Hexaware can assess a stack it did not deliver. New logos, no build risk.
 
-And every decision they make lands in the same sealed record, so the review itself becomes part of the evidence rather than a separate spreadsheet nobody can find later.
+[click 1x]
 
-## What it costs you to adopt
+Third, it recurs. The rulebook is an input, so when the regulation moves the assessment re runs. That is recurring revenue rather than a one off.
 
-[press 9 to jump to the stack slide]
+[click 1x]
 
-[click, the first stack draws]
+And the strategic one is the middle route, for a specific reason I will come to.
 
-Before the commercial question, the integration question, because this is usually where a compliance tool dies.
+## The market
 
-This is what a voice agent looks like. Telephony, speech to text, the thing that decides what to say, the model that writes it, and speech back out.
+[slide 13: click 1x]
 
-[click, echoproof appears in the chain]
+[click 1x]
 
-We attach at one point. It is a configuration change in front of the model, and nothing else in that chain moves.
+The voice AI agent market is around three and a half billion dollars this year and heading toward thirty five billion by 2033. Every one of those deployments is a governance sign off waiting to happen, and the ones in regulated industries cannot ship without it.
 
-[click, the return path and the side branch appear]
+[click 1x]
 
-And we do not sit in the middle of your call. The reply goes back untouched and is never held up. The checking runs off to the side, after the customer already has their answer.
+On cost, our measured campaign was eighty two cents of model spend for eighteen calls, projecting to roughly twenty three dollars per hundred calls. Model spend is not the constraint. Reviewer time is, and that is what this is aimed at.
 
-[click, the second stack appears]
+## Who else is in this
 
-Swap out every vendor in that diagram and the attachment point is the same. So this is not a bet on your current stack staying still.
+[slide 14: click 1x]
 
-## Whose standard it is
+[click 2x]
 
-[click to the next slide]
+Two axes. Before or after deployment, and independent or the vendor checking itself.
 
-[click, the cartridges seat into the core]
+Conversation intelligence, Observe.AI and Modulate, get to full coverage on production calls. Genuinely useful, but it is after the call and it is scoring against rubrics somebody wrote.
 
-This is the part that matters for how it fits your organisation. The engine has no industry knowledge in it.
+[click 1x]
 
-A client brings four things. Their rulebook. The situations they care about. The customer types to test against. And their own thresholds for what is serious enough to stop a release.
+The closest thing to us is OpenAI Presence, which launched in July. Strong product, evals and graders built in. But it is end to end, so the vendor supplying the agent is also the vendor grading it, and that is a structural conflict every other regulated industry separates. It also does not cover cascaded stacks at all.
 
-That last one is the important one. We do not tell you what blocks a deployment. You tell us, and we compute against your rule.
+[click 1x]
 
-[click, the policy cartridge swaps]
-
-Which is also why this is not a debt collection product. Swap the rulebook and the same system runs a telecom standard, with no engineering work.
-
-[click, the industries appear]
-
-Collections, insurance, healthcare, telecom, financial services. Anywhere a regulated conversation is being automated.
-
-And commercially that is the thesis. The expensive part of a compliance product is normally that every client is a rebuild. Here the rules are the input rather than the implementation, so a new sector is a data exercise.
-
-## What is real
-
-[click to the next slide]
-
-[click, the today column appears]
-
-I want to be honest about the line between what exists and what is designed.
-
-Everything I am about to show you is real and runs today. Real assessments, real evidence on disk.
-
-[click, the production column appears]
-
-The production version is designed and not built. Enterprise model hosting, cloud storage with retention locks, the throughput work to run this at volume.
-
-[click, the configuration line appears]
-
-The important commercial fact is that the gap between those two columns is configuration rather than a rewrite. That was decided on day one, and it is why this is a deployment question rather than a rebuild.
+Which leaves this quadrant empty, and here is the strategic point. OpenAI is shipping Presence through select global systems integrators. Being able to say we assure any agent, not only the ones built on one vendor, is the differentiator in exactly that conversation.
 
 ## The walkthrough
 
 [alt tab to the browser, tab three, the bench]
 
-Let me show you the actual thing.
-
-Every assessment that has been run, each one sealed and re-verified when the page loads.
+Let me show you the artifact itself, quickly.
 
 [click the top card, third party disclosure - demo baseline]
 
-This is the conversation from earlier.
+[point at the gate decision block at the top]
 
-[point at gate decision at the top]
+Block release, at the top. That threshold belongs to the client. They decide what stops a deployment and we compute against their rule.
 
-Block release, at the top. That is computed from the client's own thresholds. They said one serious finding is enough to stop a deployment, so this agent does not ship.
-
-Your compliance team sets that number. It is their policy, running automatically.
-
-[point at the abstentions section]
-
-And these are the ones it declined to rule on, kept separate from the findings and routed to a person. It does not guess in order to look decisive.
-
-[scroll to findings and click the first one]
-
-[point at what was said]
-
-The sentence the agent said, exactly.
+[scroll to findings and click the first finding]
 
 [point at the cream coloured card]
 
-And the rule, printed the way the regulation prints it. Your reviewer is not being asked to trust a machine. They are being handed the citation and asked to agree or disagree.
-
-That is the difference between a tool your compliance officer resents and one they use. A system that says trust me gets ignored the first time it is wrong. A system that shows its source gets corrected and kept.
+And every finding carries the rule, printed as the regulation prints it. Your reviewer is being handed a citation and asked to agree or disagree, in seconds.
 
 [scroll down to the evidence trace]
 
-And underneath, the full record of how it got there, sealed so that it visibly breaks if anyone edits it.
-
-That is the artifact you hand a regulator.
+And the full record of how it got there, sealed so it visibly breaks if anyone edits it. That is what you hand a regulator.
 
 [stop scrolling and look at the room]
 
@@ -206,13 +163,15 @@ That is the artifact you hand a regulator.
 
 [alt tab back to the deck]
 
-[press end to jump to the last slide]
+[press 1 7 and enter]
 
-[click three times, the lines and the ask appear]
+[click 3x]
 
 Every claim has a source. Every verdict has a rule. Every finding has evidence.
 
-What I am looking for is an introduction to somebody who signs off that a voice agent can go live, because I want to find out what that person would actually pay for.
+I have not really been selling a product here. The product is a proxy, a rulebook and a hash chain. What I am selling is that governance is the thing standing between these deployments and revenue, and it is solvable.
+
+So the ask is a live engagement to point this at, and an introduction to whoever signs off that an agent can go live.
 
 ## If something goes wrong
 
@@ -222,44 +181,38 @@ What I am looking for is an introduction to somebody who signs off that a voice 
 
 [reload the page]
 
-If it does not come back, go to the deck and close from there. Say this.
+If it does not recover, close from the deck. Say this.
 
-That is a live system on this laptop and I would rather show you it working properly than fight it now. I will send you a walkthrough after this.
+That is a live system on this laptop and I would rather show it working properly than fight it now. I will send a walkthrough after this.
 
 ## Questions you will get
 
-### "What does this cost to run?"
+### "What does it cost to run?"
 
-Model spend is not the constraint at any volume I have measured. The constraint is reviewer time, and that is exactly what this is aimed at.
+Model spend is not the constraint at any volume I have measured, and it projects to about twenty three dollars per hundred calls. The real cost is compute on the reranker, which is a hardware line item.
 
-I have not set pricing, because I have not validated it with a buyer. I would rather tell you that than invent a number in front of you.
+I have not set pricing, because I have not validated it with a buyer. I would rather tell you that than invent a number.
 
 ### "Who owns this internally, compliance or engineering?"
 
-Compliance owns the output and engineering owns the integration, which is usually a one line configuration change.
+Compliance owns the output. Engineering owns the integration, which is a configuration change. The budget tends to sit with whoever owns the deployment, because the thing being bought is the deployment happening on time.
 
-The budget tends to sit with whoever owns the deployment, because the thing being bought is the deployment happening on time.
+### "How long to onboard a client?"
 
-### "How long does it take to onboard us?"
+The work is turning their rulebook into something addressable section by section. If their compliance team already maintains a structured policy document, that is fast. If it is a folder of PDFs, that is a project.
 
-The real work is turning your rulebook into something addressable section by section. If your compliance team already maintains a structured policy document, that is fast. If it is a folder of PDFs, that is a project.
-
-I would want to measure how well it retrieves against your corpus before I gave you a date, because a private rulebook is a harder problem than a public regulation and I would rather find that out with you than promise around it.
+I would want to measure retrieval against their corpus before quoting a date, because a private rulebook is a harder problem than a public regulation.
 
 ### "Does it replace our compliance reviewers?"
 
-No, and I would not sell it that way. It reads every turn, which no human process does, and it hands your reviewer a short list where each item already has the governing rule attached.
+No, and I would not sell it that way. It reads every turn, which no human process does, and it hands your reviewer a short list where each item already has the governing rule attached. Their time goes into judgement instead of into searching.
 
-The gain is that their time goes into judgement rather than into listening to recordings looking for something to judge.
+### "Why would we not wait for the model vendors to build this?"
 
-### "What happens when it gets something wrong?"
+Because the thing being checked is your rulebook, not a general notion of the law, and the record has to be yours.
 
-Two kinds of wrong, and they are not equally bad. It can stay quiet about something real, which is why this is a layer in front of a human rather than a replacement for one.
+And structurally, you do not want the company supplying the agent to also be the company signing off that it is safe. Those should be different parties, and in every other regulated industry they are.
 
-Or it can flag something that is fine, which is the one that destroys reviewer trust, and it is the failure mode we tuned hardest against. If your reviewers stop believing the flags, the product is worthless regardless of what it catches.
+### "What about open source models?"
 
-### "Why would we not just wait for the model vendors to build this?"
-
-Because the thing being checked is your rulebook, not a general notion of the law, and the record has to be yours. A vendor building a general compliance filter is building for the average of every regulation, and you are not average.
-
-There is also a structural reason. You do not want the company that supplies the agent to also be the company that signs off that it is safe. Those should be different parties.
+The interface is one OpenAI compatible endpoint, so any model behind a compatible endpoint works, including open weights models running inside a client's own environment. For a bank that cannot send transcripts to a third party, that matters a lot, and it is a configuration change rather than a port.
