@@ -188,7 +188,7 @@ html,body{overflow:visible;height:auto;background:var(--ground)}
     var(--ground);
   background-size:100% 100%,100% 100%,40px 40px,40px 40px,100% 100%}
 .slide:last-of-type{page-break-after:auto;break-after:auto}
-.slide::after{content:"ECHOPROOF" "\00a0\00a0\00a0\00a0" counter(slidenum) " / 16";
+.slide::after{content:"ECHOPROOF" "\00a0\00a0\00a0\00a0" counter(slidenum) " / 15";
   position:absolute;left:0;right:0;bottom:0;height:44px;z-index:2;
   display:flex;align-items:center;padding:0 100px;
   font-family:var(--font-mono);font-size:12px;
@@ -978,59 +978,7 @@ html,body{overflow:visible;height:auto;background:var(--ground)}
   </div>
 </section>
 
-<!-- 15 HOW IT GOT HERE ==================================================== -->
-<section class="slide" data-eyebrow="HOW IT GOT HERE" data-glow="880,700">
-  <div class="eyebrow rise">14 / How it got here</div>
-  <h2 class="rise">Shaped by the people who do this for a living.</h2>
-  <p class="sub rise">Two conversations changed the build rather than the pitch.</p>
-  <div style="margin-top:26px">
-    <svg width="1390" height="320" viewBox="0 0 1390 320" aria-label="Two feedback loops. Deepgram applied engineering feedback on speech evidence led to word level timestamp mapping. Hexaware customer experience feedback on reviewer usability led to a client configured gate decision and a case file built around rule text.">
-      <defs><marker id="fA" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
-        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-trace)"/></marker></defs>
-      <g data-step="1">
-        <rect class="node" x="0" y="0" width="330" height="124"/>
-        <g transform="translate(24,22)">
-          <path d="M4,16 a11,11 0 1,1 15,0 l-7.5,10 z" fill="var(--sig-trace)"/>
-          <text class="sb" x="36" y="18" style="font-size:16px">Deepgram</text>
-        </g>
-        <text class="sl t" x="24" y="84">APPLIED ENGINEERING</text>
-        <text class="sbm" x="24" y="108">Speech evidence review</text>
-        <path class="fl draw" d="M330,62 L406,62" marker-end="url(#fA)"/>
-        <rect class="node" x="410" y="0" width="420" height="124"/>
-        <text class="sl" x="434" y="32">THE FEEDBACK</text>
-        <text class="sb" x="434" y="64">Approximate timings are not</text>
-        <text class="sb" x="434" y="86">evidence. Map word level</text>
-        <text class="sb" x="434" y="108">timestamps onto the transcript.</text>
-        <path class="fl draw" d="M830,62 L906,62" marker-end="url(#fA)"/>
-        <rect class="node key" x="910" y="0" width="480" height="124"/>
-        <text class="sl t" x="934" y="32">WHAT CHANGED</text>
-        <text class="sb" x="934" y="64">Offsets map deterministically onto word</text>
-        <text class="sb" x="934" y="86">timings, and the clip is cut from those.</text>
-        <text class="sbm" x="934" y="110">The audio evidence path you saw.</text>
-      </g>
-      <g data-step="2">
-        <rect class="node" x="0" y="170" width="330" height="124"/>
-        <text class="sb" x="24" y="212" style="font-size:16px">Hexaware CX</text>
-        <text class="sl t" x="24" y="254">CX DELIVERY</text>
-        <text class="sbm" x="24" y="278">Delivery side review</text>
-        <path class="fl draw" d="M330,232 L406,232" marker-end="url(#fA)"/>
-        <rect class="node" x="410" y="170" width="420" height="124"/>
-        <text class="sl" x="434" y="202">THE FEEDBACK</text>
-        <text class="sb" x="434" y="234">A finding a reviewer cannot act</text>
-        <text class="sb" x="434" y="256">on is noise. The buyer is the</text>
-        <text class="sb" x="434" y="278">person signing off.</text>
-        <path class="fl draw" d="M830,232 L906,232" marker-end="url(#fA)"/>
-        <rect class="node key" x="910" y="170" width="480" height="124"/>
-        <text class="sl t" x="934" y="202">WHAT CHANGED</text>
-        <text class="sb" x="934" y="234">The gate decision became client</text>
-        <text class="sb" x="934" y="256">configured, and the case file was</text>
-        <text class="sb" x="934" y="278">rebuilt around the rule text.</text>
-      </g>
-    </svg>
-  </div>
-</section>
-
-<!-- 16 CLOSE ============================================================== -->
+<!-- 15 CLOSE ============================================================== -->
 <section class="slide" data-eyebrow="CLOSE" data-glow="800,300">
   <div class="eyebrow rise">Close</div>
   <h1 style="font-size:70px;line-height:1.14">

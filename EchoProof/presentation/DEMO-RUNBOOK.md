@@ -73,7 +73,7 @@ Open `http://127.0.0.1:8077/bench`. Confirm:
 | Tab | URL | Why |
 |---|---|---|
 | 1 | `http://127.0.0.1:8077/rig` | Where you launch the run |
-| 2 | The deck for your slot | Slides |
+| 2 | `presentation/demo-day/deck.html` | Slides |
 | 3 | `http://127.0.0.1:8077/runs/prepared-reg_f-rf-06-thirdparty/claims/rf-06-thirdparty-t00-c02` | The fallback case file, pre-loaded |
 
 - Browser zoom exactly 100 percent. The type scale is tuned for it.

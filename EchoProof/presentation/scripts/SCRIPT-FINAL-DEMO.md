@@ -1,3 +1,4 @@
+================ POC DISCUSSION SCRIPT ================
 ================ FINAL DEMO, 13 MINUTES ================
 
 ---------------- BEFORE YOU START ----------------
@@ -10,7 +11,7 @@
 
 [TYPE WARM UP IN THE ASSESSMENT TITLE BOX, CLICK RUN ADJUDICATION, LET IT FINISH]
 
-[OPEN PRESENTATION/DEMO-DAY/DECK-V2.HTML IN TAB TWO, PRESS F FOR FULLSCREEN]
+[OPEN PRESENTATION/DEMO-DAY/DECK.HTML IN TAB TWO, PRESS F FOR FULLSCREEN]
 
 [OPEN HTTP://127.0.0.1:8077/BENCH IN TAB THREE, CHECK THE TOP CARD READS THIRD PARTY DISCLOSURE - DEMO BASELINE]
 
@@ -18,13 +19,43 @@
 
 [SLIDE 1: CLICK 2X]
 
-Before this was a product, it was my job.
+Here is the moment every company deploying an AI agent eventually reaches.
 
-I worked in compliance at TELUS. And the thing nobody tells you is that compliance is not about knowing the rules. Almost everyone knows the rules. It is about proof. You can be completely right and still lose, because you could not show your work.
+The agent is built.
 
-That idea is the whole of what I am about to show you.
+The model works.
 
-Every large enterprise is now racing to put AI agents into legally governed conversations. Collections. Insurance. Healthcare. And what holds those launches up is not the model.
+The customer is ready.
+
+And someone in compliance asks:
+
+"Can you prove this thing is safe?"
+
+Not did you test it?
+
+Not does it usually behave?
+
+But
+
+Show me what the agent said.
+
+Show me the evidence and why you reached that verdict.
+
+And that is the problem I want to solve with EchoProof.
+
+In regulated AI, being right isn't enough.
+
+You have to be able to prove it.
+
+I learned that interning in compliance at TELUS.
+
+Compliance isn't really about knowing the rules.
+
+It is about being able to produce the evidence.
+
+And today, that evidence is largely created by people, manually, after the fact, and at a fraction of the conversations these agents are having.
+
+That's the bottleneck.
 
 ---------------- THE BOTTLENECK ----------------
 
@@ -32,7 +63,9 @@ Every large enterprise is now racing to put AI agents into legally governed conv
 
 [CLICK 1X]
 
-It is this. The model is ready. The integration is ready. The business case is signed.
+The models are ready. The agents are ready. The businesses are ready.
+
+The proof isn't.
 
 [CLICK 1X]
 
@@ -164,8 +197,6 @@ The claim extractor gives character offsets into the transcript. Those two map o
 
 And that span slices the source audio, so a finding carries the exact sentence flagged, not the whole call.
 
-That path is deterministic because of a conversation. I took this to an applied engineer at Deepgram, and the feedback was blunt: if you are going to cite audio as evidence you cannot slice on approximate timings. So it maps word level timestamps onto the transcript instead of guessing.
-
 Adjudication is text only. Audio attaches after the verdict exists, so it is evidence for a finding and never an input to one. Now, where does all of this actually sit.
 
 ---------------- THE STACK ----------------
@@ -266,13 +297,13 @@ And it matters commercially, because OpenAI is shipping Presence through select 
 
 And on scale, because it is the obvious next question. Everything I am about to show you runs end to end on this laptop against real evidence. At volume the same interface points at Bedrock, retrieval moves to OpenSearch, the reranker moves to a GPU, and adjudication runs as a worker pool that scales linearly, because every turn is independent.
 
+All of which is easier to show than it is to describe.
+
 ---------------- THE WALKTHROUGH ----------------
 
 [ALT TAB TO THE BROWSER, TAB THREE, THE BENCH]
 
 So let me use it the way the person it is built for would use it.
-
-And that framing is not mine. It came from the CX delivery side at Hexaware, where the feedback was that a finding a reviewer cannot act on is just noise, and that the buyer is the person signing off, not the engineer. So the gate became client configured, and the case file got rebuilt around the rule text instead of a score. This is what that produced.
 
 I am the compliance engineer. It is Monday. A voice agent build has been handed to me and I have to decide whether it can go live.
 
@@ -394,7 +425,7 @@ The rulebook is an input. It goes in as a data pack, chunked at section level wi
 
 There is a real thread there. The interface is one OpenAI compatible endpoint, so any model behind a compatible endpoint works, including open weights ones running in a client's own environment. For a bank that cannot send transcripts to a third party, that matters a lot.
 
-And it lines up with where governance is heading. The reason people care about published training lineage on models like DeepSeek is traceability, being able to say where an answer came from. That is exactly the argument we make one layer up. Model lineage tells you where the weights came from. Our evidence chain tells you where the decision came from. A regulator asks the second question far more often than the first.
+And it lines up with where governance is heading. The reason people care about published training lineage is traceability, being able to say where an answer came from. That is exactly the argument we make one layer up. Model lineage tells you where the weights came from. Our evidence chain tells you where the decision came from. A regulator asks the second question far more often than the first.
 
 ---- "WHAT DOES IT COST TO RUN AT VOLUME?" ----
 

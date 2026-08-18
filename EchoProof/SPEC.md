@@ -1,4 +1,4 @@
-# EchoProof — SPEC.md
+# EchoProof, specification
 Read only the section(s) a phase names. Engineering only, no business content.
 
 ## §1 Data pack schemas
@@ -25,7 +25,7 @@ word tokens.
 ## §3 Claim extraction
 Tool-calling output per claim: claim_id, claim_type (numeric|date|commitment|
 policy_statement|implicit), char_start, char_end, normalized_value (numeric/
-date only). Measure recall per claim_type, not aggregate — implicit
+date only). Measure recall per claim_type, not aggregate. Implicit
 commitments are weakest and highest-liability.
 
 ## §4 Deterministic checks
@@ -40,7 +40,7 @@ section. Local FAISS+BM25 behind a retriever interface (OpenSearch is the
 Production swap). Two distinct confidence thresholds: a floor below which
 nothing plausibly matches -> no_governing_rule, and a ceiling above the floor
 but not confident enough -> retrieval_below_confidence. These must stay
-separate — merging them turns a retrieval bug into a false "no rule exists"
+separate, because merging them turns a retrieval bug into a false "no rule exists"
 claim. Gate metric: precision@1 against the ~40 hand-written query/section
 pairs (extend, don't discard).
 
@@ -70,7 +70,7 @@ same stored inputs regenerate the same verdict, verified by recomputed hash.
 ## §8 Audio evidence and citation
 Nova-3 word-level timestamps + claim extractor char offsets map
 deterministically to word tokens, which slice the source audio via
-ffmpeg/pydub — a clip of the exact flagged sentence, not the whole call.
+ffmpeg/pydub gives a clip of the exact flagged sentence, not the whole call.
 Word-level confidence below threshold on a numeric token -> abstain, not a
 finding. Adjudication stays text-only; audio is bolted on after the verdict
 exists, never an input to it.
@@ -101,7 +101,7 @@ only against hard negatives (real judgment turns, greetings excluded).
 Report a precision-recall curve, not a single accuracy number. Decision bands
 at <=2% FP on hard negatives: >90% viable, 80-90% viable with human review,
 70-80% retrieval is the bottleneck, <70% reconsider the corpus. Headline
-validation: judge-human agreement on a 25-item blind subset, floor 85% — below
+validation: judge-human agreement on a 25-item blind subset, floor 85%. Below
 it, the report must state EchoProof is a triage layer, not a release gate.
 Diagnostics per stage: citation precision@1, claim recall by type, abstain
 rate/precision, reproducibility-by-hash.
