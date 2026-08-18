@@ -155,7 +155,7 @@ The ordering is deliberate. Adjudication is text only. Audio bolts on after the 
 
 [click 2x]
 
-A cascaded voice agent, and we attach at one point in front of the model call.
+Three layers. Top is the customer cascaded voice agent, telephony, Deepgram for speech to text, an orchestrator, text to speech. Middle is us, one OpenAI compatible endpoint in front of the model call. Bottom is our engine: the OpenAI SDK model interface with Mistral today and Bedrock at volume, FAISS and BM25 behind a retriever interface, the cross encoder, and the hash chained log.
 
 [click 1x]
 

@@ -115,6 +115,11 @@ svg{display:block;overflow:visible}
 .iso-r{fill:var(--iso-right);stroke:var(--line-strong);stroke-width:1.5}
 .iso-t.key{stroke:var(--sig-trace);stroke-width:2}
 .chip{fill:var(--ground-sunken);stroke:var(--line-strong);stroke-width:1;rx:2}
+/* Vendor marks sit in one uniform tile: same size, same radius, same
+   treatment, so a row of them reads as a system rather than a scrapbook. */
+.tile{fill:var(--ground-sunken);stroke:var(--line-strong);stroke-width:1.2}
+.tile.key{stroke:var(--sig-trace)}
+.tlabel{font-family:"Archivo",Helvetica,Arial,sans-serif;font-size:13px;fill:var(--ink)}
 
 #chrome{position:absolute;left:0;right:0;bottom:0;height:44px;z-index:3;
   display:flex;align-items:center;justify-content:space-between;
@@ -575,12 +580,89 @@ svg{display:block;overflow:visible}
   <h2 class="rise">One endpoint. Any stack.</h2>
   <p class="sub rise">EchoProof attaches at a single point in front of the model call. The response is returned unmodified and never delayed, and adjudication runs to the side.</p>
   <div style="margin-top:10px">
-    <svg width="1180" height="510" viewBox="-350 -16 1140 500" aria-label="An isometric three layer stack. The top layer is the customer voice agent with telephony, Deepgram Nova-3 speech to text, an orchestrator and text to speech. The middle layer is the EchoProof proxy, a single OpenAI compatible endpoint attaching in front of the model call. The bottom layer is the EchoProof engine holding the model interface, hybrid retrieval and the hash chained evidence log.">
+    <svg width="1300" height="460" viewBox="-350 -16 1440 510" aria-label="An isometric three layer stack. The top layer is the customer voice agent: telephony, Deepgram Nova-3 for speech to text, an orchestrator and text to speech. The middle layer is EchoProof, a single OpenAI compatible endpoint attaching in front of the model call, with adjudication branching off the hot path. The bottom layer is the EchoProof engine: the OpenAI SDK model interface, Mistral today and AWS Bedrock at volume, FAISS and BM25 retrieval, a cross encoder reranker and a hash chained evidence log.">
       <defs>
         <marker id="isoA" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
           <path d="M0,0 L8,4 L0,8 z" fill="var(--sig-trace)"/></marker>
         <marker id="isoG" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
           <path d="M0,0 L8,4 L0,8 z" fill="var(--sig-det)"/></marker>
+
+        <!-- vendor and component marks, drawn to a 24 by 24 box -->
+        <g id="mkOpenAI" fill="none" stroke="#ffffff" stroke-width="1.9"
+           stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 4.4 A7.6 7.6 0 0 1 18.6 8.2"/>
+          <path d="M18.6 8.2 A7.6 7.6 0 0 1 18.6 15.8"/>
+          <path d="M18.6 15.8 A7.6 7.6 0 0 1 12 19.6"/>
+          <path d="M12 19.6 A7.6 7.6 0 0 1 5.4 15.8"/>
+          <path d="M5.4 15.8 A7.6 7.6 0 0 1 5.4 8.2"/>
+          <path d="M5.4 8.2 A7.6 7.6 0 0 1 12 4.4"/>
+          <path d="M12 7.6 L15.2 9.4 L15.2 13.1"/>
+          <path d="M15.2 13.1 L12 15 L8.8 13.1"/>
+          <path d="M8.8 13.1 L8.8 9.4 L12 7.6"/>
+        </g>
+        <g id="mkDeepgram">
+          <circle cx="12" cy="12" r="9.4" fill="#ffffff"/>
+          <path d="M6.4 6.2 h5.2 a5.9 5.9 0 0 1 0 11.8 h-2.2 l-3.4 3.2 a0.3 0.3 0 0 1 -0.5 -0.2 v-5.2
+                   a0.3 0.3 0 0 1 0.3 -0.3 h5.8 a2.6 2.6 0 0 0 0 -5.2 h-5.2 a0.3 0.3 0 0 1 -0.3 -0.3
+                   v-3.5 a0.3 0.3 0 0 1 0.3 -0.3 z" fill="#0b0d10"/>
+        </g>
+        <g id="mkMistral">
+          <g fill="#ffd300">
+            <rect x="7" y="4" width="4" height="4"/><rect x="15" y="4" width="4" height="4"/>
+          </g>
+          <g fill="#ffaf00">
+            <rect x="3" y="8" width="8" height="4"/><rect x="15" y="8" width="6" height="4"/>
+          </g>
+          <g fill="#ff8205">
+            <rect x="3" y="12" width="18" height="4"/>
+          </g>
+          <g fill="#fa500f">
+            <rect x="3" y="16" width="4" height="4"/><rect x="11" y="16" width="4" height="4"/>
+            <rect x="17" y="16" width="4" height="4"/>
+          </g>
+          <g fill="#e10500">
+            <rect x="3" y="20" width="6" height="3"/><rect x="15" y="20" width="6" height="3"/>
+          </g>
+        </g>
+        <g id="mkAWS">
+          <path d="M3.2 13.6 c5 3.4 12.4 4.6 19.6 1.4 l1 2.1 c-8 3.7 -16.4 2.2 -21.6 -1.6 z"
+                fill="#ff9900"/>
+          <path d="M18.4 10.6 l4.6 -0.4 l-1.6 4.4 z" fill="#ff9900"/>
+          <path d="M5.4 5.2 h1.7 l1.5 4.6 l1.5 -4.6 h1.6 l-2.3 6.3 h-1.7 z" fill="var(--ink)"/>
+          <path d="M13.4 5.2 h1.6 v6.3 h-1.6 z" fill="var(--ink)"/>
+          <path d="M17.2 10.2 c0.8 0.5 1.9 0.6 2.4 0.2 c0.5 -0.4 0.2 -1 -0.6 -1.3
+                   c-1.3 -0.4 -2.1 -1 -2 -2.2 c0.1 -1.2 1.5 -1.7 2.9 -1.4 l-0.4 1.3
+                   c-0.6 -0.2 -1.2 -0.2 -1.4 0 c-0.3 0.2 -0.1 0.6 0.5 0.8
+                   c1.4 0.5 2.2 1.1 2.1 2.3 c-0.1 1.3 -1.6 1.8 -3.1 1.4 z" fill="var(--ink)"/>
+        </g>
+        <g id="mkEcho" fill="none" stroke="var(--sig-trace)" stroke-width="1.8">
+          <circle cx="12" cy="12" r="8"/>
+          <path d="M12 4 A8 8 0 0 1 19 8.2" stroke-width="3"/>
+          <path d="M8.6 12 h6.8" stroke-linecap="round"/>
+        </g>
+        <g id="mkPhone" fill="none" stroke="var(--ink-faint)" stroke-width="1.8" stroke-linecap="round">
+          <path d="M7 5 l3 0 l1.6 4 l-2.2 1.6 a10 10 0 0 0 4 4 l1.6 -2.2 l4 1.6 l0 3
+                   a1.6 1.6 0 0 1 -1.8 1.6 A14 14 0 0 1 5.4 6.8 A1.6 1.6 0 0 1 7 5 z"/>
+        </g>
+        <g id="mkFlow" fill="none" stroke="var(--ink-faint)" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="7" cy="7" r="2.4"/><circle cx="17" cy="7" r="2.4"/><circle cx="12" cy="17" r="2.4"/>
+          <path d="M9.2 8.4 L11 14.8 M14.8 8.4 L13 14.8 M9.4 7 h5.2"/>
+        </g>
+        <g id="mkSpeak" fill="none" stroke="var(--ink-faint)" stroke-width="1.8" stroke-linecap="round">
+          <path d="M5 10 h3 l4 -3.6 v11.2 l-4 -3.6 h-3 z"/>
+          <path d="M15.6 9 a4.4 4.4 0 0 1 0 6 M18.2 6.6 a8 8 0 0 1 0 10.8"/>
+        </g>
+        <g id="mkSearch" fill="none" stroke="var(--ink-faint)" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="10.6" cy="10.6" r="5.4"/><path d="M14.6 14.6 L19.4 19.4"/>
+        </g>
+        <g id="mkLayers" fill="none" stroke="var(--ink-faint)" stroke-width="1.8" stroke-linejoin="round">
+          <path d="M12 4 L20.5 8.4 L12 12.8 L3.5 8.4 z"/>
+          <path d="M3.5 13 L12 17.4 L20.5 13"/>
+        </g>
+        <g id="mkChain" fill="none" stroke="var(--ink-faint)" stroke-width="1.8" stroke-linecap="round">
+          <path d="M10 14 a3.6 3.6 0 0 1 0 -5 l2.4 -2.4 a3.6 3.6 0 0 1 5.1 5.1 l-1.2 1.2"/>
+          <path d="M14 10 a3.6 3.6 0 0 1 0 5 l-2.4 2.4 a3.6 3.6 0 0 1 -5.1 -5.1 l1.2 -1.2"/>
+        </g>
       </defs>
 
       <!-- LAYER 3, the engine. First in document so upper slabs paint over it. -->
@@ -590,22 +672,28 @@ svg{display:block;overflow:visible}
           <path class="iso-r" d="M430,160 L760,110 L760,124 L430,174 Z"/>
           <path class="iso-t key" d="M0,0 L760,110 L430,160 L-330,50 Z"/>
         </g>
-        <text class="sl t" x="-262" y="344">ECHOPROOF ENGINE</text>
-        <g transform="translate(-262,354)">
-          <rect class="chip" x="0" y="0" width="158" height="26"/>
-          <text class="sbm" x="12" y="18" style="font-size:11px">OpenAI SDK interface</text>
-          <rect class="chip" x="172" y="0" width="124" height="26"/>
-          <text class="sbm" x="184" y="18" style="font-size:11px">Mistral today</text>
-          <rect class="chip" x="310" y="0" width="168" height="26"/>
-          <text class="sbm" x="322" y="18" style="font-size:11px">Bedrock in production</text>
+        <text class="sl t" x="-262" y="342">ECHOPROOF ENGINE</text>
+        <g transform="translate(-262,352)">
+          <rect class="tile" x="0" y="0" width="30" height="30" rx="7"/>
+          <use href="#mkOpenAI" x="3" y="3"/>
+          <text class="tlabel" x="38" y="20">OpenAI SDK interface</text>
+          <rect class="tile" x="212" y="0" width="30" height="30" rx="7"/>
+          <use href="#mkMistral" x="215" y="3"/>
+          <text class="tlabel" x="250" y="20">Mistral today</text>
+          <rect class="tile" x="378" y="0" width="30" height="30" rx="7"/>
+          <use href="#mkAWS" x="381" y="3"/>
+          <text class="tlabel" x="416" y="20">Bedrock at volume</text>
         </g>
-        <g transform="translate(-208,390)">
-          <rect class="chip" x="0" y="0" width="148" height="26"/>
-          <text class="sbm" x="12" y="18" style="font-size:11px">FAISS and BM25</text>
-          <rect class="chip" x="162" y="0" width="160" height="26"/>
-          <text class="sbm" x="174" y="18" style="font-size:11px">cross encoder rerank</text>
-          <rect class="chip" x="336" y="0" width="168" height="26"/>
-          <text class="sbm" x="348" y="18" style="font-size:11px">hash chained evidence</text>
+        <g transform="translate(-262,394)">
+          <rect class="tile" x="0" y="0" width="30" height="30" rx="7"/>
+          <use href="#mkSearch" x="3" y="3"/>
+          <text class="tlabel" x="38" y="20">FAISS and BM25</text>
+          <rect class="tile" x="212" y="0" width="30" height="30" rx="7"/>
+          <use href="#mkLayers" x="215" y="3"/>
+          <text class="tlabel" x="250" y="20">cross encoder rerank</text>
+          <rect class="tile" x="454" y="0" width="30" height="30" rx="7"/>
+          <use href="#mkChain" x="457" y="3"/>
+          <text class="tlabel" x="492" y="20">hash chained evidence</text>
         </g>
       </g>
 
@@ -616,14 +704,13 @@ svg{display:block;overflow:visible}
           <path class="iso-r" d="M430,160 L760,110 L760,124 L430,174 Z"/>
           <path class="iso-t key" d="M0,0 L760,110 L430,160 L-330,50 Z"/>
         </g>
-        <text class="sl t" x="-262" y="194">ECHOPROOF PROXY</text>
-        <g transform="translate(-262,204)">
-          <rect class="chip" x="0" y="0" width="286" height="28" style="stroke:var(--sig-trace)"/>
-          <text class="sm" x="14" y="19" style="font-size:12px">one OpenAI compatible endpoint</text>
+        <text class="sl t" x="-262" y="192">ECHOPROOF PROXY</text>
+        <g transform="translate(-262,202)">
+          <rect class="tile key" x="0" y="0" width="30" height="30" rx="7"/>
+          <use href="#mkEcho" x="3" y="3"/>
+          <text class="tlabel" x="38" y="20" style="font-size:14px">one OpenAI compatible endpoint</text>
         </g>
         <text class="sbm" x="-262" y="262" style="font-size:12px">Change a base URL. Nothing else in the stack moves.</text>
-        <path class="gold draw" d="M700,268 L830,336" marker-end="url(#isoG)"/>
-        <text class="sl g" x="700" y="258">ADJUDICATION, OFF THE HOT PATH</text>
       </g>
 
       <!-- LAYER 1, the customer voice agent -->
@@ -633,34 +720,39 @@ svg{display:block;overflow:visible}
           <path class="iso-r" d="M430,160 L760,110 L760,124 L430,174 Z"/>
           <path class="iso-t" d="M0,0 L760,110 L430,160 L-330,50 Z"/>
         </g>
-        <text class="sl" x="-262" y="44">THE CUSTOMER VOICE AGENT</text>
-        <g transform="translate(-262,54)">
-          <rect class="chip" x="0" y="0" width="104" height="26"/>
-          <text class="sbm" x="12" y="18" style="font-size:11px">telephony</text>
-          <rect class="chip" x="118" y="0" width="172" height="26" style="stroke:var(--sig-trace)"/>
-          <g transform="translate(130,5)">
-            <path d="M3,11 a8,8 0 1,1 11,0 l-5.5,7 z" fill="var(--sig-trace)"/>
-          </g>
-          <text class="sbm" x="152" y="18" style="font-size:11px">Deepgram Nova-3</text>
-          <rect class="chip" x="304" y="0" width="122" height="26"/>
-          <text class="sbm" x="316" y="18" style="font-size:11px">orchestrator</text>
-          <rect class="chip" x="440" y="0" width="128" height="26"/>
-          <text class="sbm" x="452" y="18" style="font-size:11px">text to speech</text>
+        <text class="sl" x="-262" y="42">THE CUSTOMER VOICE AGENT</text>
+        <g transform="translate(-262,52)">
+          <rect class="tile" x="0" y="0" width="30" height="30" rx="7"/>
+          <use href="#mkPhone" x="3" y="3"/>
+          <text class="tlabel" x="38" y="20">telephony</text>
+          <rect class="tile key" x="140" y="0" width="30" height="30" rx="7"/>
+          <use href="#mkDeepgram" x="143" y="3"/>
+          <text class="tlabel" x="178" y="20">Deepgram Nova-3</text>
+          <rect class="tile" x="342" y="0" width="30" height="30" rx="7"/>
+          <use href="#mkFlow" x="345" y="3"/>
+          <text class="tlabel" x="380" y="20">orchestrator</text>
+          <rect class="tile" x="502" y="0" width="30" height="30" rx="7"/>
+          <use href="#mkSpeak" x="505" y="3"/>
+          <text class="tlabel" x="540" y="20">text to speech</text>
         </g>
       </g>
 
       <!-- flow arrows, drawn last so they sit above every slab -->
       <g data-step="2">
         <path class="fl draw" d="M640,150 L640,236" marker-end="url(#isoA)"/>
-        <text class="sl t" x="652" y="200">THE MODEL CALL</text>
+        <text class="sl t" x="652" y="198">THE MODEL CALL</text>
+        <path class="gold draw" d="M792,272 L884,318" marker-end="url(#isoG)"/>
+        <rect class="node" x="890" y="296" width="188" height="52" style="stroke:var(--sig-det)"/>
+        <text class="sl g" x="906" y="320">ADJUDICATION</text>
+        <text class="sbm" x="906" y="338" style="font-size:12px">off the hot path</text>
       </g>
       <g data-step="3">
         <path class="fl draw" d="M640,300 L640,386" marker-end="url(#isoA)"/>
-        <text class="sl t" x="652" y="350">GROUNDED DECISION</text>
+        <text class="sl t" x="652" y="348">GROUNDED DECISION</text>
       </g>
 
       <g data-step="4">
-        <text class="sl t" x="-330" y="474">SWAP EVERY VENDOR IN THE TOP LAYER. THE ATTACHMENT POINT DOES NOT MOVE.</text>
+        <text class="sl t" x="-330" y="476">SWAP EVERY VENDOR IN THE TOP LAYER. THE ATTACHMENT POINT DOES NOT MOVE.</text>
       </g>
     </svg>
   </div>
