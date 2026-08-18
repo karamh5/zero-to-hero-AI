@@ -1,6 +1,6 @@
 # Five minutes
 
-Uses the demo deck, slides 1, 2, 3, 4, 11 and 16.
+Uses the demo deck, slides 1, 2, 3, 4, 11 and 15.
 
 ## Before you start
 
@@ -78,7 +78,7 @@ Same layer regardless of client, regulation or vendor stack.
 
 [alt tab to the browser, tab three, the bench]
 
-Let me use it the way the person it is built for would.
+Let me use it the way the person it is built for would. This screen came out of review with the CX side at Hexaware, where the point was that a finding a reviewer cannot act on is just noise.
 
 I am the compliance engineer. A build has been handed to me and I have to decide whether it ships.
 
@@ -110,7 +110,7 @@ That is a compliance review that took two minutes instead of two weeks.
 
 [alt tab back to the deck]
 
-[press 1 6 and enter]
+[press 1 5 and enter]
 
 [click 2x]
 

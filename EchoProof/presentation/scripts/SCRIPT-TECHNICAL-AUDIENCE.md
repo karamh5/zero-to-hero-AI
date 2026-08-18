@@ -1,6 +1,6 @@
 # Technical audience, 15 minutes
 
-Uses the demo deck, all 16 slides. Full vocabulary. Lead with the isolation
+Uses the demo deck, all 15 slides. Full vocabulary. Lead with the isolation
 boundary and the build order argument.
 
 ## Before you start
@@ -147,6 +147,8 @@ And this is the traceability argument. Published training lineage on open weight
 
 Deepgram Nova-3 gives word level timestamps, the extractor gives character offsets, and those map deterministically onto each other. The resulting span slices the source audio with ffmpeg, so a finding carries the flagged sentence rather than the whole call.
 
+That mapping is deterministic rather than nearest match because an applied engineer at Deepgram made the point that approximate timings are not evidence, and they were right.
+
 The ordering is deliberate. Adjudication is text only. Audio bolts on after the verdict exists, so it is never an input to a decision, only evidence for one.
 
 ## The stack
@@ -209,17 +211,11 @@ On scale: everything runs on this laptop today. The same model interface points 
 
 There is a discipline rule around that swap. Whichever backend produced a scored run's numbers stays the backend for that run, so nothing gets silently swapped underneath a measurement.
 
-## How it got here
-
-[slide 15: click 1x]
-
-[click 2x]
-
-Two conversations changed the build. An applied engineer at Deepgram made the point that approximate timings are not evidence, which is why the offset to timestamp mapping is deterministic rather than nearest match. And the CX delivery side at Hexaware made the point that a finding a reviewer cannot act on is noise, which is why the gate is client configured and the case file is built around rule text rather than a score.
-
 ## The walkthrough
 
 [alt tab to the browser, tab three, the bench]
+
+The shape of this screen came out of review with the CX delivery side at Hexaware: a finding a reviewer cannot act on is noise, so the gate is client configured and the case file is built around rule text rather than a score.
 
 [click the top card, third party disclosure - demo baseline]
 
@@ -263,7 +259,7 @@ And fix and re run. Same scenario, same seed, same policy pack, only the agent c
 
 [alt tab back to the deck]
 
-[press 1 6 and enter]
+[press 1 5 and enter]
 
 [click 2x]
 

@@ -164,6 +164,8 @@ The claim extractor gives character offsets into the transcript. Those two map o
 
 And that span slices the source audio, so a finding carries the exact sentence flagged, not the whole call.
 
+That path is deterministic because of a conversation. I took this to an applied engineer at Deepgram, and the feedback was blunt: if you are going to cite audio as evidence you cannot slice on approximate timings. So it maps word level timestamps onto the transcript instead of guessing.
+
 Adjudication is text only. Audio attaches after the verdict exists, so it is evidence for a finding and never an input to one. Now, where does all of this actually sit.
 
 ---------------- THE STACK ----------------
@@ -262,29 +264,15 @@ Which leaves this quadrant empty. Independent, and before launch.
 
 And it matters commercially, because OpenAI is shipping Presence through select global systems integrators. Being able to say we assure any agent, not only the ones built on one vendor, is the differentiator in exactly that room.
 
-And on scale, because it is the obvious next question. Everything I am about to show you runs end to end on this laptop against real evidence. At volume the same interface points at Bedrock, retrieval moves to OpenSearch, the reranker moves to a GPU, and adjudication runs as a worker pool that scales linearly, because every turn is independent. None of this happened in isolation, though.
-
----------------- HOW IT GOT HERE ----------------
-
-[SLIDE 15: CLICK 1X]
-
-[CLICK 1X]
-
-One thing I want to be clear about. This did not come out of my head fully formed.
-
-I took it to an applied engineer at Deepgram, and the feedback was direct. If you are citing audio as evidence you cannot slice on approximate timings, you need word level timestamps mapped onto the transcript. That audio path exists because of that conversation.
-
-[CLICK 1X]
-
-And I took it to the CX delivery side at Hexaware. The feedback there was that a finding a reviewer cannot act on is just noise, and that the buyer is the person signing off, not the engineer. So the gate decision became client configured rather than ours, and the case file got rebuilt around the rule text instead of around a score.
-
-Both of those changed the product, not the pitch. And the second one is what you are about to look at.
+And on scale, because it is the obvious next question. Everything I am about to show you runs end to end on this laptop against real evidence. At volume the same interface points at Bedrock, retrieval moves to OpenSearch, the reranker moves to a GPU, and adjudication runs as a worker pool that scales linearly, because every turn is independent.
 
 ---------------- THE WALKTHROUGH ----------------
 
 [ALT TAB TO THE BROWSER, TAB THREE, THE BENCH]
 
 So let me use it the way the person it is built for would use it.
+
+And that framing is not mine. It came from the CX delivery side at Hexaware, where the feedback was that a finding a reviewer cannot act on is just noise, and that the buyer is the person signing off, not the engineer. So the gate became client configured, and the case file got rebuilt around the rule text instead of a score. This is what that produced.
 
 I am the compliance engineer. It is Monday. A voice agent build has been handed to me and I have to decide whether it can go live.
 
@@ -350,7 +338,7 @@ That is a compliance review that took two minutes instead of two weeks, and ever
 
 [ALT TAB BACK TO THE DECK]
 
-[PRESS 1 6 AND ENTER TO JUMP TO THE LAST SLIDE]
+[PRESS 1 5 AND ENTER TO JUMP TO THE LAST SLIDE]
 
 [CLICK 2X]
 

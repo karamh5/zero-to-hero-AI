@@ -1,6 +1,6 @@
 # Business and partnership, 10 minutes
 
-Uses the demo deck, slides 1, 2, 3, 4, 11, 12, 13, 14 and 16. Lead with the
+Uses the demo deck, slides 1, 2, 3, 4, 11, 12, 13, 14 and 15. Lead with the
 commercial problem. The architecture is evidence, not subject matter.
 
 ## Before you start
@@ -139,7 +139,7 @@ Which leaves this quadrant empty, and here is the strategic point. OpenAI is shi
 
 [alt tab to the browser, tab three, the bench]
 
-Let me show you the artifact itself, quickly.
+Let me show you the artifact itself, quickly. And the shape of this screen is not mine either. It came out of review with the CX delivery side at Hexaware, where the point was that a finding a reviewer cannot act on is noise.
 
 [click the top card, third party disclosure - demo baseline]
 
@@ -163,7 +163,7 @@ And the full record of how it got there, sealed so it visibly breaks if anyone e
 
 [alt tab back to the deck]
 
-[press 1 6 and enter]
+[press 1 5 and enter]
 
 [click 2x]
 
