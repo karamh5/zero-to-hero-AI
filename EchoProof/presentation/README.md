@@ -11,7 +11,10 @@ build step in the deck it refers to.
 
 | File | What it is | Use it when |
 |---|---|---|
-| [demo-day/deck.html](demo-day/deck.html) | The deck. 15 slides, 14 original inline SVG diagrams, offline, arrow keys, no presenter notes so it is safe to share | Every talk. There is only one deck |
+| [demo-day/deck-v2.html](demo-day/deck-v2.html) | **The current deck.** 15 slides, 14 original inline SVG diagrams, offline, arrow keys, no presenter notes so it is safe to share | Every talk. All five scripts point here |
+| [demo-day/deck.html](demo-day/deck.html) | The earlier 16 slide cut, kept as is. Carries the how it got here slide that v2 drops | Reference only. No script points at it |
+| [demo-day/deck-print.html](demo-day/deck-print.html) | Print variant of the 16 slide cut | Exporting the 16 slide version to PDF |
+| demo-day/deck.pdf | Export of the 16 slide cut | Stale against v2. Re export from deck-v2.html before sharing |
 | [scripts/SCRIPT-FINAL-DEMO.md](scripts/SCRIPT-FINAL-DEMO.md) | 13 minutes, all 15 slides plus the full UI walkthrough | **Demo day. Rehearse this one** |
 | [scripts/SCRIPT-5MIN.md](scripts/SCRIPT-5MIN.md) | 5 minutes, slides 1, 2, 3, 4, 11, 15 plus a short walkthrough | A brief internal or intro slot |
 | [scripts/SCRIPT-2MIN-ELEVATOR.md](scripts/SCRIPT-2MIN-ELEVATOR.md) | 2 minutes, no deck, one screen and one scroll | Corridor, lift, quick intro |
@@ -27,7 +30,7 @@ build step in the deck it refers to.
 
 ## 2. The deck
 
-15 slides, one visual system throughout. Slide 10 is an isometric three layer
+deck-v2.html is 15 slides, one visual system throughout. Slide 10 is an isometric three layer
 stack carrying the real vendor names. The deck ships with no presenter notes,
 and every slide is written to stand on its own, so it can be sent to somebody
 who will read it without anyone narrating.

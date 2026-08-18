@@ -13,7 +13,7 @@ commercial problem. The architecture is evidence, not subject matter.
 
 [type warm up in the assessment title box, click run adjudication, let it finish]
 
-[open presentation/demo-day/deck.html in tab two, press f for fullscreen]
+[open presentation/demo-day/deck-v2.html in tab two, press f for fullscreen]
 
 [open http://127.0.0.1:8077/bench in tab three, check the top card reads third party disclosure - demo baseline]
 
