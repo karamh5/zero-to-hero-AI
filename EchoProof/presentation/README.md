@@ -11,12 +11,12 @@ build step in the deck it refers to.
 
 | File | What it is | Use it when |
 |---|---|---|
-| [demo-day/deck.html](demo-day/deck.html) | The deck. 17 slides, 16 original inline SVG diagrams, offline, arrow keys, `N` for presenter notes | Every talk. There is only one deck |
-| [scripts/SCRIPT-FINAL-DEMO.md](scripts/SCRIPT-FINAL-DEMO.md) | 13 minutes, all 17 slides plus the full UI walkthrough | **Demo day. Rehearse this one** |
-| [scripts/SCRIPT-5MIN.md](scripts/SCRIPT-5MIN.md) | 5 minutes, slides 1, 2, 3, 4, 11, 17 plus a short walkthrough | A brief internal or intro slot |
+| [demo-day/deck.html](demo-day/deck.html) | The deck. 16 slides, 15 original inline SVG diagrams, offline, arrow keys, no presenter notes so it is safe to share | Every talk. There is only one deck |
+| [scripts/SCRIPT-FINAL-DEMO.md](scripts/SCRIPT-FINAL-DEMO.md) | 13 minutes, all 16 slides plus the full UI walkthrough | **Demo day. Rehearse this one** |
+| [scripts/SCRIPT-5MIN.md](scripts/SCRIPT-5MIN.md) | 5 minutes, slides 1, 2, 3, 4, 11, 16 plus a short walkthrough | A brief internal or intro slot |
 | [scripts/SCRIPT-2MIN-ELEVATOR.md](scripts/SCRIPT-2MIN-ELEVATOR.md) | 2 minutes, no deck, one screen and one scroll | Corridor, lift, quick intro |
-| [scripts/SCRIPT-BUSINESS-AUDIENCE.md](scripts/SCRIPT-BUSINESS-AUDIENCE.md) | 10 minutes, slides 1, 2, 3, 4, 11, 12, 13, 14, 17. Leads with what stalls deployments | Buyers, partnership conversations |
-| [scripts/SCRIPT-TECHNICAL-AUDIENCE.md](scripts/SCRIPT-TECHNICAL-AUDIENCE.md) | 15 minutes, all 17 slides, full vocabulary | Engineers, ML people |
+| [scripts/SCRIPT-BUSINESS-AUDIENCE.md](scripts/SCRIPT-BUSINESS-AUDIENCE.md) | 10 minutes, slides 1, 2, 3, 4, 11, 12, 13, 14, 16. Leads with what stalls deployments | Buyers, partnership conversations |
+| [scripts/SCRIPT-TECHNICAL-AUDIENCE.md](scripts/SCRIPT-TECHNICAL-AUDIENCE.md) | 15 minutes, all 16 slides, full vocabulary | Engineers, ML people |
 | [DEMO-RUNBOOK.md](DEMO-RUNBOOK.md) | Pre-flight, warm-up, what to run, failure playbook | Every single time you present |
 | [QA-BANK.md](QA-BANK.md) | Deeper question bank | Prep, the night before |
 
@@ -27,22 +27,23 @@ build step in the deck it refers to.
 
 ## 2. The deck
 
-17 slides. Slides 11 and 12 switch the whole ground to a light partner theme,
-so the room feels the handover out of the instrument and into the client house.
+16 slides, one visual system throughout. Slide 10 is an isometric three layer
+stack carrying the real vendor names. The deck ships with no presenter notes,
+and every slide is written to stand on its own, so it can be sent to somebody
+who will read it without anyone narrating.
 
 | # | Slide | # | Slide |
 |---|---|---|---|
-| 1 | Title | 10 | The stack, where it attaches |
-| 2 | The bottleneck | 11 | Where EchoProof sits, partner themed |
-| 3 | What they do today | 12 | Go to market, partner themed |
-| 4 | What it is | 13 | Market and cost |
-| 5 | The pipeline | 14 | The landscape |
-| 6 | The isolation boundary | 15 | Scale and production |
-| 7 | The five verdict states | 16 | How it got here |
-| 8 | Evidence and traceability | 17 | Close |
-| 9 | Audio as evidence | | |
+| 1 | Title | 9 | Audio as evidence |
+| 2 | The bottleneck | 10 | The stack, isometric |
+| 3 | What they do today | 11 | Where EchoProof sits |
+| 4 | What it is | 12 | Go to market |
+| 5 | The pipeline | 13 | Market and cost |
+| 6 | The isolation boundary | 14 | The landscape |
+| 7 | The five verdict states | 15 | How it got here |
+| 8 | Evidence and traceability | 16 | Close |
 
-Keys: arrows, space, click, swipe, `N` notes, `O` overview, `F` fullscreen,
+Keys: arrows, space, click, swipe, `O` overview, `F` fullscreen,
 `B` blackout, `?` key map, `Home` and `End`, and a slide number followed by
 `Enter` to jump.
 

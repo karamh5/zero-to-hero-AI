@@ -1,6 +1,6 @@
 # Five minutes
 
-Uses the demo deck, slides 1, 2, 3, 4, 11 and 17.
+Uses the demo deck, slides 1, 2, 3, 4, 11 and 16.
 
 ## Before you start
 
@@ -58,7 +58,7 @@ This is a manual process, and EchoProof automates it. Same review, every turn, b
 
 Four moves. It reads what the agent said, and only the agent. It pulls the claims out as verbatim quotes. It finds the provision in the client's own rulebook that governs each one. And it rules on it and seals the record.
 
-The important part is the third and fourth. The model doing the ruling never sees the rulebook. It gets handed one provision and has to answer from that text alone, and then we print the provision next to the answer. So you check it rather than trust it.
+The important part is the third and fourth. The model deciding never sees the rulebook. It gets handed one provision and answers from that text alone, and then we print the provision next to the answer. So you check it rather than trust it.
 
 Which brings me to where that fits.
 
@@ -110,9 +110,9 @@ That is a compliance review that took two minutes instead of two weeks.
 
 [alt tab back to the deck]
 
-[press 1 7 and enter]
+[press 1 6 and enter]
 
-[click 3x]
+[click 2x]
 
 Every claim has a source. Every verdict has a rule. Every finding has evidence.
 

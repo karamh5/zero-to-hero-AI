@@ -1,6 +1,6 @@
 # Business and partnership, 10 minutes
 
-Uses the demo deck, slides 1, 2, 3, 4, 11, 12, 13, 14 and 17. Lead with the
+Uses the demo deck, slides 1, 2, 3, 4, 11, 12, 13, 14 and 16. Lead with the
 commercial problem. The architecture is evidence, not subject matter.
 
 ## Before you start
@@ -59,7 +59,7 @@ This is a manual process, and we automate it. Every turn, before launch, with th
 
 [click 4x]
 
-Four steps, and the one that matters commercially is the last two. It finds the actual provision in your rulebook that governs a sentence, and it rules using only that provision, then prints it next to the verdict.
+Four steps, and the two that matter commercially are the last two. It finds the actual provision in your rulebook that governs a sentence, decides using only that provision, then prints it next to the verdict.
 
 Which means your compliance officer is reviewing a citation instead of forming an opinion. That is the difference between a tool they resent and one they use.
 
@@ -163,9 +163,9 @@ And the full record of how it got there, sealed so it visibly breaks if anyone e
 
 [alt tab back to the deck]
 
-[press 1 7 and enter]
+[press 1 6 and enter]
 
-[click 3x]
+[click 2x]
 
 Every claim has a source. Every verdict has a rule. Every finding has evidence.
 

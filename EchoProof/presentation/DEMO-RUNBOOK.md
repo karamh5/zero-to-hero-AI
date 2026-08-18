@@ -79,7 +79,6 @@ Open `http://127.0.0.1:8077/bench`. Confirm:
 - Browser zoom exactly 100 percent. The type scale is tuned for it.
 - Window maximised. The rig is a two column layout and collapses under 900px.
 - Close every other tab. A notification during a demo is a lost room.
-- Press `N` in the deck once to confirm presenter notes open, then `N` again to close.
 
 ### Step 6. Check nothing else is competing
 

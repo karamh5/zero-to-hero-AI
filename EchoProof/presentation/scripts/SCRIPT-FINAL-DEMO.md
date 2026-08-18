@@ -14,19 +14,17 @@
 
 [open http://127.0.0.1:8077/bench in tab three, check the top card reads third party disclosure - demo baseline]
 
-[press n twice in the deck to check presenter notes open and close]
-
 ## Opening
 
 [slide 1: click 2x]
 
 Before this was a product, it was my job.
 
-I worked in compliance at TELUS. And the thing nobody tells you before you do that work is that compliance is not really about knowing the rules. Almost everyone knows the rules. It is about proof. You can be completely right and still lose the room, because you could not show your work.
+I worked in compliance at TELUS. And the thing nobody tells you is that compliance is not about knowing the rules. Almost everyone knows the rules. It is about proof. You can be completely right and still lose, because you could not show your work.
 
 That idea is the whole of what I am about to show you.
 
-Right now every large enterprise is racing to put AI agents into conversations that are legally governed. Collections. Insurance. Healthcare. And the thing holding those launches up is not the model.
+Every large enterprise is now racing to put AI agents into legally governed conversations. Collections. Insurance. Healthcare. And what holds those launches up is not the model.
 
 ## The bottleneck
 
@@ -54,9 +52,9 @@ It is a person, with headphones, and a rulebook open next to them. Industry benc
 
 [click 1x]
 
-And that number is not laziness, it is arithmetic. A trained analyst gets through ten to fifteen interactions in a day. It is a structural ceiling, and you cannot staff your way out of it.
+That is arithmetic, not laziness. A trained analyst gets through ten to fifteen interactions a day. It is a structural ceiling you cannot staff your way out of.
 
-So ninety five percent or more of what your agents say is never examined by anyone, it is reviewed weeks after go live, and what comes out is a score with no rule attached.
+So most of what your agents say is never examined by anyone, it is reviewed weeks after go live, and what comes out is a score with no rule attached.
 
 [click 1x]
 
@@ -66,11 +64,11 @@ This is a manual process, and EchoProof automates it. Not a new process to learn
 
 [slide 4: click 1x]
 
-In one sentence, it reads what the agent said, finds the rule in the client's own rulebook that governs it, and rules from that rule.
+In one sentence: it reads what the agent said, finds the provision in the client's own rulebook that governs it, and decides from that text alone.
 
 [click 4x]
 
-Four moves. It reads the turn, and only the agent's turns are ever adjudicated. It locates the claims as verbatim quotes. It retrieves the governing provision. And it rules on it and seals the record.
+Four moves. It reads the turn, and only the agent's turns. It locates claims as verbatim quotes. It retrieves the governing provision. And it decides, then seals the record.
 
 Everything from here is how each of those is made trustworthy, because any one done loosely turns this back into an opinion.
 
@@ -80,7 +78,7 @@ Everything from here is how each of those is made trustworthy, because any one d
 
 [click 1x]
 
-An OpenAI compatible proxy sits in front of the agent's model call. You change a base URL and nothing else in the stack moves.
+An OpenAI compatible proxy sits in front of the model call. You change a base URL and nothing else moves.
 
 Claim extraction returns verbatim quotes, and the offsets are computed in code by locating that quote, so a paraphrase gets rejected rather than stored.
 
@@ -114,7 +112,7 @@ Then the fence. Those two things are the only things that cross into the judge, 
 
 The corpus does not cross. The model's own training knowledge does not cross.
 
-Two reasons. The rule text it was handed is stored, so a verdict is falsifiable just by reading it. And if the judge could reach past that fence, a wrong verdict would be unattributable, because you could never tell whether retrieval or the judge failed.
+Two reasons. The provision it was handed is stored, so a verdict is falsifiable by reading it. And if it could reach past that fence, a wrong verdict would be unattributable, because you could never tell whether retrieval or the judge failed.
 
 ## The five states
 
@@ -130,9 +128,7 @@ Three of them decline.
 
 [click 1x]
 
-Those three route to a human reviewer, and they are counted separately from findings everywhere in the system.
-
-[click 1x]
+Those three route to a human reviewer, counted separately from findings everywhere in the system.
 
 Because a system that forces a verdict to avoid an abstention is optimising its own scoreboard. A confident wrong answer costs a compliance officer far more than an honest I do not know.
 
@@ -146,7 +142,7 @@ Every model call, every retrieval call and every finding writes a span into an a
 
 [click 1x]
 
-So watch what happens when somebody edits an entry in the middle. Every link after it breaks, in sequence. You cannot quietly amend this record. You can only visibly destroy it.
+Watch what happens when somebody edits an entry in the middle. Every link after it breaks. You cannot quietly amend this record, only visibly destroy it.
 
 [click 1x]
 
@@ -166,9 +162,9 @@ The claim extractor gives character offsets into the transcript. Those two map o
 
 [click 1x]
 
-And that span slices the source audio, so a finding carries a clip of the exact sentence flagged, not the whole call.
+And that span slices the source audio, so a finding carries the exact sentence flagged, not the whole call.
 
-Adjudication is text only. Audio attaches after the verdict exists, which makes it evidence for a finding and never an input to one.
+Adjudication is text only. Audio attaches after the verdict exists, so it is evidence for a finding and never an input to one.
 
 ## The stack
 
@@ -176,19 +172,19 @@ Adjudication is text only. Audio attaches after the verdict exists, which makes 
 
 [click 1x]
 
-This is a cascaded voice agent. Telephony, speech to text, an orchestrator, the model call, text to speech, back to the caller.
+Top layer, the customer's voice agent. Telephony, Deepgram for speech to text, an orchestrator, text to speech.
 
 [click 1x]
 
-EchoProof attaches at exactly one point, in front of the model call.
+Middle layer, us. One OpenAI compatible endpoint, sitting in front of the model call.
 
 [click 1x]
 
-The response goes back unmodified and is never delayed. Adjudication branches off to the side, after the response has already gone. A capture failure cannot become a request failure, and that is enforced by tests.
+Bottom layer is our engine, and the response goes back unmodified and is never delayed. Adjudication runs to the side, after the response has gone. A capture failure cannot become a request failure, and that is enforced by tests.
 
 [click 1x]
 
-Now swap every vendor in that stack. The attachment point does not move. One endpoint, any stack. Which is exactly what makes the next part possible.
+Swap every vendor in that top layer. The attachment point does not move. Which is what makes the next part possible.
 
 ## Where it sits at Hexaware
 
@@ -208,7 +204,7 @@ EchoProof sits in exactly one place. Between the build and the sign off.
 
 [click 1x]
 
-And out the other side comes the artifact. Not an assurance the agent was tested. An evidence file showing what was tested and against which rule, that the client can put in front of their own regulator.
+And out the other side comes the artifact. Not an assurance the agent was tested, an evidence file showing what was tested and against which rule, that the client can put in front of their own regulator.
 
 Same layer regardless of client, regulation or vendor stack.
 
@@ -266,25 +262,11 @@ Which leaves this quadrant empty. Independent, and before launch.
 
 And it matters commercially, because OpenAI is shipping Presence through select global systems integrators. Being able to say we assure any agent, not only the ones built on one vendor, is the differentiator in exactly that room.
 
-## Scale
-
-[slide 15: click 1x]
-
-[click 1x]
-
-Everything I am about to show you runs end to end on this laptop, with real evidence on disk. Nothing in the demo is mocked.
-
-[click 1x]
-
-Production is designed and deliberately not built. Bedrock is a base URL and a model string. Retrieval to OpenSearch, the cross encoder to a GPU, artifacts to S3 with object lock. And adjudication becomes a worker pool that scales linearly, because every turn is independent.
-
-[click 1x]
-
-The boundary between those columns is configuration, not a rewrite.
+And on scale, because it is the obvious next question. Everything I am about to show you runs end to end on this laptop against real evidence. At volume the same interface points at Bedrock, retrieval moves to OpenSearch, the reranker moves to a GPU, and adjudication runs as a worker pool that scales linearly, because every turn is independent.
 
 ## How it got here
 
-[slide 16: click 1x]
+[slide 15: click 1x]
 
 [click 1x]
 
@@ -318,15 +300,15 @@ Block release. And that is not our opinion. It is computed on read from the clie
 
 [point at the verdicts table]
 
-Second question. What is the shape of it. Two contradicted, six abstentions.
+Second, what is the shape of it. Two contradicted, six abstentions.
 
 [point at the abstentions section]
 
-And the abstentions are listed apart from the findings, deliberately. Those are the ones it declined to rule on, and they are my queue, not evidence that the agent was fine.
+Listed apart from findings, deliberately. Those are my queue, not evidence the agent was fine.
 
 [scroll to findings and click the first finding]
 
-Third question. Show me the worst one.
+Third, show me the worst one.
 
 [point at what was said]
 
@@ -338,15 +320,15 @@ And this is the rule it broke, printed as the regulation prints it. Section 1006
 
 [point at why it failed]
 
-The reasoning names the third party and says which exceptions it ruled out.
+The reasoning names the third party and the exceptions it ruled out.
 
 [scroll down to the evidence trace]
 
-Fourth question, and this is the one that actually matters to me. How do I know this is right.
+Fourth, and this is the one that matters. How do I know it is right.
 
 [point at the retrieval step]
 
-Every step. This one is retrieval: the queries it ran, every candidate provision it was offered, and the one it selected.
+Every step. This one is retrieval: the queries it ran, every candidate it was offered, and the one it selected.
 
 [point at the last step, evidence seal]
 
@@ -354,11 +336,11 @@ And the seal at the end. If anyone edits any of it after the fact, this breaks v
 
 [click corpus in the top nav]
 
-Fifth question. What did it not look at. This is the rulebook, and I can see which provisions retrieval reached on this run. My coverage gap, in one place.
+Fifth, what did it not look at. This is the rulebook, and I can see which provisions retrieval reached. My coverage gap, in one place.
 
 [click delta in the top nav]
 
-And then the loop that closes it. Same scenario, same seed, only the agent changed. The finding closed and nothing new opened. That is what I need to see before I sign, because a fix that closes one issue and opens another has not fixed anything.
+And the loop that closes it. Same scenario, same seed, only the agent changed. The finding closed and nothing new opened. That is what I need before I sign, because a fix that closes one issue and opens another has fixed nothing.
 
 [stop clicking and look at the room]
 
@@ -368,9 +350,9 @@ That is a compliance review that took two minutes instead of two weeks, and ever
 
 [alt tab back to the deck]
 
-[press 1 7 and enter to jump to the last slide]
+[press 1 6 and enter to jump to the last slide]
 
-[click 3x]
+[click 2x]
 
 Every claim has a source. Every verdict has a rule. Every finding has evidence.
 

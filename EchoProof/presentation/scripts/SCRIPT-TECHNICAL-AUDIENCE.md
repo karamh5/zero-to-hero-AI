@@ -1,6 +1,6 @@
 # Technical audience, 15 minutes
 
-Uses the demo deck, all 17 slides. Full vocabulary. Lead with the isolation
+Uses the demo deck, all 16 slides. Full vocabulary. Lead with the isolation
 boundary and the build order argument.
 
 ## Before you start
@@ -47,7 +47,7 @@ Manual review at one to five percent coverage, bounded by an analyst getting thr
 
 [click 4x]
 
-Four moves. Read the turn, agent turns only. Locate claims as verbatim quotes. Retrieve the governing provision. Rule and seal.
+Four moves. Read the turn, agent turns only. Locate claims as verbatim quotes. Retrieve the governing provision. Decide, and seal.
 
 The rest of this is how each of those is made attributable when it fails.
 
@@ -116,8 +116,6 @@ Keeping the first two separate matters, because collapsing them turns a retrieva
 [click 1x]
 
 All three route to human review and are counted apart from findings.
-
-[click 1x]
 
 A system that forces a verdict to avoid an abstention is optimising its own scoreboard.
 
@@ -207,19 +205,13 @@ OpenAI Presence is the closest, launched in July, with evals and graders built i
 
 Which leaves independent and pre deployment empty.
 
-## Scale
+On scale: everything runs on this laptop today. The same model interface points at Bedrock by changing a base URL, retrieval moves to OpenSearch, and the cross encoder moves to GPU, which is the single biggest throughput lever. Adjudication runs as a horizontally scaled worker pool that scales linearly, because turns are independent.
 
-[slide 15: click 1x]
-
-[click 3x]
-
-Everything runs on this laptop today. Production is one model interface pointed at Bedrock, retrieval to OpenSearch, the cross encoder to GPU which is the single biggest throughput lever, artifacts to S3 with object lock, and adjudication as a horizontally scaled worker pool that scales linearly because turns are independent.
-
-There is also a discipline rule around that swap. Whichever backend produced a scored run's numbers stays the backend for that run, so nothing gets silently swapped underneath a measurement.
+There is a discipline rule around that swap. Whichever backend produced a scored run's numbers stays the backend for that run, so nothing gets silently swapped underneath a measurement.
 
 ## How it got here
 
-[slide 16: click 1x]
+[slide 15: click 1x]
 
 [click 2x]
 
@@ -271,9 +263,9 @@ And fix and re run. Same scenario, same seed, same policy pack, only the agent c
 
 [alt tab back to the deck]
 
-[press 1 7 and enter]
+[press 1 6 and enter]
 
-[click 3x]
+[click 2x]
 
 Every claim has a source. Every verdict has a rule. Every finding has evidence.
 
