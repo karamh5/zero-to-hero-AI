@@ -152,13 +152,17 @@ svg{display:block;overflow:visible}
   .armed .draw{transition:none;stroke-dashoffset:0!important}
 }
 
-@page{size:1600px 900px landscape;margin:0}
+/* Explicit dimensions already imply landscape. Pairing them with the
+   landscape keyword is invalid and some engines drop the whole rule. */
+@page{size:1600px 900px;margin:0}
 @media print{
   html,body{overflow:visible;background:var(--print-ground)}
   #stage{position:static;width:1600px;height:auto;transform:none}
   #bg,#chrome,#rail,.ov,#black{display:none!important}
   .slide{position:relative;display:flex!important;width:1600px;height:900px;
     page-break-after:always;break-after:page;background:var(--ground)}
+  /* the last slide must not break, or the PDF ends on a blank page */
+  .slide:last-of-type{page-break-after:auto;break-after:auto}
   .rise,[data-step]{opacity:1!important;transform:none!important}
   .draw{stroke-dashoffset:0!important}
 }
