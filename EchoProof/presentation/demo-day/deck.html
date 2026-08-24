@@ -313,63 +313,12 @@ svg{display:block;overflow:visible}
       <path class="fl" d="M1026,69 L1084,69" marker-end="url(#mA)"/>
     </svg>
   </div>
-  <p class="sub rise">The model that decides never browses the corpus. It is handed one provision and answers from that text, which is what makes the answer checkable.</p>
+  <p class="sub rise"><strong>In:</strong> a transcript of a test conversation the agent already had. <strong>Out:</strong> a verdict on every line, with the rule quoted beside it. EchoProof never places the call and never touches the live customer.</p>
 </section>
 
-<!-- 05 THE PIPELINE ======================================================= -->
-<section class="slide" data-eyebrow="THE PIPELINE" data-glow="620,180">
-  <div class="eyebrow rise">04 / The pipeline</div>
-  <h2 class="rise">Six stages, from a proxy to a sealed record.</h2>
-  <div style="margin-top:34px">
-    <svg width="1390" height="330" viewBox="0 0 1390 330" aria-label="Pipeline: proxy, claim extraction with character offsets, deterministic verification of money and dates, hybrid retrieval, grounded judge, evidence log. The deterministic path leaves ahead of retrieval and rejoins at the evidence log. The agent turn travels as a waveform sliced at claim boundaries.">
-      <defs><marker id="mB" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
-        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-trace)"/></marker>
-        <marker id="mG" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
-        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-det)"/></marker></defs>
-      <g data-step="1">
-        <rect class="node" x="0" y="80" width="188" height="76"/>
-        <text class="sl t" x="16" y="104">01 / ADAPTER</text><text class="sb" x="16" y="130">OpenAI compatible</text><text class="sb" x="16" y="148">proxy</text>
-        <rect class="node" x="240" y="80" width="200" height="76"/>
-        <text class="sl t" x="256" y="104">02 / EXTRACT</text><text class="sb" x="256" y="130">Verbatim quotes</text><text class="sb" x="256" y="148">to char offsets</text>
-        <rect class="node" x="492" y="80" width="200" height="76"/>
-        <text class="sl g" x="508" y="104">03 / VERIFY</text><text class="sb" x="508" y="130">Money and dates,</text><text class="sb" x="508" y="148">settled in code</text>
-        <rect class="node" x="744" y="80" width="200" height="76"/>
-        <text class="sl t" x="760" y="104">04 / RETRIEVE</text><text class="sb" x="760" y="130">Hybrid, fused,</text><text class="sb" x="760" y="148">reranked</text>
-        <rect class="node key" x="996" y="80" width="184" height="76"/>
-        <text class="sl t" x="1012" y="104">05 / JUDGE</text><text class="sb" x="1012" y="130">Grounded in one</text><text class="sb" x="1012" y="148">provision</text>
-        <rect class="node" x="1232" y="80" width="158" height="76"/>
-        <text class="sl t" x="1248" y="104">06 / EVIDENCE</text><text class="sb" x="1248" y="130">Append only</text><text class="sb" x="1248" y="148">hash chain</text>
-        <path class="fl draw" d="M188,118 L238,118" marker-end="url(#mB)"/>
-        <path class="fl draw" d="M440,118 L490,118" marker-end="url(#mB)"/>
-        <path class="fl draw" d="M692,118 L742,118" marker-end="url(#mB)"/>
-        <path class="fl draw" d="M944,118 L994,118" marker-end="url(#mB)"/>
-        <path class="fl draw" d="M1180,118 L1230,118" marker-end="url(#mB)"/>
-      </g>
-      <g data-step="2">
-        <path class="gold draw" d="M592,156 L592,222 L1311,222 L1311,158" marker-end="url(#mG)"/>
-        <text class="sl g" x="612" y="216">ARITHMETIC SETTLES IT, SO NO MODEL SEES IT</text>
-      </g>
-      <g data-step="3">
-        <text class="sl" x="0" y="276">AGENT TURN, SLICED AT CLAIM BOUNDARIES</text>
-        <g stroke="var(--sig-trace)" stroke-width="2.5" opacity=".9">
-          <path d="M8,302 v-14 M18,302 v-24 M28,302 v-9 M38,302 v-30 M48,302 v-18 M58,302 v-26 M68,302 v-11 M78,302 v-22 M88,302 v-32 M98,302 v-15 M108,302 v-20 M118,302 v-28"/>
-          <path d="M158,302 v-19 M168,302 v-31 M178,302 v-12 M188,302 v-25 M198,302 v-16 M208,302 v-29 M218,302 v-21 M228,302 v-13 M238,302 v-27 M248,302 v-18 M258,302 v-24 M268,302 v-10"/>
-          <path d="M308,302 v-26 M318,302 v-14 M328,302 v-22 M338,302 v-33 M348,302 v-17 M358,302 v-25 M368,302 v-12 M378,302 v-28 M388,302 v-20 M398,302 v-15 M408,302 v-30 M418,302 v-19"/>
-          <path d="M458,302 v-13 M468,302 v-27 M478,302 v-21 M488,302 v-16 M498,302 v-31 M508,302 v-18 M518,302 v-24 M528,302 v-11 M538,302 v-29 M548,302 v-20 M558,302 v-14 M568,302 v-26"/>
-          <path d="M608,302 v-22 M618,302 v-30 M628,302 v-15 M638,302 v-19 M648,302 v-27 M658,302 v-12 M668,302 v-24 M678,302 v-17 M688,302 v-32 M698,302 v-21 M708,302 v-13 M718,302 v-25"/>
-        </g>
-        <g stroke="var(--sig-contradicted)" stroke-width="2">
-          <path d="M138,274 v42 M288,274 v42 M438,274 v42 M588,274 v42"/>
-        </g>
-        <text class="sl r" x="748" y="300">CLAIM BOUNDARY</text>
-      </g>
-    </svg>
-  </div>
-</section>
-
-<!-- 06 ISOLATION BOUNDARY ================================================= -->
+<!-- 05 ISOLATION BOUNDARY ================================================= -->
 <section class="slide" data-eyebrow="THE ISOLATION BOUNDARY" data-glow="1180,700">
-  <div class="eyebrow rise">05 / The isolation boundary</div>
+  <div class="eyebrow rise">04 / The isolation boundary</div>
   <h2 class="rise">The judge is fenced in, on purpose.</h2>
   <div style="margin-top:22px">
     <svg width="1390" height="380" viewBox="0 0 1390 380" aria-label="A dense field of policy provisions on the left. Hybrid retrieval lifts exactly one provision out. Only that provision and one claim cross a fence into the grounded judge. The full corpus and the model own training knowledge are shown failing to cross.">
@@ -440,9 +389,9 @@ svg{display:block;overflow:visible}
   <p class="sub rise">Because the provision it was handed is stored alongside the verdict, a reviewer can disagree by reading. And when it is wrong, the failure is attributable to retrieval or to the judge, never to both.</p>
 </section>
 
-<!-- 07 FIVE STATES ======================================================== -->
+<!-- 06 FIVE STATES ======================================================== -->
 <section class="slide" data-eyebrow="THE FIVE VERDICT STATES" data-glow="300,220">
-  <div class="eyebrow rise">06 / The five states</div>
+  <div class="eyebrow rise">05 / The five states</div>
   <h2 class="rise">Two decide. Three decline.</h2>
   <p class="sub rise">Never a pass or a fail. The three that decline route to a human reviewer and are counted apart from findings, so a refusal is never reported as a catch.</p>
   <div style="margin-top:30px">
@@ -484,9 +433,9 @@ svg{display:block;overflow:visible}
   </div>
 </section>
 
-<!-- 08 EVIDENCE =========================================================== -->
+<!-- 07 EVIDENCE =========================================================== -->
 <section class="slide" data-eyebrow="EVIDENCE AND TRACEABILITY" data-glow="1120,240">
-  <div class="eyebrow rise">07 / Evidence and traceability</div>
+  <div class="eyebrow rise">06 / Evidence and traceability</div>
   <h2 class="rise">Tamper evident by construction, not by policy.</h2>
   <div style="margin-top:30px">
     <svg width="1390" height="310" viewBox="0 0 1390 310" aria-label="An evidence chain drawn as physical links, each with an arm reaching back to its predecessor. When a middle entry is edited, every link after it breaks in sequence.">
@@ -537,9 +486,9 @@ svg{display:block;overflow:visible}
   <p class="sub rise">Published training lineage tells you where a model came from. This tells you where a decision came from, which is the question a regulator asks.</p>
 </section>
 
-<!-- 09 AUDIO ============================================================== -->
+<!-- 08 AUDIO ============================================================== -->
 <section class="slide" data-eyebrow="AUDIO AS EVIDENCE" data-glow="420,760">
-  <div class="eyebrow rise">08 / Audio as evidence</div>
+  <div class="eyebrow rise">07 / Audio as evidence</div>
   <h2 class="rise">Offsets, to timestamps, to the sentence itself.</h2>
   <div style="margin-top:30px">
     <svg width="1390" height="310" viewBox="0 0 1390 310" aria-label="A transcript bar with the flagged span highlighted, word level timestamp ticks beneath it from Deepgram Nova-3, and a bracket marking the audio clip that the offsets and timestamps together produce.">
@@ -578,9 +527,9 @@ svg{display:block;overflow:visible}
   </div>
 </section>
 
-<!-- 10 THE STACK, ISOMETRIC =============================================== -->
+<!-- 09 THE STACK, ISOMETRIC =============================================== -->
 <section class="slide" data-eyebrow="THE STACK" data-glow="700,420">
-  <div class="eyebrow rise">09 / The stack</div>
+  <div class="eyebrow rise">08 / The stack</div>
   <h2 class="rise">One endpoint. Any stack.</h2>
   <p class="sub rise">EchoProof attaches at a single point in front of the model call. The response is returned unmodified and never delayed, and adjudication runs to the side.</p>
   <div style="margin-top:10px">
@@ -762,102 +711,97 @@ svg{display:block;overflow:visible}
   </div>
 </section>
 
-<!-- 11 WHERE IT SITS ====================================================== -->
-<section class="slide" data-eyebrow="INTEGRATION" data-glow="700,400">
-  <div class="eyebrow rise">10 / Where EchoProof sits</div>
-  <h2 class="rise">Between the build and the sign off.</h2>
-  <p class="sub rise">The client owns the regulation. The delivery partner owns the agent and the operations. EchoProof produces the artifact that moves the sign off.</p>
-  <div style="margin-top:26px">
-    <svg width="1390" height="330" viewBox="0 0 1390 330" aria-label="A delivery flow. The client supplies the regulation and policy. The delivery partner builds and operates the voice agents. EchoProof sits between the agent build and the client sign off, producing a deployment readiness report as the handover artifact.">
-      <defs><marker id="pA" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
-        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-trace)"/></marker></defs>
+<!-- 10 ROADMAP ========================================================== -->
+<section class="slide" data-eyebrow="ROADMAP" data-glow="1100,240">
+  <div class="eyebrow rise">09 / Roadmap</div>
+  <h2 class="rise">Compliance first, because that is the gap nobody filled.</h2>
+  <div style="margin-top:10px">
+    <svg width="1340" height="470" viewBox="-190 10 1480 560" aria-label="A three horizon roadmap climbing left to right. Horizon one, live today, is pre-deployment compliance validation for regulated industries. Horizon two broadens it into a full pre-release validation suite covering agent behaviour, and plugs into Agent V. Horizon three extends to live monitoring, real time intervention and a self improving loop where every run improves the next.">
+      <defs>
+        <marker id="rmA" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-trace)"/></marker>
+        <marker id="rmG" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-det)"/></marker>
+        <g id="rmShield" fill="none" stroke="var(--sig-supported)" stroke-width="1.8"
+           stroke-linejoin="round" stroke-linecap="round">
+          <path d="M12 3.4 L20 6.6 v6.2 c0 4.4 -3.4 7 -8 8.4 c-4.6 -1.4 -8 -4 -8 -8.4 V6.6 z"/>
+          <path d="M8.4 12.2 l2.6 2.6 l4.8 -5"/>
+        </g>
+        <g id="rmGauge" fill="none" stroke="var(--sig-trace)" stroke-width="1.8" stroke-linecap="round">
+          <path d="M4 16.4 a8.6 8.6 0 1 1 16 0"/>
+          <path d="M12 16.4 L16.6 10.6"/><circle cx="12" cy="16.4" r="1.6" fill="var(--sig-trace)"/>
+        </g>
+        <g id="rmLoop" fill="none" stroke="var(--sig-det)" stroke-width="1.8" stroke-linecap="round">
+          <path d="M5.4 12 a6.6 6.6 0 1 1 2.6 5.2"/>
+          <path d="M4.4 6.6 l1 5.4 l5.2 -1.4"/>
+        </g>
+      </defs>
+
+      <!-- ============ HORIZON 1, live today ============ -->
       <g data-step="1">
-        <rect class="node" x="0" y="60" width="266" height="126"/>
-        <text class="sl t" x="24" y="92">THE CLIENT</text>
-        <text class="sb" x="24" y="126" style="font-size:17px">Their regulation,</text>
-        <text class="sb" x="24" y="150" style="font-size:17px">their policy, their</text>
-        <text class="sb" x="24" y="174" style="font-size:17px">risk threshold</text>
-        <path class="fl draw" d="M266,123 L322,123" marker-end="url(#pA)"/>
+        <g transform="translate(0,430)">
+          <path class="iso-l" d="M-165,25 L215,80 L215,92 L-165,37 Z"/>
+          <path class="iso-r" d="M215,80 L380,55 L380,67 L215,92 Z"/>
+          <path class="iso-t key" d="M0,0 L380,55 L215,80 L-165,25 Z"/>
+        </g>
+        <rect class="tile" x="-165" y="300" width="30" height="30" rx="7"/>
+        <use href="#rmShield" x="-162" y="303"/>
+        <text class="sl k" x="-121" y="313">HORIZON 01 / LIVE TODAY</text>
+        <text class="sl" x="-121" y="329">WHAT YOU JUST SAW</text>
+        <text class="sb" x="-165" y="364" style="font-size:19px;font-weight:600">Pre-deployment</text>
+        <text class="sb" x="-165" y="388" style="font-size:19px;font-weight:600">compliance validation</text>
+        <text class="sbm" x="-165" y="414" style="font-size:13px">Banking, financial services, insurance, collections</text>
       </g>
+
+      <!-- ============ HORIZON 2, next ============ -->
       <g data-step="2">
-        <rect class="node" x="326" y="34" width="326" height="178"/>
-        <text class="sl t" x="350" y="66">HEXAWARE DELIVERY</text>
-        <text class="sb" x="350" y="102" style="font-size:17px">Voice agent build</text>
-        <text class="sb" x="350" y="130" style="font-size:17px">CX operations</text>
-        <text class="sb" x="350" y="158" style="font-size:17px">Global delivery centres</text>
-        <text class="sbm" x="350" y="190">People first. AI powered.</text>
-        <path class="fl draw" d="M652,123 L708,123" marker-end="url(#pA)"/>
+        <path class="fl draw" d="M396,478 L446,418" marker-end="url(#rmA)"/>
+        <g transform="translate(440,300)">
+          <path class="iso-l" d="M-165,25 L215,80 L215,92 L-165,37 Z"/>
+          <path class="iso-r" d="M215,80 L380,55 L380,67 L215,92 Z"/>
+          <path class="iso-t key" d="M0,0 L380,55 L215,80 L-165,25 Z"/>
+        </g>
+        <rect class="tile" x="275" y="170" width="30" height="30" rx="7"/>
+        <use href="#rmGauge" x="278" y="173"/>
+        <text class="sl t" x="319" y="183">HORIZON 02 / NEXT</text>
+        <text class="sl" x="319" y="199">BEYOND COMPLIANCE</text>
+        <text class="sb" x="275" y="234" style="font-size:19px;font-weight:600">Full pre-release</text>
+        <text class="sb" x="275" y="258" style="font-size:19px;font-weight:600">validation suite</text>
+        <text class="sbm" x="275" y="284" style="font-size:13px">Behaviour under pressure, accents, interruptions,</text>
+        <text class="sbm" x="275" y="302" style="font-size:13px">authentication flow. Plugs into Agent V.</text>
       </g>
+
+      <!-- ============ HORIZON 3, then ============ -->
       <g data-step="3">
-        <rect class="node key" x="712" y="34" width="326" height="178" style="stroke-width:2.5"/>
-        <rect x="712" y="34" width="326" height="178" fill="var(--sig-trace)" opacity=".08"/>
-        <text class="sl t" x="736" y="66">ECHOPROOF</text>
-        <text class="sb" x="736" y="104" style="font-size:19px;font-weight:600">The assurance layer</text>
-        <text class="sbm" x="736" y="136">Every agent turn, every rule,</text>
-        <text class="sbm" x="736" y="158">before anything ships</text>
-        <text class="sm" x="736" y="192" style="font-size:13px">vendor neutral</text>
-        <path class="fl draw" d="M1038,123 L1094,123" marker-end="url(#pA)"/>
+        <path class="fl draw" d="M836,348 L886,288" marker-end="url(#rmA)"/>
+        <g transform="translate(880,170)">
+          <path class="iso-l" d="M-165,25 L215,80 L215,92 L-165,37 Z"/>
+          <path class="iso-r" d="M215,80 L380,55 L380,67 L215,92 Z"/>
+          <path class="iso-t key" d="M0,0 L380,55 L215,80 L-165,25 Z"/>
+        </g>
+        <rect class="tile" x="715" y="40" width="30" height="30" rx="7"/>
+        <use href="#rmLoop" x="718" y="43"/>
+        <text class="sl g" x="759" y="53">HORIZON 03 / THEN</text>
+        <text class="sl" x="759" y="69">AFTER IT GOES LIVE</text>
+        <text class="sb" x="715" y="104" style="font-size:19px;font-weight:600">Live monitoring and</text>
+        <text class="sb" x="715" y="128" style="font-size:19px;font-weight:600">self improvement</text>
+        <text class="sbm" x="715" y="154" style="font-size:13px">Real time intervention, and every judged run</text>
+        <text class="sbm" x="715" y="172" style="font-size:13px">becomes data that sharpens the next one.</text>
       </g>
+
+      <!-- ============ the loop back ============ -->
       <g data-step="4">
-        <rect class="node" x="1098" y="60" width="292" height="126" style="stroke:var(--sig-supported)"/>
-        <text class="sl k" x="1122" y="92">THE HANDOVER</text>
-        <text class="sb" x="1122" y="126" style="font-size:17px">Deployment</text>
-        <text class="sb" x="1122" y="150" style="font-size:17px">Readiness Report</text>
-        <text class="sbm" x="1122" y="176">Signed off, and evidenced</text>
-        <line x1="0" y1="250" x2="1390" y2="250" stroke="var(--line)"/>
-        <text class="sl t" x="0" y="284">SAME LAYER REGARDLESS OF CLIENT, REGULATION OR VENDOR STACK</text>
-        <text class="sbm" x="0" y="314" style="font-size:15px">The regulation is an input to the system, not a rebuild of it.</text>
+        <path class="gold draw" d="M1240,250 C1330,470 700,560 -60,528"
+              fill="none" marker-end="url(#rmG)"/>
+        <text class="sl g" x="360" y="552">EVERY RUN MAKES THE NEXT ONE SHARPER</text>
       </g>
     </svg>
   </div>
 </section>
 
-<!-- 12 GO TO MARKET ======================================================= -->
-<section class="slide" data-eyebrow="GO TO MARKET" data-glow="1100,660">
-  <div class="eyebrow rise">11 / Go to market</div>
-  <h2 class="rise">Three routes, all of them existing motions.</h2>
-  <div style="margin-top:30px">
-    <svg width="1390" height="360" viewBox="0 0 1390 360" aria-label="Three go to market routes: attach to existing customer experience engagements, audit agents built by others because the layer is vendor neutral, and recurring reassessment when regulations change.">
-      <g data-step="1">
-        <rect class="node" x="0" y="0" width="440" height="234"/>
-        <text class="sl t" x="26" y="36">ROUTE 01 / ATTACH</text>
-        <text class="sb" x="26" y="78" style="font-size:22px;font-weight:600">Existing CX</text>
-        <text class="sb" x="26" y="108" style="font-size:22px;font-weight:600">engagements</text>
-        <text class="sbm" x="26" y="150">Assurance becomes a line item on</text>
-        <text class="sbm" x="26" y="172">work already being won.</text>
-        <text class="sbm" x="26" y="208" style="font-size:13px">Shortest path. No new buyer.</text>
-      </g>
-      <g data-step="2">
-        <rect class="node key" x="474" y="0" width="440" height="234" style="stroke-width:2.5"/>
-        <rect x="474" y="0" width="440" height="234" fill="var(--sig-trace)" opacity=".08"/>
-        <text class="sl t" x="500" y="36">ROUTE 02 / NEW</text>
-        <text class="sb" x="500" y="78" style="font-size:22px;font-weight:600">Audit agents</text>
-        <text class="sb" x="500" y="108" style="font-size:22px;font-weight:600">others built</text>
-        <text class="sbm" x="500" y="150">Vendor neutral means Hexaware can</text>
-        <text class="sbm" x="500" y="172">assess a stack it did not deliver.</text>
-        <text class="sbm" x="500" y="208" style="font-size:13px">New logos, no build risk.</text>
-      </g>
-      <g data-step="3">
-        <rect class="node" x="948" y="0" width="442" height="234"/>
-        <text class="sl t" x="974" y="36">ROUTE 03 / RECUR</text>
-        <text class="sb" x="974" y="78" style="font-size:22px;font-weight:600">Regulations</text>
-        <text class="sb" x="974" y="108" style="font-size:22px;font-weight:600">change</text>
-        <text class="sbm" x="974" y="150">The rulebook is an input. When it</text>
-        <text class="sbm" x="974" y="172">moves, the assessment re runs.</text>
-        <text class="sbm" x="974" y="208" style="font-size:13px">Recurring, not one off.</text>
-      </g>
-      <g data-step="4">
-        <line x1="0" y1="278" x2="1390" y2="278" stroke="var(--line)"/>
-        <text class="sl t" x="0" y="312">THE STRATEGIC ONE IS ROUTE TWO</text>
-        <text class="sbm" x="0" y="342" style="font-size:15px">OpenAI ships Presence through select global systems integrators. Assuring any agent, not only ones built on a single vendor, is the differentiator in that room.</text>
-      </g>
-    </svg>
-  </div>
-</section>
-
-<!-- 13 MARKET AND COST ==================================================== -->
+<!-- 11 MARKET AND COST ==================================================== -->
 <section class="slide" data-eyebrow="MARKET AND COST" data-glow="260,300">
-  <div class="eyebrow rise">12 / Market and cost</div>
+  <div class="eyebrow rise">10 / Market and cost</div>
   <h2 class="rise">A large market, and a small line item.</h2>
   <div style="margin-top:26px">
     <svg width="1390" height="340" viewBox="0 0 1390 340" aria-label="Voice AI agent market growing from about three and a half billion dollars in 2026 to about thirty five billion by 2033 at roughly thirty nine percent compound growth. Measured EchoProof campaign cost was eighty two cents of model spend for eighteen calls.">
@@ -893,9 +837,9 @@ svg{display:block;overflow:visible}
   <p class="src rise">Market: published industry forecasts 2026. Cost: measured campaign in this repository, projected at realistic call length.</p>
 </section>
 
-<!-- 14 THE LANDSCAPE ====================================================== -->
+<!-- 12 THE LANDSCAPE ====================================================== -->
 <section class="slide" data-eyebrow="THE LANDSCAPE" data-glow="1150,660">
-  <div class="eyebrow rise">13 / The landscape</div>
+  <div class="eyebrow rise">11 / The landscape</div>
   <h2 class="rise">Nobody independent is checking before launch.</h2>
   <div style="margin-top:22px">
     <svg width="1390" height="390" viewBox="0 0 1390 390" aria-label="A positioning map. The horizontal axis runs from after deployment to before deployment. The vertical axis runs from vendor self check to independent. Conversation intelligence tools sit after deployment. End to end platforms and voice vendors sit in vendor self check. EchoProof sits alone in the before deployment and independent quadrant.">
@@ -943,7 +887,7 @@ svg{display:block;overflow:visible}
   </div>
 </section>
 
-<!-- 15 CLOSE ============================================================== -->
+<!-- 13 CLOSE ============================================================== -->
 <section class="slide" data-eyebrow="CLOSE" data-glow="800,300">
   <div class="eyebrow rise">Close</div>
   <h1 style="font-size:70px;line-height:1.14">
@@ -957,7 +901,7 @@ svg{display:block;overflow:visible}
   <div id="chrome">
     <span>ECHOPROOF</span>
     <span id="eyeb">TITLE</span>
-    <span><span id="idx">1</span> / 15</span>
+    <span><span id="idx">1</span> / 13</span>
   </div>
   <div class="ov" id="over"><h3>Overview</h3><div id="ogrid"></div></div>
   <div class="ov" id="keys"><h3>Key map</h3><dl>
