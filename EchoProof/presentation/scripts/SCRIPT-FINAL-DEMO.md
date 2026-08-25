@@ -1,5 +1,10 @@
-================ POC DISCUSSION SCRIPT ================
-================ FINAL DEMO, 13 MINUTES ================
+================ ECHOPROOF ================
+================ FINAL DEMO SCRIPT ================
+
+Target: 10 minutes. Slides about 6, walkthrough about 3, close about 1.
+Every click marker below is verified against a real build step in deck.html.
+Grouped reveals fire on ONE press and settle in sequence, so there is no
+drumming on the space bar.
 
 ---------------- BEFORE YOU START ----------------
 
@@ -15,371 +20,267 @@
 
 [OPEN HTTP://127.0.0.1:8077/BENCH IN TAB THREE, CHECK THE TOP CARD READS THIRD PARTY DISCLOSURE - DEMO BASELINE]
 
----------------- OPENING ----------------
+---------------- OPENING (0:00) ----------------
 
-[SLIDE 1: CLICK 2X]
+[SLIDE 1: CLICK 1X]
 
-Here is the moment every company deploying an AI agent eventually reaches.
+Thanks Erik.
 
-The agent is built.
+Like Erik said, this is EchoProof. It has been my foundational project this
+summer at Hexaware and I am excited to get right into it.
 
-The model works.
+So here is something true about every voice AI agent, no matter who built it.
+You can swap the speech vendor. You can swap the voice. But somewhere in the
+middle there is a language model deciding what to actually say to the customer.
+That model is the part that can break a rule. And it is the one piece every
+stack has in common.
 
-The customer is ready.
-
-And someone in compliance asks:
-
-"Can you prove this thing is safe?"
-
-Not did you test it?
-
-Not does it usually behave?
-
-But
-
-Show me what the agent said.
-
-Show me the evidence and why you reached that verdict.
-
-And that is the problem I want to solve with EchoProof.
-
-In regulated AI, being right isn't enough.
-
-You have to be able to prove it.
+In regulated AI, being right is not enough. You have to be able to prove you
+were right.
 
 I learned that interning in compliance at TELUS.
 
-Compliance isn't really about knowing the rules.
+And today THAT proof is produced by people, manually, across hundreds of
+conversations.
 
-It is about being able to produce the evidence.
+That is the bottleneck. [CLICK 1X]
 
-And today, that evidence is largely created by people, manually, after the fact, and at a fraction of the conversations these agents are having.
-
-That's the bottleneck.
-
----------------- THE BOTTLENECK ----------------
-
-[SLIDE 2: CLICK 1X]
+---------------- THE BOTTLENECK (1:15) ----------------
 
 [CLICK 1X]
 
-The models are ready. The agents are ready. The businesses are ready.
-
-The proof isn't.
+The proof is the part that is missing.
 
 [CLICK 1X]
 
-And then it stops, because one person has to put their name on a document saying this agent is safe to talk to customers, and they have nothing to base that on.
+Deployment stalls right here, because Quality Assurance has to sign their name
+to a document saying this agent is safe, and there is no consistent framework
+sitting behind that signature.
 
 [CLICK 1X]
 
-The constraint is not capability. It is proof. Which brings me to how that proof gets produced today.
+EchoProof came out of multiple rounds of iteration with stakeholders, including
+validation from an applied engineer at Deepgram and several working sessions
+with Roger in customer experience.
 
----------------- WHAT THEY DO TODAY ----------------
+Two common problems stood out.
 
-[SLIDE 3: CLICK 1X]
+First being coverage, because nobody can listen to every conversation on file.
+And the second is evidence, because a score in a spreadsheet is not something
+you hand a regulator.
+
+Each of those adds weeks to agent rollout, and here is how things are typically
+done today. [CLICK 1X]
+
+---------------- WHAT THEY DO TODAY (2:00) ----------------
 
 [CLICK 1X]
 
-It is a person, with headphones, and a rulebook open next to them. Industry benchmarks put manual quality review at somewhere between one and five percent of calls.
+Industry benchmarks put quality review somewhere between one and five percent
+of calls.
 
 [CLICK 1X]
 
-That is arithmetic, not laziness. A trained analyst gets through ten to fifteen interactions a day. It is a structural ceiling you cannot staff your way out of.
-
-So most of what your agents say is never examined by anyone, it is reviewed weeks after go live, and what comes out is a score with no rule attached.
+One analyst gets through a handful of conversations a day. So most of what your
+agent says is never fully examined by anyone.
 
 [CLICK 1X]
 
-This is a manual process, and EchoProof automates it. Not a new process to learn. The same review, on every single turn, before launch instead of after, and every flag comes out carrying the rule it broke. Here is what that actually is.
+That is a manual process, and something EchoProof can automate. [CLICK 1X]
 
----------------- WHAT IT IS ----------------
+---------------- WHAT IT IS (2:30) ----------------
 
 [SLIDE 4: CLICK 1X]
 
-In one sentence: it reads what the agent said, finds the provision in the client's own rulebook that governs it, and decides from that text alone.
+What goes in is a transcript of a test conversation the agent already had. What
+comes out is a verdict on every line the agent said, with the exact rule quoted
+next to it. It is a pre-deployment check. It runs before anything goes live.
 
-[CLICK 4X]
+In just four steps. It reads what the agent said. It pulls out each claim. It
+finds the one rule in the client's own policy documents that governs that claim.
+Then it rules, and seals the record.
 
-Four moves. It reads the turn, and only the agent's turns. It locates claims as verbatim quotes. It retrieves the governing provision. And it decides, then seals the record.
+Now, the next few slides are the reasons you can trust that output. [CLICK 1X]
 
-Everything from here is how each of those is made trustworthy, because any one done loosely turns this back into an opinion, starting with how it reads.
-
----------------- THE PIPELINE ----------------
-
-[SLIDE 5: CLICK 1X]
-
-[CLICK 1X]
-
-An OpenAI compatible proxy sits in front of the model call. You change a base URL and nothing else moves.
-
-Claim extraction returns verbatim quotes, and the offsets are computed in code by locating that quote, so a paraphrase gets rejected rather than stored.
+---------------- THE ISOLATION BOUNDARY (3:30) ----------------
 
 [CLICK 1X]
 
-Then this gold path. Money and dates are canonicalised and compared in code, ahead of retrieval. A value that arithmetic can settle never reaches a model at all.
+Retrieval searches the client's rulebook by evaluating keywords and meaning of
+the claims.
 
 [CLICK 1X]
 
-And the turn travels as signal, cut at claim boundaries, because the claim is the unit of adjudication rather than the sentence or the call.
-
-Which sets up the one decision this whole thing rests on.
-
----------------- THE ISOLATION BOUNDARY ----------------
-
-[SLIDE 6: CLICK 1X]
+It pulls out exactly one policy and pairs it with one claim.
 
 [CLICK 1X]
 
-Retrieval is hybrid. Keyword and dense search across the client's corpus, fused, then reranked by a cross encoder.
+Then you have the fence. That pair is everything the judge ever sees. Even the
+model's own training knowledge does not intervene.
 
 [CLICK 1X]
 
-It lifts exactly one provision out, and pairs it with one claim.
+This brings us to. [CLICK 1X]
+
+---------------- THE FIVE STATES (4:00) ----------------
 
 [CLICK 1X]
 
-Then the fence. Those two things are the only things that cross into the judge, and the judge rules from that text alone.
+The verdicts. Supported and contradicted, are the two that decide the outcome.
 
 [CLICK 1X]
 
-The corpus does not cross. The model's own training knowledge does not cross.
-
-Two reasons. The provision it was handed is stored, so a verdict is falsifiable by reading it. And if it could reach past that fence, a wrong verdict would be unattributable, because you could never tell whether retrieval or the judge failed. That fence decides whether it speaks at all.
-
----------------- THE FIVE STATES ----------------
-
-[SLIDE 7: CLICK 1X]
-
-[CLICK 2X]
-
-Five verdict states, never a pass or a fail. Two of them decide.
+And these three verdicts are scenarios where the model itself refuses to judge
+them, this can be due to no policies governing a certain claim, or the judge
+unwilling to give a false positive.
 
 [CLICK 1X]
 
-Three of them decline.
+Those three route to a human reviewer, and they are separate from findings in
+the system. [CLICK 1X]
+
+---------------- EVIDENCE AND TRACEABILITY (4:30) ----------------
 
 [CLICK 1X]
 
-Those three route to a human reviewer, counted separately from findings everywhere in the system.
-
-Because a system that forces a verdict to avoid an abstention is optimising its own scoreboard. A confident wrong answer costs a compliance officer far more than an honest I do not know. Every one of those gets logged the same way.
-
----------------- EVIDENCE AND TRACEABILITY ----------------
-
-[SLIDE 8: CLICK 1X]
+Traceability. So every search and every finding writes a record into a linked
+log.
 
 [CLICK 1X]
 
-Every model call, every retrieval call and every finding writes a span into an append only, hash chained log. Each entry's hash covers the entry before it.
+This is what happens when somebody edits an entry in the middle. Every link
+after it breaks. You cannot discretely change this record, only visibly destroy
+it.
 
 [CLICK 1X]
 
-Watch what happens when somebody edits an entry in the middle. Every link after it breaks. You cannot quietly amend this record, only visibly destroy it.
+That gives you traceability and credibility of the decision itself. [CLICK 1X]
+
+---------------- AUDIO AS EVIDENCE (5:00) ----------------
 
 [CLICK 1X]
 
-And this is the part that matters most for governance. Published training lineage gives you traceability of the model. This gives you traceability of the decision, which is what a regulator actually asks about. And that traceability does not stop at text.
-
----------------- AUDIO AS EVIDENCE ----------------
-
-[SLIDE 9: CLICK 1X]
+The audio component of EchoProof is the speech to text running through
+Deepgram, which returns timestamps.
 
 [CLICK 1X]
 
-Speech to text is Deepgram Nova-3, which returns word level timestamps.
+And that slices the source audio, so the reviewer hears the eight seconds that
+matter instead of scrubbing a twelve minute recording. This is done because if
+the transcription ever gets it wrong, the QA can simply listen to the raw audio
+to verify it themselves.
+
+Now with regards to the stack. [CLICK 1X]
+
+---------------- THE STACK (5:30) ----------------
 
 [CLICK 1X]
 
-The claim extractor gives character offsets into the transcript. Those two map onto each other deterministically.
+The top layer is the customer's voice agent. Deepgram, or any other vendor,
+handles speech to text.
 
 [CLICK 1X]
 
-And that span slices the source audio, so a finding carries the exact sentence flagged, not the whole call.
-
-Adjudication is text only. Audio attaches after the verdict exists, so it is evidence for a finding and never an input to one. Now, where does all of this actually sit.
-
----------------- THE STACK ----------------
-
-[SLIDE 10: CLICK 1X]
+In the middle layer is EchoProof. It is a standardized endpoint, which just
+means it plugs into whatever stack a customer already runs.
 
 [CLICK 1X]
 
-Top layer, the customer's voice agent. Telephony, Deepgram for speech to text, an orchestrator, text to speech.
+And the bottom layer is the engine. Where the judge monitors off to the side.
 
 [CLICK 1X]
 
-Middle layer, us. One OpenAI compatible endpoint, sitting in front of the model call.
+And every vendor in that top layer is portable, so nothing gets rebuilt to
+accommodate it.
+
+That is the theory. Now this is all easier to show than to describe so let us
+head to the user interface.
+
+---------------- THE WALKTHROUGH (6:00) ----------------
+
+[ALT TAB TO THE BROWSER]
+
+[YOUR UI WALKTHROUGH GOES HERE. HOME PAGE, THEN RIG, THEN BENCH, THEN CORPUS.]
+
+[WHEN YOU ARE DONE, ALT TAB BACK TO THE DECK]
+
+That is the product. Here is where it goes. [CLICK 1X]
+
+---------------- ROADMAP (8:45) ----------------
 
 [CLICK 1X]
 
-Bottom layer is our engine, and the response goes back unmodified and is never delayed. Adjudication runs to the side, after the response has gone. A capture failure cannot become a request failure, and that is enforced by tests.
+Today, it diagnoses. It finds the violation, it cites the rule that governs it,
+and it seals the evidence. That is what you just saw, and it is deliberately
+narrow, because compliance against a client's own rulebook is the part nobody
+filled.
 
 [CLICK 1X]
 
-Swap every vendor in that top layer. The attachment point does not move. Which is what makes the next part possible.
-
----------------- WHERE IT SITS AT HEXAWARE ----------------
-
-[SLIDE 11: CLICK 1X]
-
-[CLICK 1X]
-
-The client brings the regulation, their policy and their risk threshold.
+Next, it repairs. Instead of testing a scripted handful of conversations, it
+searches thousands of paths looking for the ones that break. Then it does not
+just flag the bad line, it rewrites the agent's instructions to kill that whole
+class of problem, and re runs everything to prove the fix held and nothing else
+broke.
 
 [CLICK 1X]
 
-Hexaware brings the agent build, the CX operations, the delivery centres.
+Then it compounds. Every violation ever found becomes a permanent test case, so
+every client makes the next client's launch safer. And eventually the rulebook
+itself generates the guardrails, which means agents start compliant instead of
+being tested into compliance.
 
 [CLICK 1X]
 
-EchoProof sits in exactly one place. Between the build and the sign off.
+Which is the interesting part long term. It stops being a report you read, and
+becomes a loop that keeps making the next agent better than the last one.
+[CLICK 1X]
+
+---------------- MARKET AND COST (9:15) ----------------
 
 [CLICK 1X]
 
-And out the other side comes the artifact. Not an assurance the agent was tested, an evidence file showing what was tested and against which rule, that the client can put in front of their own regulator.
-
-Same layer regardless of client, regulation or vendor stack, which is what makes this repeatable.
-
----------------- GO TO MARKET ----------------
-
-[SLIDE 12: CLICK 1X]
+The voice AI market is around 3.5 billion this year, and forecasts near 35
+billion by 2033. And with more agents comes more compliance pressure.
 
 [CLICK 1X]
 
-Three routes, and all of them are motions Hexaware already runs. It attaches to CX engagements already being won, as the assurance line item.
+Here is what it actually costs to run. The measured campaign was eighteen calls
+for eighty two cents in model spend, projecting to roughly twenty three dollars
+per hundred calls.
+
+So model spend is not the constraint here. Access is, because we need the
+client's authorization to test against their policies.
+
+This also raises the question of who else is doing this. [CLICK 1X]
+
+---------------- COMPETITIVE (9:30) ----------------
 
 [CLICK 1X]
 
-It opens a new one, which is auditing agents somebody else built, because being vendor neutral means Hexaware can assess a stack it did not deliver.
+The closest product is OpenAI Presence. It is a strong product, but it is end to
+end, which means the vendor supplying the agent also supplies the grade. That is
+a self assessment.
+
+EchoProof works across mixed stacks where the speech layer and the model come
+from different vendors, which is what most real enterprise deployments look
+like, especially when factoring in economics, budget and existing partnerships.
+[CLICK 1X]
+
+---------------- CLOSE (9:45) ----------------
 
 [CLICK 1X]
 
-And it recurs, because the rulebook is an input. When the regulation moves, the assessment re runs.
+So, as a result. A review that took two weeks takes minutes. It covers every
+turn instead of only a handful. And at the end you are holding an evidence file
+with a citation on every line.
 
-[CLICK 1X]
+I think governance is the thing standing between these deployments and revenue.
 
-The strategic one is the middle route, but first, the size of that room.
+I know you will each have your own read on it. So I would like to end here and I
+would love to hear any of your thoughts and questions.
 
----------------- MARKET AND COST ----------------
-
-[SLIDE 13: CLICK 1X]
-
-[CLICK 1X]
-
-The voice AI agent market is around three and a half billion dollars this year, heading toward thirty five billion by 2033. Every one of those deployments is a governance sign off waiting to happen.
-
-[CLICK 1X]
-
-And on cost, our measured campaign came to eighty two cents of model spend for eighteen calls, which projects to roughly twenty three dollars per hundred call campaign. Model spend is not the constraint here. Reviewer time is, and that is what this is aimed at. Which is why that route matters, and who else is in this space.
-
----------------- THE LANDSCAPE ----------------
-
-[SLIDE 14: CLICK 1X]
-
-[CLICK 1X]
-
-So who else is doing this. Two axes. Before or after deployment. And independent, or the vendor checking itself.
-
-[CLICK 1X]
-
-Conversation intelligence, Observe.AI and Modulate, analyse production calls at full coverage. Genuinely valuable, but it is scoring against rubrics after the call.
-
-[CLICK 1X]
-
-The closest thing to us is OpenAI Presence, launched in July. Strong product, evals and graders built in. But it is end to end. The same vendor supplies the voice, the model and the readiness answer, so what comes back is a self check. And it does not cover cascaded stacks at all. Same problem with the voice vendors shipping built in compliance engines.
-
-[CLICK 1X]
-
-Which leaves this quadrant empty. Independent, and before launch.
-
-And it matters commercially, because OpenAI is shipping Presence through select global systems integrators. Being able to say we assure any agent, not only the ones built on one vendor, is the differentiator in exactly that room.
-
-And on scale, because it is the obvious next question. Everything I am about to show you runs end to end on this laptop against real evidence. At volume the same interface points at Bedrock, retrieval moves to OpenSearch, the reranker moves to a GPU, and adjudication runs as a worker pool that scales linearly, because every turn is independent.
-
-All of which is easier to show than it is to describe.
-
----------------- THE WALKTHROUGH ----------------
-
-[ALT TAB TO THE BROWSER, TAB THREE, THE BENCH]
-
-So let me use it the way the person it is built for would use it.
-
-I am the compliance engineer. It is Monday. A voice agent build has been handed to me and I have to decide whether it can go live.
-
-This is the bench. Every assessment run, each card saying chain verified, meaning the chain was re verified when this page loaded.
-
-[CLICK THE TOP CARD, THIRD PARTY DISCLOSURE - DEMO BASELINE]
-
-First question I ask is always the same. Can this ship.
-
-[POINT AT THE GATE DECISION BLOCK AT THE TOP]
-
-Block release. And that is not our opinion. It is computed on read from the client's own criteria pack. They told us one critical finding stops a deployment, so this stops.
-
-[POINT AT THE VERDICTS TABLE]
-
-Second, what is the shape of it. Two contradicted, six abstentions.
-
-[POINT AT THE ABSTENTIONS SECTION]
-
-Listed apart from findings, deliberately. Those are my queue, not evidence the agent was fine.
-
-[SCROLL TO FINDINGS AND CLICK THE FIRST FINDING]
-
-Third, show me the worst one.
-
-[POINT AT WHAT WAS SAID]
-
-This is what the agent said, sliced out of the recorded transcript by character offset. Not summarised, not restated.
-
-[POINT AT THE CREAM COLOURED CARD]
-
-And this is the rule it broke, printed as the regulation prints it. Section 1006.6(d)(1). I am not asked to trust a verdict, I am shown what it rests on, so I can disagree in five seconds.
-
-[POINT AT WHY IT FAILED]
-
-The reasoning names the third party and the exceptions it ruled out.
-
-[SCROLL DOWN TO THE EVIDENCE TRACE]
-
-Fourth, and this is the one that matters. How do I know it is right.
-
-[POINT AT THE RETRIEVAL STEP]
-
-Every step. This one is retrieval: the queries it ran, every candidate it was offered, and the one it selected.
-
-[POINT AT THE LAST STEP, EVIDENCE SEAL]
-
-And the seal at the end. If anyone edits any of it after the fact, this breaks visibly.
-
-[CLICK CORPUS IN THE TOP NAV]
-
-Fifth, what did it not look at. This is the rulebook, and I can see which provisions retrieval reached. My coverage gap, in one place.
-
-[CLICK DELTA IN THE TOP NAV]
-
-And the loop that closes it. Same scenario, same seed, only the agent changed. The finding closed and nothing new opened. That is what I need before I sign, because a fix that closes one issue and opens another has fixed nothing.
-
-[STOP CLICKING AND LOOK AT THE ROOM]
-
-That is a compliance review that took two minutes instead of two weeks, and every step of it is on the record. Which is the whole point, stated simply.
-
----------------- CLOSE ----------------
-
-[ALT TAB BACK TO THE DECK]
-
-[PRESS 1 5 AND ENTER TO JUMP TO THE LAST SLIDE]
-
-[CLICK 2X]
-
-Every claim has a source. Every verdict has a rule. Every finding has evidence.
-
-I have not really been selling you a product here. The product is a proxy, a rulebook and a hash chain. What I am actually saying is that governance is the thing standing between these deployments and revenue, and it is solvable.
-
-So the ask is a live engagement to point this at, and an introduction to whoever signs off that an agent can go live.
-
-Thank you.
+[STOP TALKING]
 
 ---------------- IF SOMETHING GOES WRONG ----------------
 
@@ -389,9 +290,11 @@ Thank you.
 
 [RELOAD THE PAGE]
 
-If it does not come back, go back to the deck and close from the last slide. Say this.
+If it does not come back, go back to the deck and close from the last slide.
+Say this.
 
-That runs live on this laptop and I am not going to debug it in front of you. Everything I described is on disk and I will walk anyone through it afterwards.
+That runs live on this laptop and I am not going to debug it in front of you.
+Everything I described is on disk and I will walk anyone through it afterwards.
 
 ---- A SCREEN RENDERS HALF WAY ----
 
@@ -399,42 +302,8 @@ That runs live on this laptop and I am not going to debug it in front of you. Ev
 
 Keep talking through the reload. Do not narrate it.
 
----------------- QUESTIONS YOU WILL GET ----------------
+---- A LIVE RUN IS STILL GOING WHEN YOU COME BACK ----
 
----- "HOW IS THIS DIFFERENT FROM OPENAI PRESENCE?" ----
-
-Presence is a strong product and it does have evals and graders in it. The difference is who is holding the pen. It is OpenAI's model, OpenAI's guardrails and OpenAI's grader, so the readiness answer is a self check.
-
-The other half is coverage. Presence is an end to end platform. A large share of real enterprise deployments are cascaded, with the speech layer from one vendor and the model from another, and an end to end product does not assess those at all. We are neutral to the whole stack, and a cascaded setup is actually easier for us to instrument because the seams are already there.
-
----- "WHAT ABOUT OBSERVE.AI OR THE OTHER CONVERSATION INTELLIGENCE TOOLS?" ----
-
-They are good at what they do and they do get to full coverage, which is more than manual QA manages. But they are analysing production calls after the fact and scoring against rubrics somebody wrote.
-
-We are pre deployment, and we adjudicate against the client's actual regulation with the provision cited. Different question, different point in the lifecycle. Honestly they are complements more than competitors.
-
----- "WHY NOT JUST HAVE THE MODEL VENDOR BUILD THIS IN?" ----
-
-Because you do not want the company supplying the agent to also be the company signing off that it is safe. That is a structural conflict, and every other regulated industry separates those two roles.
-
----- "HOW DOES THIS HANDLE A RULEBOOK WE HAVE NOT SEEN?" ----
-
-The rulebook is an input. It goes in as a data pack, chunked at section level with the real identifiers. We proved the boundary by swapping the corpus for a completely different industry's standard, with a different numbering convention, and no engine code changed.
-
----- "WHAT ABOUT OPEN SOURCE, OR RUNNING THIS ON OPEN WEIGHTS MODELS?" ----
-
-There is a real thread there. The interface is one OpenAI compatible endpoint, so any model behind a compatible endpoint works, including open weights ones running in a client's own environment. For a bank that cannot send transcripts to a third party, that matters a lot.
-
-And it lines up with where governance is heading. The reason people care about published training lineage is traceability, being able to say where an answer came from. That is exactly the argument we make one layer up. Model lineage tells you where the weights came from. Our evidence chain tells you where the decision came from. A regulator asks the second question far more often than the first.
-
----- "WHAT DOES IT COST TO RUN AT VOLUME?" ----
-
-Model spend is not the constraint. Our measured campaign was well under a dollar, and it projects to about twenty three dollars per hundred calls at realistic call lengths.
-
-The real cost is compute on the reranker, which is a hardware line item and not a research problem, and the thing you are trading against is reviewer hours.
-
----- "WHAT IS THE HARDEST UNSOLVED PROBLEM IN IT?" ----
-
-Compound obligations. A rule that requires two things in one sentence gets split into two claims, and each half gets judged against the whole rule, so text that actually complies can be marked as violating.
-
-That is structural rather than tuning. Claims are the unit of adjudication and obligations are not always claim shaped. Fixing it means evaluating multi element obligations at turn level, and that is not built.
+Do not wait for it. Switch to the bench and open the stored baseline. Say that
+it is a live model call on a laptop CPU, that about two minutes a conversation
+is expected, and that it is the first thing production fixes.

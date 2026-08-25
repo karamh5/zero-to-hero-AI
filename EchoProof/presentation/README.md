@@ -11,9 +11,9 @@ build step in the deck.
 
 | File | What it is | Use it when |
 |---|---|---|
-| [demo-day/deck.html](demo-day/deck.html) | **The deck.** 15 slides, 14 inline SVG diagrams, offline, arrow keys, click to advance build steps | Presenting live |
+| [demo-day/deck.html](demo-day/deck.html) | **The deck.** 13 slides, 12 inline SVG diagrams, offline, arrow keys, click to advance build steps | Presenting live |
 | [demo-day/deck-print.html](demo-day/deck-print.html) | Same deck, every build step already in its final state, one slide per page | Making the PDF to send |
-| [scripts/SCRIPT-FINAL-DEMO.md](scripts/SCRIPT-FINAL-DEMO.md) | 13 minutes, all 15 slides plus the full UI walkthrough | **The main script. Rehearse this one** |
+| [scripts/SCRIPT-FINAL-DEMO.md](scripts/SCRIPT-FINAL-DEMO.md) | 10 minutes, all 13 slides plus the UI walkthrough | **The main script. Rehearse this one** |
 | [scripts/SCRIPT-2MIN-ELEVATOR.md](scripts/SCRIPT-2MIN-ELEVATOR.md) | 2 minutes, no deck, one screen and one scroll | Corridor, lift, quick intro |
 | [DEMO-RUNBOOK.md](DEMO-RUNBOOK.md) | Pre-flight, warm-up, what to run, failure playbook | Every time you present |
 | [QA-BANK.md](QA-BANK.md) | Deeper question bank | Prep, the night before |
@@ -39,27 +39,32 @@ already in its finished state, and the slides stack one per page.
    deck prints unreadable
 7. Save
 
-Fifteen landscape pages.
+Thirteen landscape pages.
 
 ---
 
 ## 3. The deck
 
-15 slides, one visual system throughout. Slide 10 is an isometric three layer
-stack carrying the real vendor names. There are no presenter notes in the file,
-and every slide is written to stand on its own, so it can be sent to somebody
-who will read it without anyone narrating.
+13 slides, one visual system throughout. Slide 9 is an isometric three layer
+stack carrying the real vendor names, and slide 10 is the three horizon roadmap.
+There are no presenter notes in the file, and every slide is written to stand on
+its own, so it can be sent to somebody who will read it without anyone
+narrating.
 
-| # | Slide | # | Slide |
-|---|---|---|---|
-| 1 | Title | 9 | Audio as evidence |
-| 2 | The bottleneck | 10 | The stack, isometric |
-| 3 | What they do today | 11 | Where EchoProof sits |
-| 4 | What it is | 12 | Go to market |
-| 5 | The pipeline | 13 | Market and cost |
-| 6 | The isolation boundary | 14 | The landscape |
-| 7 | The five verdict states | 15 | Close |
-| 8 | Evidence and traceability | | |
+| # | Slide | Presses | # | Slide | Presses |
+|---|---|---|---|---|---|
+| 1 | Title | 1 | 8 | Audio as evidence | 2 |
+| 2 | The bottleneck | 3 | 9 | The stack, isometric | 4 |
+| 3 | What they do today | 3 | 10 | Roadmap | 4 |
+| 4 | What it is | 1 | 11 | Market and cost | 2 |
+| 5 | The isolation boundary | 4 | 12 | The landscape | 1 |
+| 6 | The five verdict states | 3 | 13 | Close | 1 |
+| 7 | Evidence and traceability | 3 | | | |
+
+**Presses** is the number of clicks that slide needs before it advances.
+Elements that belong together share one build step and settle in sequence, so a
+slide that used to take four presses now takes one. `SCRIPT-FINAL-DEMO.md` is
+written against exactly these numbers.
 
 Keys: arrows, space, click, swipe, `O` overview, `F` fullscreen,
 `B` blackout, `?` key map, `Home` and `End`, and a slide number followed by
