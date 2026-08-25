@@ -223,7 +223,7 @@ every client makes the next client's launch safer. And eventually the rulebook
 itself generates the guardrails, which means agents start compliant instead of
 being tested into compliance.
 
-[CLICK 1X]
+[THE LOOP DRAWS ITSELF UNDER ALL THREE. NO CLICK.]
 
 Which is the interesting part long term. It stops being a report you read, and
 becomes a loop that keeps making the next agent better than the last one.
@@ -262,7 +262,7 @@ like, especially when factoring in economics, budget and existing partnerships.
 
 ---------------- CLOSE (9:45) ----------------
 
-[CLICK 1X]
+[NO CLICK. ALL THREE LINES ARRIVE WITH THE SLIDE.]
 
 So, as a result. A review that took two weeks takes minutes. It covers every
 turn instead of only a handful. And at the end you are holding an evidence file

@@ -55,10 +55,10 @@ narrating.
 |---|---|---|---|---|---|
 | 1 | Title | 1 | 8 | Audio as evidence | 2 |
 | 2 | The bottleneck | 2 | 9 | The stack, isometric | 3 |
-| 3 | What they do today | 3 | 10 | Roadmap | 4 |
+| 3 | What they do today | 3 | 10 | Roadmap | 3 |
 | 4 | What it is | 1 | 11 | Market and cost | 2 |
 | 5 | The isolation boundary | 3 | 12 | The landscape | 1 |
-| 6 | The five verdict states | 2 | 13 | Close | 1 |
+| 6 | The five verdict states | 2 | 13 | Close | 0 |
 | 7 | Evidence and traceability | 2 | | | |
 
 **Presses** is the number of clicks that slide needs before it advances.
