@@ -54,12 +54,12 @@ narrating.
 | # | Slide | Presses | # | Slide | Presses |
 |---|---|---|---|---|---|
 | 1 | Title | 1 | 8 | Audio as evidence | 2 |
-| 2 | The bottleneck | 3 | 9 | The stack, isometric | 4 |
+| 2 | The bottleneck | 2 | 9 | The stack, isometric | 3 |
 | 3 | What they do today | 3 | 10 | Roadmap | 4 |
 | 4 | What it is | 1 | 11 | Market and cost | 2 |
-| 5 | The isolation boundary | 4 | 12 | The landscape | 1 |
-| 6 | The five verdict states | 3 | 13 | Close | 1 |
-| 7 | Evidence and traceability | 3 | | | |
+| 5 | The isolation boundary | 3 | 12 | The landscape | 1 |
+| 6 | The five verdict states | 2 | 13 | Close | 1 |
+| 7 | Evidence and traceability | 2 | | | |
 
 **Presses** is the number of clicks that slide needs before it advances.
 Elements that belong together share one build step and settle in sequence, so a

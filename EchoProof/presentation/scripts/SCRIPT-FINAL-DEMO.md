@@ -57,7 +57,7 @@ Deployment stalls right here, because Quality Assurance has to sign their name
 to a document saying this agent is safe, and there is no consistent framework
 sitting behind that signature.
 
-[CLICK 1X]
+The constraint is not capability. It is proof.
 
 EchoProof came out of multiple rounds of iteration with stakeholders, including
 validation from an applied engineer at Deepgram and several working sessions
@@ -115,10 +115,8 @@ It pulls out exactly one policy and pairs it with one claim.
 
 [CLICK 1X]
 
-Then you have the fence. That pair is everything the judge ever sees. Even the
-model's own training knowledge does not intervene.
-
-[CLICK 1X]
+Then you have the fence. That pair is everything the judge ever sees. Not the
+full corpus, and not even the model's own training knowledge.
 
 This brings us to. [CLICK 1X]
 
@@ -133,8 +131,6 @@ The verdicts. Supported and contradicted, are the two that decide the outcome.
 And these three verdicts are scenarios where the model itself refuses to judge
 them, this can be due to no policies governing a certain claim, or the judge
 unwilling to give a false positive.
-
-[CLICK 1X]
 
 Those three route to a human reviewer, and they are separate from findings in
 the system. [CLICK 1X]
@@ -152,9 +148,8 @@ This is what happens when somebody edits an entry in the middle. Every link
 after it breaks. You cannot discretely change this record, only visibly destroy
 it.
 
+That gives you traceability of the decision itself, not only of the model.
 [CLICK 1X]
-
-That gives you traceability and credibility of the decision itself. [CLICK 1X]
 
 ---------------- AUDIO AS EVIDENCE (5:00) ----------------
 
@@ -188,10 +183,8 @@ means it plugs into whatever stack a customer already runs.
 
 And the bottom layer is the engine. Where the judge monitors off to the side.
 
-[CLICK 1X]
-
-And every vendor in that top layer is portable, so nothing gets rebuilt to
-accommodate it.
+And every vendor in that top layer is swappable. The attachment point does not
+move, so nothing gets rebuilt to accommodate it.
 
 That is the theory. Now this is all easier to show than to describe so let us
 head to the user interface.

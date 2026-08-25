@@ -247,7 +247,7 @@ svg{display:block;overflow:visible}
           <path d="M1210,42 L1250,84 M1250,42 L1210,84"/>
         </g>
       </g>
-      <g data-step="3">
+      <g data-step="2" data-in="1">
         <line x1="0" y1="146" x2="1390" y2="146" stroke="var(--line)"/>
         <text class="sl t" x="0" y="180">THE CONSTRAINT IS NOT CAPABILITY. IT IS PROOF.</text>
       </g>
@@ -381,7 +381,7 @@ svg{display:block;overflow:visible}
         <path class="fl draw" d="M840,62 L1018,104" marker-end="url(#mC)"/>
         <path class="fl draw" d="M840,176 L1018,154" marker-end="url(#mC)"/>
       </g>
-      <g data-step="4">
+      <g data-step="3" data-in="1">
         <rect x="606" y="258" width="234" height="46" rx="2" fill="none" stroke="var(--sig-contradicted)" stroke-dasharray="5 4"/>
         <text class="sbm" x="624" y="286" fill="var(--sig-contradicted)">the full corpus</text>
         <rect x="606" y="316" width="234" height="46" rx="2" fill="none" stroke="var(--sig-contradicted)" stroke-dasharray="5 4"/>
@@ -433,7 +433,7 @@ svg{display:block;overflow:visible}
         <text class="sm" x="1172" y="80" fill="var(--ink-muted)" style="font-size:13px">conflicting_sections</text>
         <text class="sbm" x="1172" y="116">Two plausible</text><text class="sbm" x="1172" y="136">candidates point</text><text class="sbm" x="1172" y="156">different ways.</text>
       </g>
-      <g data-step="3">
+      <g data-step="2" data-in="1">
         <path class="fl draw" d="M732,210 L732,246 L1268,246 L1268,210" opacity=".7"/>
         <path class="fl draw" d="M1000,210 L1000,246" opacity=".7"/>
         <text class="sl t" x="820" y="272">ROUTED TO HUMAN REVIEW, COUNTED SEPARATELY FROM FINDINGS</text>
@@ -486,7 +486,7 @@ svg{display:block;overflow:visible}
         </g>
         <text class="sl s" x="1130" y="222">SEAL BROKEN</text>
       </g>
-      <g data-step="3">
+      <g data-step="2" data-in="1">
         <line x1="0" y1="274" x2="1390" y2="274" stroke="var(--line)"/>
         <text class="sl t" x="0" y="302">TRACEABILITY OF THE DECISION, NOT ONLY OF THE MODEL.</text>
       </g>
@@ -713,7 +713,7 @@ svg{display:block;overflow:visible}
         <text class="sl t" x="652" y="348">GROUNDED DECISION</text>
       </g>
 
-      <g data-step="4">
+      <g data-step="3" data-in="1">
         <text class="sl t" x="-330" y="476">SWAP EVERY VENDOR IN THE TOP LAYER. THE ATTACHMENT POINT DOES NOT MOVE.</text>
       </g>
     </svg>
@@ -721,92 +721,118 @@ svg{display:block;overflow:visible}
 </section>
 
 <!-- 10 ROADMAP ========================================================== -->
-<section class="slide" data-eyebrow="ROADMAP" data-glow="1120,200">
+<section class="slide" data-eyebrow="ROADMAP" data-glow="1120,180">
   <div class="eyebrow rise">09 / Roadmap</div>
   <h2 class="rise">Diagnosis is where it starts. Not where it ends.</h2>
   <p class="sub rise">Every judged run is labelled data. Findings become tests, tests become guardrails, and the guardrails ship inside the next agent.</p>
-  <div style="margin-top:26px">
-    <svg width="1390" height="480" viewBox="0 0 1390 480" aria-label="A three horizon roadmap climbing left to right. Horizon one, live today, is diagnosis: find the violation, cite the governing rule, seal the evidence. Horizon two is repair: search thousands of conversation paths for the ones that break, fix the agent, then re-run everything to prove the fix held. Horizon three is compounding: every fix becomes a permanent test case until the rulebook itself generates the guardrails and agents start compliant. A loop closes from horizon three back to horizon one, because every run makes the next one sharper.">
+  <div style="margin-top:18px">
+    <svg width="1390" height="470" viewBox="0 0 1390 470" aria-label="Three isometric scenes reading left to right and climbing. First, diagnose: a transcript slab with one line flagged red beneath a scan ring, and the governing provision standing beside it. Second, repair: conversation paths fan out with the failing one in red, and the bad block is lifted out of the slab and replaced with a fixed one. Third, compound: those fixed blocks stack into a growing tower of permanent test cases, the newest in gold. A gold loop closes from the third scene back to the first, because every run makes the next one sharper.">
       <defs>
-        <marker id="rmA" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
-          <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-trace)"/></marker>
         <marker id="rmG" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
           <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-det)"/></marker>
-        <g id="rmScan" fill="none" stroke="var(--sig-trace)" stroke-width="1.8"
-           stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.4 15.4 L20.5 20.5"/>
-          <path d="M7.6 10.7 l2.1 2.1 l4.3 -4.5"/>
-        </g>
-        <g id="rmFix" fill="none" stroke="var(--sig-supported)" stroke-width="1.8"
-           stroke-linecap="round" stroke-linejoin="round">
-          <path d="M15.6 4.4 a4.6 4.6 0 0 0 -6.2 5.9 L4.2 15.5 a1.7 1.7 0 0 0 0 2.4
-                   l1.9 1.9 a1.7 1.7 0 0 0 2.4 0 l5.2 -5.2 a4.6 4.6 0 0 0 5.9 -6.2
-                   l-2.9 2.9 l-2.6 -0.7 l-0.7 -2.6 z"/>
-        </g>
-        <g id="rmGrow" fill="none" stroke="var(--sig-det)" stroke-width="1.8"
-           stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4.5 20 v-5"/><path d="M10.5 20 v-9"/><path d="M16.5 20 v-13"/>
-          <path d="M13 10 l3.5 -3.5 l3.5 3.5"/>
-        </g>
+        <marker id="rmA" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 z" fill="var(--sig-trace)"/></marker>
       </defs>
 
       <g data-step="1">
-        <rect x="0" y="200" width="406" height="210" rx="3" fill="var(--ground-raised)" stroke="var(--line-strong)" stroke-width="1.5"/>
-        <rect x="0" y="200" width="406" height="3" fill="var(--sig-trace)"/>
-        <rect class="tile" x="24" y="226" width="30" height="30" rx="7"/>
-        <use href="#rmScan" x="27" y="229"/>
-        <text class="sl" x="66" y="240" fill="var(--sig-trace)">HORIZON 01 / DIAGNOSE</text>
-        <text class="sl" x="66" y="256">LIVE TODAY, WHAT YOU JUST SAW</text>
-        <text class="sb" x="24" y="300" style="font-size:22px;font-weight:600">Find it. Cite it.</text>
-        <text class="sb" x="24" y="326" style="font-size:22px;font-weight:600">Prove it.</text>
-        <text class="sbm" x="24" y="352" style="font-size:12.5px">Every claim checked against the client rulebook,</text>
-        <text class="sbm" x="24" y="370" style="font-size:12.5px">every verdict sealed into the evidence chain.</text>
-        <rect class="chip" x="24" y="378" width="117" height="22"/>
-        <text class="sl" x="34" y="393">CITED VERDICTS</text>
-        <rect class="chip" x="149" y="378" width="124" height="22"/>
-        <text class="sl" x="159" y="393">SEALED EVIDENCE</text>
+        <!-- transcript slab, one line flagged -->
+        <path class="iso-l" d="M123.4,145.8 L253.0,220.6 L253.0,232.7 L123.4,157.9 Z"/>
+        <path class="iso-r" d="M340.6,170.0 L253.0,220.6 L253.0,232.7 L340.6,182.1 Z"/>
+        <path class="iso-t" d="M211.0,95.2 L340.6,170.0 L253.0,220.6 L123.4,145.8 Z"/>
+        <path d="M214.9,106.0 L302.5,156.6 L296.8,159.9 L209.1,109.3 Z" fill="var(--ink-faint)" opacity=".5"/>
+        <path d="M199.6,114.8 L306.3,176.4 L300.6,179.7 L193.9,118.1 Z" fill="var(--ink-faint)" opacity=".5"/>
+        <path d="M184.4,123.6 L249.1,161.0 L243.4,164.3 L178.7,126.9 Z" fill="var(--sig-contradicted)" opacity="1"/>
+        <path d="M169.1,132.4 L281.5,197.3 L275.8,200.6 L163.4,135.7 Z" fill="var(--ink-faint)" opacity=".5"/>
+        <path d="M153.9,141.2 L232.0,186.3 L226.3,189.6 L148.2,144.5 Z" fill="var(--ink-faint)" opacity=".5"/>
+        <!-- scan ring and beam onto the flagged line -->
+        <ellipse cx="232.0" cy="115.0" rx="94.3" ry="54.4" fill="none" stroke="var(--sig-trace)" stroke-width="1.6" opacity=".8"/>
+        <ellipse cx="232.0" cy="115.0" rx="62.0" ry="35.8" fill="none" stroke="var(--sig-trace)" stroke-width="1" stroke-dasharray="4 4" opacity=".55"/>
+        <path d="M223.4,106.8 L223.4,148.1" stroke="var(--sig-trace)" stroke-width="1.4" stroke-dasharray="3 3" opacity=".85"/>
+        <circle cx="223.4" cy="148.1" r="3" fill="var(--sig-contradicted)"/>
+        <!-- the provision it cites, standing beside the slab -->
+        <path class="iso-l" d="M283.4,182.1 L290.1,185.9 L290.1,229.9 L283.4,226.1 Z" fill="var(--paper)" stroke="var(--line-strong)" stroke-width="1"/>
+        <path class="iso-r" d="M339.6,157.3 L290.1,185.9 L290.1,229.9 L339.6,201.3 Z" fill="var(--paper)" stroke="var(--line-strong)" stroke-width="1"/>
+        <path class="iso-t" d="M333.0,153.5 L339.6,157.3 L290.1,185.9 L283.4,182.1 Z" fill="var(--paper)" stroke="var(--line-strong)" stroke-width="1"/>
+        <text class="sl t" x="311.4" y="162.6" text-anchor="middle">RULE</text>
+        <!-- column text -->
+        <path d="M16,282 h418" stroke="var(--sig-trace)" stroke-width="2"/>
+        <text class="sl" x="16" y="304" fill="var(--sig-trace)">HORIZON 01 / DIAGNOSE</text>
+        <text class="sl" x="16" y="320">LIVE TODAY, WHAT YOU JUST SAW</text>
+        <text class="sb" x="16" y="352" style="font-size:23px;font-weight:600">Find it. Cite it.</text>
+        <text class="sb" x="16" y="378" style="font-size:23px;font-weight:600">Prove it.</text>
+        <text class="sbm" x="16" y="404" style="font-size:12.5px">Every line the agent said, checked against the client</text>
+        <text class="sbm" x="16" y="422" style="font-size:12.5px">rulebook, with the governing provision quoted beside it.</text>
       </g>
 
       <g data-step="2">
-        <path class="fl draw" d="M414,305 L478,241" marker-end="url(#rmA)"/>
-        <rect x="492" y="110" width="406" height="210" rx="3" fill="var(--ground-raised)" stroke="var(--line-strong)" stroke-width="1.5"/>
-        <rect x="492" y="110" width="406" height="3" fill="var(--sig-supported)"/>
-        <rect class="tile" x="516" y="136" width="30" height="30" rx="7"/>
-        <use href="#rmFix" x="519" y="139"/>
-        <text class="sl" x="558" y="150" fill="var(--sig-supported)">HORIZON 02 / REPAIR</text>
-        <text class="sl" x="558" y="166">FROM CRITIC TO MECHANIC</text>
-        <text class="sb" x="516" y="210" style="font-size:22px;font-weight:600">Fix it, and prove</text>
-        <text class="sb" x="516" y="236" style="font-size:22px;font-weight:600">the fix held.</text>
-        <text class="sbm" x="516" y="262" style="font-size:12.5px">Search thousands of conversation paths for the</text>
-        <text class="sbm" x="516" y="280" style="font-size:12.5px">ones that break, repair them, then re-run it all.</text>
-        <rect class="chip" x="516" y="288" width="130" height="22"/>
-        <text class="sl" x="526" y="303">HUNT THE FAILURE</text>
-        <rect class="chip" x="654" y="288" width="130" height="22"/>
-        <text class="sl" x="664" y="303">FIX AND PROVE IT</text>
+        <path class="fl draw" d="M436,170 L474,152" marker-end="url(#rmA)"/>
+        <!-- conversation paths fanning out, one of them breaks -->
+        <path d="M607.4,90.8 L745.6,104.1" stroke="var(--sig-trace)" stroke-width="1" opacity=".35" fill="none"/>
+        <path d="M607.4,90.8 L732.6,127.1" stroke="var(--sig-contradicted)" stroke-width="1.8" opacity=".95" fill="none"/>
+        <path d="M607.4,90.8 L706.4,148.0" stroke="var(--sig-trace)" stroke-width="1" opacity=".35" fill="none"/>
+        <path d="M607.4,90.8 L670.2,163.0" stroke="var(--sig-trace)" stroke-width="1" opacity=".35" fill="none"/>
+        <path d="M607.4,90.8 L630.4,170.5" stroke="var(--sig-trace)" stroke-width="1" opacity=".35" fill="none"/>
+        <!-- the slab, with the bad block lifted out -->
+        <path class="iso-l" d="M586.4,130.8 L716.0,205.6 L716.0,217.7 L586.4,142.9 Z"/>
+        <path class="iso-r" d="M803.6,155.0 L716.0,205.6 L716.0,217.7 L803.6,167.1 Z"/>
+        <path class="iso-t" d="M674.0,80.2 L803.6,155.0 L716.0,205.6 L586.4,130.8 Z"/>
+        <path d="M691.2,124.9 L727.4,145.8 L698.8,162.3 L662.6,141.4 Z" fill="var(--ground-sunken)" stroke="var(--sig-contradicted)" stroke-width="1.2" stroke-dasharray="4 3"/>
+        <path class="iso-l" d="M662.6,90.1 L698.8,111.0 L698.8,128.6 L662.6,107.7 Z" fill="var(--iso-left)" stroke="var(--sig-supported)" stroke-width="1.6"/>
+        <path class="iso-r" d="M727.4,94.5 L698.8,111.0 L698.8,128.6 L727.4,112.1 Z" fill="var(--iso-left)" stroke="var(--sig-supported)" stroke-width="1.6"/>
+        <path class="iso-t" d="M691.2,73.6 L727.4,94.5 L698.8,111.0 L662.6,90.1 Z" fill="var(--iso-top)" stroke="var(--sig-supported)" stroke-width="2"/>
+        <path d="M682.6,103.8 L682.6,133.1" stroke="var(--sig-supported)" stroke-width="1.2" stroke-dasharray="3 3" opacity=".8"/>
+        <path d="M705.5,117.1 L705.5,146.3" stroke="var(--sig-supported)" stroke-width="1.2" stroke-dasharray="3 3" opacity=".8"/>
+        <text class="sl k" x="695.0" y="84.2" text-anchor="middle">FIXED</text>
+        <!-- column text -->
+        <path d="M479,282 h418" stroke="var(--sig-supported)" stroke-width="2"/>
+        <text class="sl" x="479" y="304" fill="var(--sig-supported)">HORIZON 02 / REPAIR</text>
+        <text class="sl" x="479" y="320">FROM CRITIC TO MECHANIC</text>
+        <text class="sb" x="479" y="352" style="font-size:23px;font-weight:600">Fix it, and prove</text>
+        <text class="sb" x="479" y="378" style="font-size:23px;font-weight:600">the fix held.</text>
+        <text class="sbm" x="479" y="404" style="font-size:12.5px">Hunt thousands of conversation paths for the ones that</text>
+        <text class="sbm" x="479" y="422" style="font-size:12.5px">break, repair the agent, re-run to prove nothing else did.</text>
       </g>
 
       <g data-step="3">
-        <path class="fl draw" d="M906,215 L970,151" marker-end="url(#rmA)"/>
-        <rect x="984" y="20" width="406" height="210" rx="3" fill="var(--ground-raised)" stroke="var(--line-strong)" stroke-width="1.5"/>
-        <rect x="984" y="20" width="406" height="3" fill="var(--sig-det)"/>
-        <rect class="tile" x="1008" y="46" width="30" height="30" rx="7"/>
-        <use href="#rmGrow" x="1011" y="49"/>
-        <text class="sl" x="1050" y="60" fill="var(--sig-det)">HORIZON 03 / COMPOUND</text>
-        <text class="sl" x="1050" y="76">THE PART THAT KEEPS PAYING</text>
-        <text class="sb" x="1008" y="120" style="font-size:22px;font-weight:600">Every fix makes the</text>
-        <text class="sb" x="1008" y="146" style="font-size:22px;font-weight:600">next agent safer.</text>
-        <text class="sbm" x="1008" y="172" style="font-size:12.5px">Each violation becomes a permanent test, until</text>
-        <text class="sbm" x="1008" y="190" style="font-size:12.5px">the rulebook itself builds the guardrails.</text>
-        <rect class="chip" x="1008" y="198" width="186" height="22"/>
-        <text class="sl" x="1018" y="213">EVERY FIX BECOMES A TEST</text>
-        <rect class="chip" x="1202" y="198" width="117" height="22"/>
-        <text class="sl" x="1212" y="213">BORN COMPLIANT</text>
+        <path class="fl draw" d="M899,152 L937,126" marker-end="url(#rmA)"/>
+        <!-- every fix becomes a permanent test, and they stack -->
+        <path class="iso-l" d="M1072.3,120.9 L1175.1,180.3 L1175.1,189.5 L1072.3,130.1 Z" stroke="var(--line-strong)" stroke-width="1.2" opacity="0.42"/>
+        <path class="iso-r" d="M1243.7,140.7 L1175.1,180.3 L1175.1,189.5 L1243.7,149.9 Z" stroke="var(--line-strong)" stroke-width="1.2" opacity="0.42"/>
+        <path class="iso-t" d="M1140.9,81.3 L1243.7,140.7 L1175.1,180.3 L1072.3,120.9 Z" stroke="var(--line-strong)" stroke-width="1.2" opacity="0.42"/>
+        <path class="iso-l" d="M1074.2,109.6 L1174.8,167.7 L1174.8,177.0 L1074.2,118.9 Z" stroke="var(--line-strong)" stroke-width="1.2" opacity="0.52"/>
+        <path class="iso-r" d="M1241.8,129.0 L1174.8,167.7 L1174.8,177.0 L1241.8,138.2 Z" stroke="var(--line-strong)" stroke-width="1.2" opacity="0.52"/>
+        <path class="iso-t" d="M1141.2,70.9 L1241.8,129.0 L1174.8,167.7 L1074.2,109.6 Z" stroke="var(--line-strong)" stroke-width="1.2" opacity="0.52"/>
+        <path class="iso-l" d="M1076.1,98.4 L1174.4,155.2 L1174.4,164.4 L1076.1,107.7 Z" stroke="var(--line-strong)" stroke-width="1.2" opacity="0.62"/>
+        <path class="iso-r" d="M1239.9,117.3 L1174.4,155.2 L1174.4,164.4 L1239.9,126.6 Z" stroke="var(--line-strong)" stroke-width="1.2" opacity="0.62"/>
+        <path class="iso-t" d="M1141.6,60.6 L1239.9,117.3 L1174.4,155.2 L1076.1,98.4 Z" stroke="var(--line-strong)" stroke-width="1.2" opacity="0.62"/>
+        <path class="iso-l" d="M1078.0,87.2 L1174.0,142.6 L1174.0,151.9 L1078.0,96.4 Z" stroke="var(--line-strong)" stroke-width="1.2" opacity="0.72"/>
+        <path class="iso-r" d="M1238.0,105.7 L1174.0,142.6 L1174.0,151.9 L1238.0,114.9 Z" stroke="var(--line-strong)" stroke-width="1.2" opacity="0.72"/>
+        <path class="iso-t" d="M1142.0,50.2 L1238.0,105.7 L1174.0,142.6 L1078.0,87.2 Z" stroke="var(--line-strong)" stroke-width="1.2" opacity="0.72"/>
+        <path class="iso-l" d="M1079.9,76.0 L1173.6,130.1 L1173.6,139.3 L1079.9,85.2 Z" stroke="var(--sig-det)" stroke-width="1.6" opacity="1"/>
+        <path class="iso-r" d="M1236.1,94.0 L1173.6,130.1 L1173.6,139.3 L1236.1,103.3 Z" stroke="var(--sig-det)" stroke-width="1.6" opacity="1"/>
+        <path class="iso-t" d="M1142.4,39.9 L1236.1,94.0 L1173.6,130.1 L1079.9,76.0 Z" stroke="var(--sig-det)" stroke-width="1.8" opacity="1"/>
+        <path class="iso-l" d="M1081.8,64.8 L1173.2,117.6 L1173.2,126.8 L1081.8,74.0 Z" stroke="var(--sig-det)" stroke-width="1.6" opacity="1"/>
+        <path class="iso-r" d="M1234.2,82.4 L1173.2,117.6 L1173.2,126.8 L1234.2,91.6 Z" stroke="var(--sig-det)" stroke-width="1.6" opacity="1"/>
+        <path class="iso-t" d="M1142.8,29.6 L1234.2,82.4 L1173.2,117.6 L1081.8,64.8 Z" stroke="var(--sig-det)" stroke-width="1.8" opacity="1"/>
+        <path class="iso-l" d="M1083.7,53.5 L1172.9,105.0 L1172.9,114.3 L1083.7,62.8 Z" stroke="var(--sig-det)" stroke-width="1.6" opacity="1"/>
+        <path class="iso-r" d="M1232.3,70.7 L1172.9,105.0 L1172.9,114.3 L1232.3,79.9 Z" stroke="var(--sig-det)" stroke-width="1.6" opacity="1"/>
+        <path class="iso-t" d="M1143.1,19.2 L1232.3,70.7 L1172.9,105.0 L1083.7,53.5 Z" stroke="var(--sig-det)" stroke-width="1.8" opacity="1"/>
+        <path d="M1158.0,50.0 l-9,10 M1158.0,50.0 l9,10" stroke="var(--sig-det)" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M1158.0,50.0 v16" stroke="var(--sig-det)" stroke-width="2" stroke-linecap="round"/>
+        <!-- column text -->
+        <path d="M942,282 h418" stroke="var(--sig-det)" stroke-width="2"/>
+        <text class="sl" x="942" y="304" fill="var(--sig-det)">HORIZON 03 / COMPOUND</text>
+        <text class="sl" x="942" y="320">THE PART THAT KEEPS PAYING</text>
+        <text class="sb" x="942" y="352" style="font-size:23px;font-weight:600">Every fix makes the</text>
+        <text class="sb" x="942" y="378" style="font-size:23px;font-weight:600">next agent safer.</text>
+        <text class="sbm" x="942" y="404" style="font-size:12.5px">Each repair becomes a permanent test case, until the</text>
+        <text class="sbm" x="942" y="422" style="font-size:12.5px">rulebook itself builds the guardrails into the next agent.</text>
       </g>
 
       <g data-step="4">
-        <path class="gold" d="M1250,232 C1362,338 1188,455 700,455 C300,455 44,455 44,398"
+        <path class="gold" d="M1290,180 C1372,300 1210,452 700,452 C300,452 40,452 30,300"
               marker-end="url(#rmG)"/>
-        <text class="sl g" x="418" y="442">EVERY RUN MAKES THE NEXT ONE SHARPER</text>
+        <text class="sl g" x="452" y="443">EVERY RUN MAKES THE NEXT ONE SHARPER</text>
       </g>
     </svg>
   </div>
