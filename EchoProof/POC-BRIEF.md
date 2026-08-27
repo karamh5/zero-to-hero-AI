@@ -21,17 +21,13 @@ company's own policy. Today that answer comes from a person listening to sample
 calls, or from a testing platform scoring against a generic rubric that has
 never read the client's policy documents.
 
-**What EchoProof does.** It reads a transcript of a conversation the agent has
-already had, extracts every factual claim and commitment the agent made,
-retrieves the one governing provision from the client's own policy corpus, and
-issues a verdict carrying that exact section identifier. Money and dates are
-verified in code rather than by a model.
-
-> **Read this twice, because it is the single most misunderstood point.**
-> EchoProof does not place calls. It does not sit in the live call path, and it
-> never speaks to a customer. Test conversations are produced the way the client
-> already produces them, or generated from the client's scenarios and personas.
-> EchoProof automates the **judging** step, not the calling step.
+**What EchoProof does.** The input is a transcript of a conversation the agent
+has already had. EchoProof extracts every factual claim and commitment in the
+agent's turns, retrieves the governing provision from the client's own policy
+corpus, and issues a verdict carrying that exact section identifier. Money and
+dates are verified in code rather than by a model. It runs pre-deployment, on
+recorded test conversations, and automates the adjudication step of an existing
+quality assurance process.
 
 **What comes out.** A Deployment Readiness Report where every finding carries
 the transcript excerpt, the audio clip of that exact sentence, the retrieved
@@ -45,21 +41,21 @@ rule text, the section number, and an integrity hash.
 - Delivery teams attaching a readiness gate to voice engagements
 - IT and InfoSec, who approve but do not buy
 
-### Core capability
+### Scope
 
-| Capability | State |
-|---|---|
-| Citation grounded judge, verdict pinned to an exact section and document version | Built |
-| Deterministic money and date verification, executed in code ahead of any model call | Built |
-| Five state verdict with routed abstention | Built |
-| Hash chained, append only evidence log | Built |
-| Audio evidence citation down to the exact sentence | Built |
-| Deployment Readiness Report as a self contained, emailable artifact | Built |
-| Fix and re-run regression loop, with the delta recorded when a finding closes | Built |
-| Four statutory trigger caller personas with drift validators | Built |
-| Required disclosure detection | Presence only. Meaning, placement, completeness and intelligibility are designed and deferred |
-| Escalation correctness | Designed, not built |
-| Policy gap list from abstentions | Designed. Requires retrieval floor recalibration before it produces meaningful output |
+Delivered in this PoC: citation grounded adjudication with every verdict pinned
+to an exact section and document version; deterministic money and date
+verification executed in code ahead of any model call; a five state verdict with
+routed abstention; an append only, hash chained evidence log; audio evidence
+cited to the exact sentence; the Deployment Readiness Report as a self contained
+artifact; a fix and re-run regression loop that records which findings close; and
+four statutory trigger caller personas with drift validators.
+
+Required disclosure detection ships as presence only. Semantic equivalence,
+placement, completeness and intelligibility are specified and scheduled rather
+than built. Escalation correctness and the policy gap list are specified and
+scheduled for the same reason. Each is called out here so that scope is legible
+to anyone evaluating the work.
 
 The five verdict states are `supported`, `contradicted`, `no_governing_rule`,
 `retrieval_below_confidence` and `conflicting_sections`. Keeping
@@ -120,22 +116,21 @@ examined only at the end.
 | Pack swap to a different industry's standard | **5 of 5 seeded violations detected and cited, no engine change** |
 | Evidence chain verification | **Passes on every run** |
 | Fix and re-run | **Closes a finding and records the delta** |
-| Measured campaign cost | **$0.82 for an 18 call campaign**, roughly $23 per 100 calls |
 | Proxy overhead | **0.129 ms** against a 50 ms budget |
 
 Citation precision is the diagnostic that matters most commercially, because a
 correct verdict citing the wrong section has failed at the thing being sold.
-Zero false positives on the compliant control matters just as much: the system
-does not invent violations.
+Zero false positives on the compliant control matters just as much, because it
+establishes that the system flags only what the rulebook actually governs.
 
 ### Positioning, stated plainly
 
-**EchoProof is a triage layer that routes to human review. It is not an
-unattended release gate.** Every item arrives with the governing rule already
-quoted beside it, so a reviewer confirms or overturns in seconds rather than
-minutes, across every turn rather than a one to five percent sample. Raising it
-to an unattended gate is a roadmap objective, and the reviewed-decision loop in
-section 6 is the mechanism for getting there.
+**EchoProof operates as a triage layer that routes to human review**, with an
+unattended release gate as the roadmap objective. Every item reaches the reviewer
+with the governing rule already quoted beside it, so a decision takes seconds
+rather than minutes, across every turn rather than a one to five percent sample.
+The reviewed-decision loop in the roadmap is the mechanism for closing the
+remaining distance.
 
 The full per stage measurement set, including where the system is weakest and
 why, is maintained in `LIMITATIONS.md` in the repository. It is written for
@@ -286,7 +281,7 @@ the demonstration. No swap after fixtures are scored.
   judgment is measured in seconds. A voice turn budget is measured in
   milliseconds. It cannot sit on the speech path, and accepting it would take on
   production SLA liability where the first dropped call attributable to the tool
-  loses the account. Section 6 describes the latency honest alternatives.
+  loses the account. The roadmap describes the latency honest alternatives.
 - Indemnification of missed violations.
 
 **Healthcare is no longer out of scope.** It was excluded in the original brief.
@@ -298,47 +293,7 @@ and a deployment model conversation.
 
 ---
 
-## 5. User Interface
-
-**Deployment Readiness Report.** A self contained HTML file generated from the
-evidence log. No server, no login, nothing to deploy. It opens in a browser and
-can be emailed to a compliance officer or attached to a risk review.
-
-- **Header.** Agent version, policy pack version, run date, coverage statement,
-  gate decision
-- **Summary.** Finding counts by severity and verdict state, with abstentions
-  broken out separately from violations
-- **Finding card.** Verdict, severity, the claim highlighted in its transcript
-  excerpt, a play control on the audio clip of that exact sentence, the retrieved
-  rule text with its section identifier, and the integrity hash
-- **Expandable trace.** The claim extracted, the retrieval candidates with
-  scores, the section selected, and the verdict with rationale. This is what
-  allows a contested finding to be root caused, since agent error, retrieval
-  error and judge error look identical in the output and completely different
-  underneath
-- **Fix and re-run view.** The same scenario before and after, with the delta
-
-Chosen over a hosted dashboard deliberately. It costs a fraction of the build
-time, there is nothing to fail during a live demonstration, and it produces an
-artifact a compliance officer can file rather than a dashboard they log into.
-
-**Run console.** A thin operator surface for launching an assessment, selecting
-scenarios and personas, watching findings arrive, and triggering a re-run. Built
-on the same evidence log. Operator convenience rather than the deliverable.
-
-**What happens to a finding.** Findings are triaged and grouped by root cause,
-since one prompt defect usually produces many findings. A human reviewer
-confirms, overturns or reclassifies, and every override is captured as structured
-data. The agent vendor may dispute a finding, and the dispute attaches to the
-evidence bundle rather than replacing it. Remediation is delivered with the
-retrieved rule text, which is what makes a finding actionable rather than
-alarming. The fixed scenario re-runs and the delta is recorded. The report is
-hash sealed at a stated agent version and policy version, and changing either
-voids it.
-
----
-
-## 6. Roadmap
+## 5. Roadmap
 
 The product today diagnoses. The arc ahead is diagnose, repair, compound.
 
@@ -394,7 +349,7 @@ provision is the part nobody filled.
 
 ---
 
-## 7. Data Strategy
+## 6. Data Strategy
 
 - **Primary corpus.** 12 CFR Part 1006, Regulation F, and the FDCPA. Public,
   authoritative, section numbered, dense with cross references and defined terms,
@@ -421,38 +376,3 @@ provision is the part nobody filled.
   remove.
 
 ---
-
-## 8. Risks and Open Items
-
-| Risk | Mitigation |
-|---|---|
-| Retrieval quality caps the entire product | Retrieval built and measured before the judge, with a gate check. Weak citation precision is fixed before any judge tuning. |
-| Fixtures are single authored | The held out split is the only control against self tuning. Sealed, scored once, examined at the end. A second independent labeller is the next step and is a real gap today. |
-| Real client policies lack section identifiers | Scoped data engineering during onboarding. Automated policy ingestion is the top roadmap item. |
-| Client side model validation extends the sales cycle | A bank will treat the judge as a model used in a control capacity, which under SR 11-7 likely requires independent validation by their model risk team before production use. Shipping a validation documentation package shortens that step without removing it. Any pilot timeline that ignores it is wrong. |
-| Report is discoverable in litigation | Privilege and filability are mutually exclusive. The default is the filable artifact, since that is what makes it a release gate. A privileged alternative is contracted through the client's outside counsel. The client selects at engagement start. |
-| Speech to speech removes the intermediate transcript | **Resolved.** The transcript ingest path is built and tested. |
-| Compound obligations can be failed by compliant text | A rule requiring two things in one sentence is split into two claims and each half is judged against the whole rule. Structural rather than a tuning problem. Fixing it means evaluating multi element obligations at turn level, which is designed and not built. |
-| Throughput on the cross encoder | A hardware line item rather than a research problem. ONNX or GPU execution is the first production fix. |
-
----
-
-## 9. What Changed Since the Original Brief
-
-Recorded so the delta is legible rather than silent.
-
-1. **The product ingests transcripts. It does not place calls.** The original
-   brief described synthetic callers placing calls into the client's agent. That
-   framing caused repeated confusion in review and has been corrected throughout.
-2. **Speech to speech is handled, not a risk.** The transcript ingest path was
-   built and verified during the PoC.
-3. **Cost came in far below estimate.** Projected at $100 to $300 per 100 call
-   campaign; measured at roughly $23.
-4. **Healthcare moved from out of scope to demand led.**
-5. **Deepgram third party service and human agent QA** were added as
-   opportunities surfaced in review.
-6. **A roadmap was added.** The original brief had a timeline but no product arc.
-7. **Real time blocking is now explicitly and permanently out of scope**, with
-   latency honest alternatives named in its place.
-8. **Capability claims are marked built, presence only, or designed and not
-   built**, rather than listed uniformly as features.
