@@ -18,13 +18,19 @@ packs:
   discover:
     - sensors.synthetic
     - sensors.dht22
+    - sensors.dht22_kernel
     - detectors.env_anomaly
 
 # ---------------------------------------------------------------------------
 # Sensor
 # ---------------------------------------------------------------------------
 sensor:
-  # `synthetic` for development and demos, `dht22` on the Raspberry Pi.
+  # `synthetic` for development and demos. On a Raspberry Pi, which pack you
+  # want depends on the board:
+  #   dht22         Pi 3 / Pi 4 / Pi Zero 2 W -- userspace bit-bang via Blinka
+  #   dht22_kernel  Pi 5                      -- the kernel's IIO driver
+  # The Pi 5 replaced the GPIO block Blinka drives, so `dht22` cannot work
+  # there. Same wiring, same GPIO4, different driver. See HARDWARE_SETUP.md.
   active: synthetic
 
   packs:
@@ -41,6 +47,14 @@ sensor:
       retries: 5                  # transient RuntimeErrors are normal, retry them
       retry_delay_s: 2.0          # a retry cannot succeed sooner than this
       use_pulseio: false          # bit-bang path is the reliable one on Pi OS
+      min_interval_s: 2.0         # datasheet floor; lower values are clamped up
+
+    dht22_kernel:
+      # Requires `dtoverlay=dht11,gpiopin=4` in /boot/firmware/config.txt and a
+      # reboot. GPIO4 is the overlay's default, so the wiring is unchanged.
+      device_path: null           # null = auto-discover the IIO device
+      retries: 5                  # transient EIO from the driver is normal
+      retry_delay_s: 2.0          # a retry cannot succeed sooner than this
       min_interval_s: 2.0         # datasheet floor; lower values are clamped up
 
 # ---------------------------------------------------------------------------

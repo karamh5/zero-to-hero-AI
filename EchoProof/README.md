@@ -2,12 +2,21 @@
 
 A pre-deployment compliance assurance layer for enterprise voice AI agents.
 
-An OpenAI-compatible proxy sits in front of a voice agent's LLM call. It
-extracts the factual claims the agent makes, retrieves the governing rule from a
-client-supplied policy corpus, and issues a five-state verdict carrying an exact
-section citation, the verbatim rule text, an audio clip of the sentence, and a
-hash-chained evidence entry. The output is a self-contained Deployment Readiness
-Report that opens in a browser and can be filed.
+The input is a transcript of a conversation the agent has already had.
+EchoProof extracts the factual claims in the agent's turns, retrieves the
+governing rule from a client-supplied policy corpus, and issues a five-state
+verdict carrying an exact section citation, the verbatim rule text, an audio
+clip of the sentence, and a hash-chained evidence entry. The output is a
+self-contained Deployment Readiness Report that opens in a browser and can be
+filed.
+
+It attaches through a standardized endpoint, so it drops into any stack without
+a rewrite, and it never sits in the live call path.
+
+New here? Start with [POC-BRIEF.md](POC-BRIEF.md) for scope, results and
+roadmap, then [ARCHITECTURE.md](ARCHITECTURE.md) for the settled design
+decisions and [LIMITATIONS.md](LIMITATIONS.md) for where the system is weakest.
+[HANDOVER.md](HANDOVER.md) covers setup if you are picking this up to run.
 
 The PoC corpus is Regulation F, 12 CFR 1006, pulled live from the eCFR API:
 **303 paragraph-level provisions with real section identifiers**.

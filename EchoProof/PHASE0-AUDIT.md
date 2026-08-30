@@ -82,7 +82,7 @@ content, so the schema is a Phase 3 concern at the earliest.
 ## 4. Proposed package layout
 
 Proposal only. Nothing below was created in Phase 0. It follows the conventions
-already set by `wildsense/` in this repo: project-local top-level packages, a
+already set by `WildSense/` in this repo: project-local top-level packages, a
 root `conftest.py` that puts the project on `sys.path`, a `requirements.txt`,
 and a `tests/` directory.
 
@@ -103,7 +103,7 @@ EchoProof/
 The `engine/` versus `packs/` split is the physical enforcement of ARCHITECTURE.md's
 fixed-engine rule: adding a vertical must touch only `packs/`. If a Phase 6 pack
 swap requires editing anything under `engine/`, that is a defect in the boundary
-and gets reported as one. `wildsense/core/registry.py` already demonstrates this
+and gets reported as one. `WildSense/core/registry.py` already demonstrates this
 pattern in this repo, where config names a pack and core never imports it.
 `engine/retrieval/base.py` is the seam where the Production OpenSearch swap
 lands without touching callers.

@@ -10,19 +10,22 @@ the architecture, the numbers. This top-level page is just the front door.
 
 ## Projects
 
-- **[wildsense/](wildsense/)** — edge-AI wildfire risk detection on a
+- **[WildSense/](WildSense/)** — edge-AI wildfire risk detection on a
   Raspberry Pi. A sensor node that learns its own baseline instead of relying
   on a hardcoded threshold, with a simulated fleet showing how it'd federate
   across many nodes.
 
 - **[EchoProof/](EchoProof/)** — a compliance assurance layer for voice AI
-  agents. It proxies the agent's LLM call, pulls the governing rule out of a
-  real policy corpus (Regulation F, 303 sections, straight from the eCFR API),
-  and issues a verdict with the exact section cited, the rule text quoted, and
-  an audio clip of the sentence — all in a hash-chained evidence log that
-  renders to a single self-contained HTML report. Most findings cite the right
-  paragraph. Detection sits at 26-35%, so the honest verdict is that it's a
-  triage layer, not a release gate — and the report says so on its front page.
+  agents. It takes a transcript of a conversation an agent has already had,
+  pulls the governing rule out of a real policy corpus (Regulation F, 303
+  sections, straight from the eCFR API), and issues a verdict with the exact
+  section cited, the rule text quoted, and an audio clip of the sentence, all
+  in a hash-chained evidence log that renders to a single self-contained HTML
+  report. Citation precision runs 0.75 to 0.83, and it produced zero false
+  positives on the compliant control across three runs. It is a triage layer
+  that routes to human review rather than an unattended release gate, and the
+  report says so on its front page. Built as the foundational project of the
+  Hexaware AI Launchpad, summer 2026. See `EchoProof/POC-BRIEF.md`.
 
 More projects will land here over time!
 

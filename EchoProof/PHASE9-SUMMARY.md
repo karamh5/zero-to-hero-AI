@@ -5,7 +5,7 @@ Ship. Root README entry, and `EchoProof/README.md`.
 ## What was written
 
 **Root [README.md](../README.md)** gained one entry under Projects, matched to
-the length and voice of the existing `wildsense/` entry. It names the honest
+the length and voice of the existing `WildSense/` entry. It names the honest
 headline rather than the flattering one: detection sits at 35 percent, so this
 is a triage layer rather than a release gate. A front door that oversells is a
 front door the numbers inside contradict.

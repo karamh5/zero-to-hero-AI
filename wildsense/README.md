@@ -13,8 +13,15 @@ without any of them ever shipping raw readings anywhere.
 
 | | |
 |---|---|
-| Compute | Raspberry Pi 4 |
+| Compute | Raspberry Pi 3 / 4 / Zero 2 W, or Pi 5 |
 | Sensor | DHT22 temperature/humidity, 3-wire module, GPIO4 (one-wire, no I2C) |
+
+The Pi 5 changed the GPIO hardware, which broke every userspace Python library
+for this sensor. Rather than declare the Pi 5 unsupported, there are two sensor
+packs behind the same wiring: `dht22` bit-bangs the pin through Blinka (Pi 3 /
+4 / Zero 2 W), and `dht22_kernel` reads the kernel's IIO driver instead (Pi 5).
+Same pin, same readings, same detector — `sensor.active` picks one. That is the
+modularity claim below being cashed rather than asserted.
 
 No soldering, no breadboard — three wires. See
 [HARDWARE_SETUP.md](HARDWARE_SETUP.md) for the full wiring guide, wired to the
@@ -139,7 +146,7 @@ flowchart TB
 | Module | Responsibility |
 |---|---|
 | `core/` | Data contracts (`Reading`, `Event`), config loading, the pack registry. Imports nothing from the other modules — the dependency arrow points inward only. |
-| `sensors/` | `BaseSensor` + `DHT22Sensor` (GPIO4, retry-hardened) + `SyntheticEnvSensor` (believable series with injected anomalies). |
+| `sensors/` | `BaseSensor` + `DHT22Sensor` (GPIO4 via Blinka, retry-hardened) + `DHT22KernelSensor` (same pin via the kernel's IIO driver, for the Pi 5) + `SyntheticEnvSensor` (believable series with injected anomalies). |
 | `detectors/` | `BaseDetector` + `EnvAnomalyDetector`: EWMA z-score gate, then a ~6.5K-parameter MLP over a 32-reading window for event type. |
 | `federation/` | `LocalTrainer` (fits on a node's own readings) + `FederatedAverager` (sample-weighted FedAvg) + a 3-node concurrent simulation. |
 | `cloud/` | S3 event snapshots over a bounded queue. Degrades to local files with one clear log line if credentials are absent. |
@@ -162,10 +169,10 @@ No core file changes. There is a test that does exactly this
 
 ## Quick start — synthetic mode (no hardware)
 
-Everything below runs from inside the `wildsense/` directory.
+Everything below runs from inside the `WildSense/` directory.
 
 ```bash
-cd wildsense
+cd WildSense
 
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
@@ -193,7 +200,8 @@ does not cooperate with a two-minute screen capture.
 
 | Flag | Effect |
 |---|---|
-| `--sensor dht22` | use the real hardware pack instead of the synthetic one |
+| `--sensor dht22` | real hardware, Pi 3 / 4 / Zero 2 W (Blinka bit-bang) |
+| `--sensor dht22_kernel` | real hardware, Pi 5 (kernel IIO driver) |
 | `--interval 2` | pin every risk level to a 2 s poll (still clamped by the sensor floor) |
 | `--duration 120` | stop after two minutes |
 | `--cycles 500` | stop after 500 read cycles |
@@ -206,7 +214,7 @@ does not cooperate with a two-minute screen capture.
 ### Tests
 
 ```bash
-cd wildsense
+cd WildSense
 pytest -q
 ```
 
@@ -244,21 +252,68 @@ between VCC and DATA; the 3-wire module already has one.
 ### Install and run on the Pi
 
 ```bash
-cd wildsense
+cd WildSense
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-
-# Hardware drivers — Raspberry Pi only, these will not build on Windows/macOS.
-pip install adafruit-circuitpython-dht adafruit-blinka
-
 python -m detectors.train        # or copy artifacts/ over from your dev machine
+```
+
+**On a Pi 3 / Pi 4 / Pi Zero 2 W** — install the hardware drivers (Raspberry Pi
+only; they will not build on Windows/macOS), then run:
+
+```bash
+pip install adafruit-circuitpython-dht adafruit-blinka
 python run.py --sensor dht22
 ```
+
+**On a Pi 5** — no Python hardware drivers are needed. Enable the kernel's own
+DHT driver by adding one line to `/boot/firmware/config.txt`:
+
+```
+dtoverlay=dht11,gpiopin=4
+```
+
+Reboot, then run:
+
+```bash
+python run.py --sensor dht22_kernel
+```
+
+The overlay is named `dht11` but covers the DHT22, and `gpiopin=4` is the same
+GPIO4 the wiring above already uses — nothing on the board moves.
 
 To view the dashboard from another machine on the network, set
 `dashboard.host: 0.0.0.0` in `config.yaml`, then browse to
 `http://<pi-address>:8000`.
+
+### Why the Pi 5 needs a different pack
+
+`adafruit_dht` reads this sensor by toggling and timing the GPIO pin from
+userspace, microsecond by microsecond. It reaches the pin through Blinka, which
+drives the Broadcom GPIO block directly. The Pi 5 moved GPIO onto a separate
+RP1 south bridge, so Blinka does not recognise the board and the timing path
+never completes — the symptom is `Timed out waiting for PulseIn message`,
+regardless of wiring.
+
+`DHT22KernelSensor` sidesteps the problem by not doing the timing in Python at
+all. The Linux `dht11` IIO driver, enabled by the device-tree overlay above,
+does the bit-banging in kernel space and publishes two files:
+
+```
+/sys/bus/iio/devices/iio:device0/in_temp_input             23400  ->  23.4 °C
+/sys/bus/iio/devices/iio:device0/in_humidityrelative_input 41200  ->  41.2 %RH
+```
+
+Reading two files is the whole driver. It needs no `board`, no Blinka, and no
+`gpio` group membership. It also means this pack — unlike the Blinka one — is
+testable in full on a laptop: the test suite points it at a directory of fake
+sysfs files and exercises discovery, milli-unit scaling and the retry loop for
+real, rather than through injected fake modules.
+
+The device number is not stable across boots when other IIO devices are
+present, so the pack discovers its device by looking for the one publishing a
+humidity channel rather than trusting `iio:device0`.
 
 ### Two DHT22 quirks the code handles for you
 
@@ -267,7 +322,9 @@ To view the dashboard from another machine on the network, set
    that `adafruit_dht` raises `RuntimeError` on a large fraction of reads
    (`Checksum did not validate`, `A full buffer was not returned`). This is
    normal, not a fault. `DHT22Sensor` retries with a configurable budget and only
-   gives up on the cycle — never on the run.
+   gives up on the cycle — never on the run. The kernel driver hits the same
+   failures and reports them as `OSError`/`EIO`; `DHT22KernelSensor` retries them
+   identically.
 2. **Reads must be ≥ 2 seconds apart.** The part needs that long to re-sample.
    `BaseSensor.min_interval_s` enforces the gap, `retry_delay_s` applies it
    between retries too, and `PollingPolicy` clamps every risk level against it —
@@ -371,7 +428,7 @@ environment, so nothing secret can be committed by accident.
 
 ```yaml
 sensor:
-  active: synthetic         # or dht22
+  active: synthetic         # or dht22 (Pi 3/4/Zero 2 W) or dht22_kernel (Pi 5)
 
 detector:
   packs:
@@ -492,12 +549,12 @@ band once converged rather than climbing smoothly.
 ## Project layout
 
 ```
-wildsense/
+WildSense/
 ├── config.yaml              # which packs are active
 ├── run.py                   # entrypoint
 ├── pipeline.py              # the loop that wires everything together
 ├── core/                    # contracts, config, registry, logging
-├── sensors/                 # base.py, dht22.py, synthetic.py
+├── sensors/                 # base.py, dht22.py, dht22_kernel.py, synthetic.py
 ├── detectors/               # base.py, baseline.py, model.py, train.py, env_anomaly.py
 ├── federation/              # local_trainer.py, averager.py, simulation.py
 ├── cloud/                   # s3_sync.py

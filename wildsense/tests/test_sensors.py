@@ -16,8 +16,10 @@ import types
 import pytest
 
 from core.contracts import EventType, Reading
+from core.registry import available_sensors, create_sensor
 from sensors.base import BaseSensor, SensorError, SensorReadError
 from sensors.dht22 import DHT22_MIN_INTERVAL_S, DHT22Sensor
+from sensors.dht22_kernel import DHT22KernelSensor
 from sensors.synthetic import (
     CLIMATE_PROFILES,
     SyntheticEnvSensor,
@@ -349,3 +351,158 @@ class TestDHT22:
         sensor = DHT22Sensor()
         with pytest.raises(SensorError, match="synthetic"):
             sensor.open()
+
+
+# ---------------------------------------------------------------------------
+# DHT22 via the kernel IIO driver (the Raspberry Pi 5 path)
+# ---------------------------------------------------------------------------
+#
+# Unlike the Blinka pack, this one talks to nothing but the filesystem, so a
+# directory of fake sysfs files exercises the *real* code path end to end --
+# discovery, scaling, retries and all -- with no fake modules injected.
+
+
+#: Real sysfs names these directories `iio:device0`, but Windows cannot create
+#: a directory containing a colon, and these tests have to run on the dev
+#: laptop as well as the Pi. Nothing in the pack parses the directory name --
+#: discovery keys on which channel files are present -- so the separator is
+#: chosen per platform purely to keep the fake tree creatable everywhere.
+IIO_SEP = "_" if sys.platform == "win32" else ":"
+
+
+def iio_name(index):
+    return f"iio{IIO_SEP}device{index}"
+
+
+def write_iio_device(root, name, temp_milli=None, humidity_milli=None):
+    """Create a fake `iio:deviceN` directory under `root`."""
+    device = root / name
+    device.mkdir(parents=True)
+    if temp_milli is not None:
+        (device / "in_temp_input").write_text(f"{temp_milli}\n")
+    if humidity_milli is not None:
+        (device / "in_humidityrelative_input").write_text(f"{humidity_milli}\n")
+    return device
+
+
+@pytest.fixture
+def iio_root(tmp_path):
+    """A fake /sys/bus/iio/devices holding one healthy DHT sensor."""
+    root = tmp_path / "iio"
+    root.mkdir()
+    write_iio_device(root, iio_name(0), temp_milli=23400, humidity_milli=41200)
+    return root
+
+
+class TestDHT22Kernel:
+    def test_reads_cleanly_and_scales_out_of_milli_units(self, iio_root):
+        sensor = DHT22KernelSensor(iio_root=str(iio_root))
+        reading = sensor.read()
+
+        # 23400 millidegrees is 23.4 C, not 23400 C. Getting this wrong is the
+        # single easiest way to break this driver, so it is asserted exactly.
+        assert reading.temperature_c == 23.4
+        assert reading.humidity_pct == 41.2
+        assert reading.source == "dht22_kernel"
+        assert reading.is_complete
+
+    def test_the_pack_is_registered_under_its_config_name(self):
+        assert "dht22_kernel" in available_sensors()
+        assert create_sensor("dht22_kernel", {"iio_root": "/nonexistent"}) is not None
+
+    def test_the_device_is_found_by_capability_not_by_index(self, tmp_path):
+        # A Pi with another IIO device present numbers them arbitrarily, and
+        # the order is not stable across boots. Discovery must key on the
+        # humidity channel, not on "iio:device0".
+        root = tmp_path / "iio"
+        root.mkdir()
+        write_iio_device(root, iio_name(0), temp_milli=45000)  # a thermal zone
+        write_iio_device(root, iio_name(1), temp_milli=19000, humidity_milli=55000)
+
+        reading = DHT22KernelSensor(iio_root=str(root)).read()
+
+        assert reading.temperature_c == 19.0
+        assert reading.humidity_pct == 55.0
+
+    def test_transient_io_errors_are_retried(self, iio_root, monkeypatch):
+        sensor = DHT22KernelSensor(iio_root=str(iio_root), retries=4, retry_delay_s=0.0)
+        calls = {"n": 0}
+        real = sensor._read_channel
+
+        def flaky(path):
+            # Fail the first two attempts the way the driver does: EIO,
+            # because the checksum did not validate.
+            if path.name == "in_temp_input":
+                calls["n"] += 1
+                if calls["n"] <= 2:
+                    raise OSError(5, "Input/output error")
+            return real(path)
+
+        monkeypatch.setattr(sensor, "_read_channel", flaky)
+        reading = sensor.read()
+
+        assert reading.temperature_c == 23.4
+        assert reading.metadata["attempts"] == 3
+
+    def test_gives_up_after_the_retry_budget(self, iio_root, monkeypatch):
+        sensor = DHT22KernelSensor(iio_root=str(iio_root), retries=3, retry_delay_s=0.0)
+        monkeypatch.setattr(
+            sensor,
+            "_read_channel",
+            lambda path: (_ for _ in ()).throw(OSError(5, "Input/output error")),
+        )
+
+        with pytest.raises(SensorReadError, match="3 consecutive reads"):
+            sensor.read()
+
+    def test_an_unparsable_sample_is_retried_not_raised(self, iio_root, monkeypatch):
+        # A short read of sysfs yields an empty string, which is a ValueError
+        # from int(), not an OSError. It is the same transient problem.
+        sensor = DHT22KernelSensor(iio_root=str(iio_root), retries=3, retry_delay_s=0.0)
+        calls = {"n": 0}
+        real = sensor._read_channel
+
+        def sometimes_empty(path):
+            if path.name == "in_temp_input":
+                calls["n"] += 1
+                if calls["n"] == 1:
+                    raise ValueError("invalid literal for int() with base 10: ''")
+            return real(path)
+
+        monkeypatch.setattr(sensor, "_read_channel", sometimes_empty)
+        assert sensor.read().temperature_c == 23.4
+
+    def test_a_missing_iio_root_names_the_overlay_to_add(self, tmp_path):
+        sensor = DHT22KernelSensor(iio_root=str(tmp_path / "absent"))
+        with pytest.raises(SensorError, match="dtoverlay=dht11"):
+            sensor.open()
+
+    def test_no_dht_device_present_names_the_overlay_and_the_pin(self, tmp_path):
+        root = tmp_path / "iio"
+        root.mkdir()
+        write_iio_device(root, iio_name(0), temp_milli=45000)  # temperature only
+
+        with pytest.raises(SensorError, match="GPIO4"):
+            DHT22KernelSensor(iio_root=str(root)).open()
+
+    def test_an_explicit_device_path_skips_discovery(self, iio_root):
+        sensor = DHT22KernelSensor(device_path=str(iio_root / iio_name(0)))
+        assert sensor.read().temperature_c == 23.4
+
+    def test_a_wrong_explicit_device_path_fails_clearly(self, tmp_path):
+        sensor = DHT22KernelSensor(device_path=str(tmp_path))
+        with pytest.raises(SensorError, match="auto-discover"):
+            sensor.open()
+
+    def test_datasheet_interval_is_enforced_against_config(self, iio_root):
+        # Same guarantee as the Blinka pack: no config value may out-run the
+        # part, whichever driver is reading it.
+        sensor = DHT22KernelSensor(iio_root=str(iio_root), min_interval_s=0.1)
+        assert sensor.min_interval_s == DHT22_MIN_INTERVAL_S
+
+    def test_close_is_idempotent_and_reopening_rediscovers(self, iio_root):
+        sensor = DHT22KernelSensor(iio_root=str(iio_root))
+        sensor.open()
+        sensor.close()
+        sensor.close()
+        assert sensor.read().temperature_c == 23.4

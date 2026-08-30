@@ -140,7 +140,13 @@ def test_adjudicate_without_key_is_labelled_disabled(client: TestClient) -> None
     assert availability["available"] in (True, False)
     if not availability["available"]:
         assert "MISTRAL_API_KEY" in availability["reason"]
-        response = client.post("/api/adjudicate", json={"transcript": "hello"})
+        # A real request, not free text. Free text is refused at validation
+        # with a 400 before availability is ever consulted, so submitting it
+        # here would assert nothing about the disabled path.
+        response = client.post(
+            "/api/adjudicate",
+            json={"pack_id": "reg_f", "conversation_id": "rf-01-disclosure"},
+        )
         assert response.status_code == 503
 
 

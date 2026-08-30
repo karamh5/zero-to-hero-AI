@@ -15,9 +15,29 @@ every term is explained the first time it appears.
 
 | # | Item | Notes |
 |---|---|---|
-| 1 | **Raspberry Pi** with Raspberry Pi OS already flashed to its microSD card | Any model with the standard 40-pin header. You should be able to boot it and get to a terminal. |
+| 1 | **Raspberry Pi** with 64-bit Raspberry Pi OS already flashed to its microSD card | Any model with the standard 40-pin header. You should be able to boot it and get to a terminal. **Which model you have changes step 4** — see the box below. |
 | 2 | **ShillehTek DHT22 module** with its attached 3-wire cable | The sensor is the white/blue plastic grid mounted on a small circuit board. |
 | 3 | **3 × female-to-female jumper wires** | **Only if** your cable does not already end in connectors that push onto the Pi's pins. See below. |
+
+> ### ⚠️ Pi 5 owners: the wiring is the same, the software is not
+>
+> The Raspberry Pi 5 replaced the chip that handles GPIO (it uses a new one
+> called RP1). The popular Python libraries for this sensor — `adafruit_dht`
+> and Blinka — drive the *old* chip directly, do not recognise the Pi 5, and
+> fail with `Timed out waiting for PulseIn message` no matter how perfectly
+> you wire it. This is not something you can fix by rechecking your
+> connections.
+>
+> The fix is to let the Linux kernel read the sensor instead of Python. It is
+> two extra lines of setup and **the wiring in section 2 does not change at
+> all.** Follow this guide normally, and take **route B** in section 4.
+>
+> | Your board | Route | Sensor pack |
+> |---|---|---|
+> | Pi 3, Pi 4, Pi Zero 2 W | **A** — Python libraries | `dht22` |
+> | Pi 5 | **B** — kernel driver | `dht22_kernel` |
+>
+> If you are not sure which you have, run `cat /proc/device-tree/model`.
 
 **Do you need the jumper wires?** Look at the loose end of the sensor's cable:
 
@@ -140,6 +160,13 @@ Go straight to the software.
 
 ## 4. Install the software
 
+Take **route A** on a Pi 3 / Pi 4 / Pi Zero 2 W, or **route B** on a Pi 5.
+Do one or the other, not both.
+
+---
+
+### Route A — Pi 3 / Pi 4 / Pi Zero 2 W (Python libraries)
+
 Open a terminal on the Pi and run these four commands, one at a time. Wait for
 each to finish before starting the next.
 
@@ -150,6 +177,13 @@ sudo apt update
 ```bash
 sudo apt install -y python3-pip libgpiod2
 ```
+
+> **If that says `Unable to locate package libgpiod2`:** the package was
+> renamed in newer Raspberry Pi OS releases. Install `libgpiod3` instead:
+>
+> ```bash
+> sudo apt install -y python3-pip libgpiod3
+> ```
 
 ```bash
 pip3 install adafruit-circuitpython-dht adafruit-blinka
@@ -198,6 +232,65 @@ What each one does:
 >
 > If you use the virtual environment, run `source ~/dht-test/bin/activate` in
 > each new terminal before running the test script.
+
+---
+
+### Route B — Pi 5 (kernel driver)
+
+The kernel already knows how to read this sensor; it just needs to be told
+which pin it is on. Open the boot config file:
+
+```bash
+sudo nano /boot/firmware/config.txt
+```
+
+Add this as a new line at the very bottom, then press `Ctrl+O`, `Enter`,
+`Ctrl+X` to save and quit:
+
+```
+dtoverlay=dht11,gpiopin=4
+```
+
+The overlay is called `dht11` for historical reasons — it drives the DHT11,
+DHT21, DHT22 and AM230x parts, yours included. `gpiopin=4` is GPIO4, which is
+physical pin 7: **exactly the pin you already wired in section 2.** Nothing on
+the board moves.
+
+Reboot so the kernel picks it up:
+
+```bash
+sudo reboot
+```
+
+Once it comes back, check that the sensor appeared:
+
+```bash
+cat /sys/bus/iio/devices/iio:device0/in_temp_input
+```
+
+You should get a number like `23400`. That is **millidegrees** Celsius —
+23400 means 23.4 °C. Humidity lives next to it:
+
+```bash
+cat /sys/bus/iio/devices/iio:device0/in_humidityrelative_input
+```
+
+`41200` means 41.2 % relative humidity.
+
+> **If you get "No such file or directory":** the device may have been given a
+> different number. List what is there with
+> `ls /sys/bus/iio/devices/` and try `iio:device1`, and so on. If the
+> directory is empty, the overlay line did not take effect — check for a typo
+> and that you rebooted.
+>
+> **If you get `cat: ...: Input/output error`:** that is the sensor's normal
+> transient failure, not a fault. Run it again a few times; roughly one read
+> in three succeeds. WildSense retries this for you automatically. If it never
+> succeeds, recheck the wiring in section 2.
+
+Route B needs no `pip install` of hardware libraries at all, and no `gpio`
+group membership. Skip to **section 8** — the test script in section 5 is for
+route A only.
 
 ---
 
@@ -392,19 +485,36 @@ touching.
 
 ## 8. Now run WildSense
 
-Once the test script prints real numbers, the hardware is proven. Point the
-project at it:
+Once you are getting real numbers — from the test script on route A, or from
+`cat` on route B — the hardware is proven. Point the project at it:
 
 ```bash
-cd wildsense
+cd WildSense
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-pip install adafruit-circuitpython-dht adafruit-blinka
-
 python -m detectors.train
+```
+
+Then start the node with the pack that matches your route:
+
+**Route A** (Pi 3 / Pi 4 / Pi Zero 2 W) — install the hardware libraries into
+the virtual environment first, then run:
+
+```bash
+pip install adafruit-circuitpython-dht adafruit-blinka
 python run.py --sensor dht22
 ```
+
+**Route B** (Pi 5) — nothing extra to install, the kernel is already doing the
+work:
+
+```bash
+python run.py --sensor dht22_kernel
+```
+
+Both packs produce identical readings and feed the identical detector. The
+only difference is who talks to the pin.
 
 Open the dashboard at <http://127.0.0.1:8000>.
 
