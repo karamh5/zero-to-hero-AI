@@ -28,13 +28,3 @@ the architecture, the numbers. This top-level page is just the front door.
   Hexaware AI Launchpad, summer 2026. See `EchoProof/POC-BRIEF.md`.
 
 More projects will land here over time!
-
-## Reference
-
-- **[career/](career/)** — the delivery side of the same work, written down. A
-  reference on how AI products go from a vague request to a monitored production
-  system: the eleven stages and their gates, the stakeholders and what each of
-  them blocks on, the architecture decisions, evaluation, governance, and the
-  artifacts a delivery produces. Documentation, not code.
-
----
