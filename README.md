@@ -16,7 +16,7 @@ the architecture, the numbers. This top-level page is just the front door.
   across many nodes.
 
 - **[EchoProof/](EchoProof/)** — a compliance assurance layer for voice AI
-  agents. It takes a transcript of a conversation an agent has already had,
+  agents. It takes a transcript of a conversation an agent had,
   pulls the governing rule out of a real policy corpus (Regulation F, 303
   sections, straight from the eCFR API), and issues a verdict with the exact
   section cited, the rule text quoted, and an audio clip of the sentence, all
