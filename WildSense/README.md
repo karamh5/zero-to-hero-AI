@@ -2,8 +2,6 @@
 
 **A modular edge-AI platform for detecting wildfire risk conditions on a Raspberry Pi.**
 
-Live site: https://claude.ai/code/artifact/bea12d6c-e080-443a-bb49-b134e4803cba
-
 WildSense reads temperature and humidity on a low-power edge node, decides *on
 the device* whether what it just measured is an unusual fire-risk condition,
 classifies what kind of event it is, and learns from a fleet of peer nodes
