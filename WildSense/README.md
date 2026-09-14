@@ -24,7 +24,7 @@ modularity claim below being cashed rather than asserted.
 No soldering, no breadboard — three wires. See
 [HARDWARE_SETUP.md](HARDWARE_SETUP.md) for the full wiring guide, wired to the
 two readings that drive fire danger indices in the field. The architecture
-assumes this is the first of several sensors, not the only one — adding a
+assumes this is the first of several sensors — adding a
 thermal camera or an air-quality pack (for smoke) is a config change, not a
 rewrite. A full synthetic mode means the entire pipeline runs, and the entire
 test suite passes, with **zero hardware attached**.
