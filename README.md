@@ -10,7 +10,7 @@
       :808808@@@@@@@@@@@@@@@@@@@@@@@@@@@@@808@@88f,         Vision .... YOLO teacher → student
      ,C808@@8@@@@@88@@008@@@@@@@@@@@888@@@@@@@@8888L,       Quantum ... hybrid quantum neurons
      t@@88@@@@8LfLCCCCGG88G08008@GC000G0CC0@@@@@@@80:       Robotics .. Battle bot CV <50 ms
-     :L@@@@@@@Li11ii11fLftffCGGCf111i;;ii1L8@@@@@8@t        Photonics . integrated photonic circuit
+     :L@@@@@@@Li11ii11fLftffCGGCf111i;;ii1L8@@@@@8@t        Photonics . Photonic Integrated Circuit
        t@@@@8tL088@@88800LtttttfCCGG00GG0C1L@@@@@0f.        Agents .... self-improving loop + RAG
         iL8@1,;iifLCGGGGGCt111fCGGGGCftt1tii0@@@@i          ─ Stack ────────────────────────────────
          ;LL;:1LG00@@8880fii1;tC088@@@CGC1;:fGfi            Languages . Python · TS · C++
