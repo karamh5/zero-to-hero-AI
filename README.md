@@ -1,13 +1,5 @@
 # zero-to-hero-AI
 
-This is where I build things with AI — real projects, end to end, each one a
-step past the last. Some are small experiments, some turn into full systems
-with actual hardware behind them. All of it lives here, organized by project,
-as a running record of what I've built and how I got there.
-
-Each project gets its own folder with its own README — go in for the details,
-the architecture, the numbers. This top-level page is just the front door.
-
 
                       ,i1i1t1;i1t1i.                        karam@hammouda ────────────────────────
                 .,,;f8@80GCC00080LG0t11i;:.                 School .... UBC · CompE '27
@@ -31,6 +23,14 @@ the architecture, the numbers. This top-level page is just the front door.
                :LtfLftttfffffft1ttfLf1tf,                   ─ Find me ──────────────────────────────
                ,1LCCCLffLG080CLffLLCGL1i                    GitHub .... karamh5
                
+
+This is where I build things with AI — real projects, end to end, each one a
+step past the last. Some are small experiments, some turn into full systems
+with actual hardware behind them. All of it lives here, organized by project,
+as a running record of what I've built and how I got there.
+
+Each project gets its own folder with its own README — go in for the details,
+the architecture, the numbers. This top-level page is just the front door.
 
 ## Projects
 
