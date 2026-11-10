@@ -9,7 +9,7 @@ Each project gets its own folder with its own README — go in for the details,
 the architecture, the numbers. This top-level page is just the front door.
 
 
-.                               .:;:;;i1i,,:;;ii;.
+                                .:;:;;i1i,,:;;ii;.
                             .1C880GGGCCCGGG088CfC0f...
                       .:i1tLG088808880GCG0008880GGG00GCG00CLf1:                        karam@hammouda ──────────────────────────
                    :ifC0GG0888GCG8@@@@@80G0@@@@@88880008@@80088L;                      School ...... UBC · CompE '27
