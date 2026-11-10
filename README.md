@@ -10,17 +10,17 @@
       :808808@@@@@@@@@@@@@@@@@@@@@@@@@@@@@808@@88f,         Vision .... YOLO teacher → student
      ,C808@@8@@@@@88@@008@@@@@@@@@@@888@@@@@@@@8888L,       Quantum ... hybrid quantum neurons
      t@@88@@@@8LfLCCCCGG88G08008@GC000G0CC0@@@@@@@80:       Robotics .. Battle bot CV <50 ms
-     :L@@@@@@@Li11ii11fLftffCGGCf111i;;ii1L8@@@@@8@t        Robotics .. Battle bot CV <50 ms
-       t@@@@8tL088@@88800LtttttfCCGG00GG0C1L@@@@@0f.        Photonics . integrated photonic circuit
-        iL8@1,;iifLCGGGGGCt111fCGGGGCftt1tii0@@@@i          Agents .... self-improving loop + RAG
-         ;LL;:1LG00@@8880fii1;tC088@@@CGC1;:fGfi            ─ Stack ────────────────────────────────
-         :Lf::i;1tffffff1;i1i;;itfLLLLf1ii;:tf              Languages . Python · TS · C++
-          :f;:ii1tttt11ii;iii;;;ii11111iii:1i               ML ........ PyTorch · SB3 · LangGraph
-           :ii;ii1i1tf1i111t1;ii;1t1iiiiii;i,               Edge ...... Jetson · Pi · ROS2 · ONNX
-             ;t;;;i1111tCCLLffCL1i1111ii;i:                 Web ....... FastAPI · React · AWS
-             :fiiiiLCCLLLLLLCLLLLLLfiiiiif,                 ─ Find me ──────────────────────────────
-              ;L1tfC0GCCCGGGGGGCLLGCft11f:                  GitHub .... karamh5
-               :LtfLftttfffffft1ttfLf1tf,                   Email  .... karam.mouda@gmail.com
+     :L@@@@@@@Li11ii11fLftffCGGCf111i;;ii1L8@@@@@8@t        Photonics . integrated photonic circuit
+       t@@@@8tL088@@88800LtttttfCCGG00GG0C1L@@@@@0f.        Agents .... self-improving loop + RAG
+        iL8@1,;iifLCGGGGGCt111fCGGGGCftt1tii0@@@@i          ─ Stack ────────────────────────────────
+         ;LL;:1LG00@@8880fii1;tC088@@@CGC1;:fGfi            Languages . Python · TS · C++
+         :Lf::i;1tffffff1;i1i;;itfLLLLf1ii;:tf              ML ........ PyTorch · SB3 · LangGraph
+          :f;:ii1tttt11ii;iii;;;ii11111iii:1i               Edge ...... Jetson · Pi · ROS2 · ONNX
+           :ii;ii1i1tf1i111t1;ii;1t1iiiiii;i,               Web ....... FastAPI · React · AWS
+             ;t;;;i1111tCCLLffCL1i1111ii;i:                 ─ Find me ──────────────────────────────
+             :fiiiiLCCLLLLLLCLLLLLLfiiiiif,                 GitHub .... karamh5
+              ;L1tfC0GCCCGGGGGGCLLGCft11f:                  Email  .... karam.mouda@gmail.com
+               :LtfLftttfffffft1ttfLf1tf,                   
                
 
 This is where I build things with AI — real projects, end to end, each one a
