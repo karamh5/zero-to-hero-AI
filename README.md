@@ -49,5 +49,14 @@ the architecture, the numbers. This top-level page is just the front door.
   that routes to human review rather than an unattended release gate, and the
   report says so on its front page. Built as the foundational project of the
   Hexaware AI Launchpad, summer 2026. See `EchoProof/POC-BRIEF.md`.
+  
+- **[VisDrone-detection](https://github.com/karamh5/VisDrone-detection)**:
+  YOLO11 object detection on VisDrone, a drone-camera dataset full of tiny,
+  densely packed objects.
+
+- **[LSTM-benchmark](https://github.com/karamh5/LSTM-benchmark)**: Two
+  time-series models side by side. A Transformer classifies engine-sensor
+  faults on FordA, and an LSTM forecasts temperature 12 hours ahead on the
+  Jena Climate data.
 
 More projects will land here over time!
