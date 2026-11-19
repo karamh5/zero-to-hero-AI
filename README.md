@@ -40,15 +40,13 @@ the architecture, the numbers. This top-level page is just the front door.
 
 - **[EchoProof/](EchoProof/)** — a compliance assurance layer for voice AI
   agents. It takes a transcript of a conversation an agent had,
-  pulls the governing rule out of a real policy corpus (Regulation F, 303
-  sections, straight from the eCFR API), and issues a verdict with the exact
-  section cited, the rule text quoted, and an audio clip of the sentence, all
-  in a hash-chained evidence log that renders to a single self-contained HTML
-  report. Citation precision runs 0.75 to 0.83, and it produced zero false
-  positives on the compliant control across three runs. It is a triage layer
-  that routes to human review rather than an unattended release gate, and the
-  report says so on its front page. Built as the foundational project of the
-  Hexaware AI Launchpad, summer 2026. See `EchoProof/POC-BRIEF.md`.
+  pulls the governing rule out of a real policy corpus, and issues a verdict
+  with the exact section cited, the rule text quoted, and an audio clip of the
+  sentence, all in a hash-chained evidence log that renders to a single
+  self-contained HTML report. Citation precision runs 0.75 to 0.83, and it
+  produced zero false positives on the compliant control across three runs.
+  It is a triage layer that routes to human review rather than an unattended
+  release gate. Built as the foundational project of the Hexaware AI Launchpad.
   
 - **[VisDrone-detection](https://github.com/karamh5/VisDrone-detection)**:
   YOLO11 object detection on VisDrone, a drone-camera dataset full of tiny,
