@@ -2,8 +2,6 @@
 
 **A modular edge-AI platform for detecting wildfire risk conditions on a Raspberry Pi.**
 
-Live site: https://claude.ai/code/artifact/bea12d6c-e080-443a-bb49-b134e4803cba
-
 WildSense reads temperature and humidity on a low-power edge node, decides *on
 the device* whether what it just measured is an unusual fire-risk condition,
 classifies what kind of event it is, and learns from a fleet of peer nodes
@@ -26,7 +24,7 @@ modularity claim below being cashed rather than asserted.
 No soldering, no breadboard — three wires. See
 [HARDWARE_SETUP.md](HARDWARE_SETUP.md) for the full wiring guide, wired to the
 two readings that drive fire danger indices in the field. The architecture
-assumes this is the first of several sensors, not the only one — adding a
+assumes this is the first of several sensors — adding a
 thermal camera or an air-quality pack (for smoke) is a config change, not a
 rewrite. A full synthetic mode means the entire pipeline runs, and the entire
 test suite passes, with **zero hardware attached**.
